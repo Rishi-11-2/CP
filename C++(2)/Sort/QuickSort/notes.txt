@@ -1,0 +1,5 @@
+in worst case the time complexity of quick sort is
+o(n^2) that is when the pivot element is at the end
+
+in best case the time complexity of quick sort is 
+o(nlog(n)) that is when the pivot element is in the middle

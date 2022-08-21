@@ -1,3 +1,4 @@
+// https://codeforces.com/contest/1720/problem/C
 #pragma GCC optimize("Ofast")
 #pragma GCC target("avx,avx2,fma")
 #include <bits/stdc++.h>

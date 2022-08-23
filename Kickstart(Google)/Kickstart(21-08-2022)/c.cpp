@@ -47,35 +47,19 @@ void solve(int t)
     int index = 0;
     for (int i = 1; i < n; i++)
     {
-        if (isPal(s, 0, i))
+        if (isPal(s, 0, i) == true)
         {
             index = i;
-            break;
+            int len = index + 1;
+            if (n % len == 0)
+            {
+                break;
+            }
         }
     }
-    string z = "";
-    int flag = 1;
-    for (int i = 1; i < n; i++)
-    {
-        if (s[i] == s[0])
-            flag++;
-    }
+    if (s[0] == s[1])
+        index = 0;
+    string z = s.substr(0, index + 1);
 
-    if (flag == n)
-    {
-        z = s[0];
-    }
-    else
-    {
-        // if (index == 0)
-        // {
-        //     index = n - 1;
-        // }
-        for (int i = 0; i <= index; i++)
-        {
-            z += s[i];
-        }
-    }
-    reverse(z.begin(), z.end());
     cout << "Case #" << t << ": " << z << el;
 }

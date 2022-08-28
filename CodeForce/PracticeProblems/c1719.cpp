@@ -12,6 +12,19 @@ using namespace std;
 #define lld long double
 #define INF INT_MAX
 void solve();
+int findDifff(string s,int l,int h)
+{
+    int a1=0;
+    int b1=0;
+    for(int i=l;i<=h;i++)
+    {
+        if(s[i]=='a')
+        a1++;
+        if(s[i]=='b')
+        b1++;
+    }
+    return(abs(a1-b1));
+    }
 int main()
 {
     ios_base::sync_with_stdio(false);
@@ -29,43 +42,40 @@ int main()
 }
 void solve()
 {
-    int n, q;
-    cin >> n >> q;
-    ll arr[n];
-    ll maxM = 0;
-    int index = 0;
-    for (int i = 0; i < n; i++)
+    
+    int n;
+    cin>>n;
+    string s;
+    cin>>s;
+    int a[n];
+    int b[n];
+    
+    int low=0;
+    int high=n-1;
+    int d=findDifff(s,low,high);
+    while(low<high and d!=0)
     {
-        cin >> arr[i];
-        if (arr[i] > maxM)
+        int d1=findDifff(s,low+1,high);
+        int d2=findDifff(s,low,high-1);
+        if(d1<d2)
         {
-            maxM = arr[i];
-            index = i;
+            low++;
+            d=d1;
         }
-    }
-
-    vector<pair<int, int>> v(q);
-    for (int i = 0; i < q; i++)
-    {
-        cin >> v[i].first >> v[i].second;
-    }
-    for (int i = 0; i < q; i++)
-    {
-        int count = 0;
-        int index = v[i].first - 1;
-        int index1 = lower_bound(arr, arr + n, arr[index]) - arr;
-        // cout << index1 << el;
-        if (index1 < index)
-            count = 0;
         else
         {
-            count += index;
-            count += (index1 - (index + 1));
-        }
-        if (arr[index] == maxM)
+            high--;
+            d=d2;
+        }}
+        if(low>=high)
         {
-            count = (v[i].second - (index + 1) / 2);
+            low=-1;
+            high=-1;
+            cout<<low<<" "<<high<<el;
+            return;
         }
-        cout << count << el;
+        low++;
+        high++;
+        cout<<low<<" "<<high<<el;
+        
     }
-}

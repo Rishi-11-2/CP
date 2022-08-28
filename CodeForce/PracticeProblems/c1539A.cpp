@@ -1,7 +1,8 @@
+#pragma GCC optimize("Ofast")
+#pragma GCC target("avx,avx2,fma")
 #include <bits/stdc++.h>
 using namespace std;
 #define el endl
-#define sp " "
 #define vi vector<int>
 #define pb push_back
 #define all(v) (v).begin(), (v).end()
@@ -9,43 +10,41 @@ using namespace std;
 #define uset unordered_set
 #define int long long int
 #define lld long double
-#define INF INT_MAX;
-typedef long double db;
-bool isInt(db x) { return ceil(x) == floor(x); }
+#define INF INT_MAX
 void solve();
 int32_t main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
-
-    solve();
-
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        solve();
+    }
 #ifndef ONLINE_JUDGE
     cerr << "time taken : " << (float)clock() / CLOCKS_PER_SEC << " secs" << endl;
 #endif
 }
 void solve()
 {
-    int n, a, b, c;
-    cin >> n >> a >> b >> c;
-    if (n < a and n < b)
+    int a, b, c, d;
+    cin >> a >> b >> c >> d;
+    int arr[4];
+    int x = max(a, b);
+    int y = max(c, d);
+    arr[0] = a;
+    arr[1] = b;
+    arr[2] = c;
+    arr[3] = d;
+    sort(arr, arr + 4);
+    if ((x == arr[3] and y == arr[2]) || (x == arr[2] and y == arr[3]))
     {
-        cout << 0 << el;
-        return;
-    }
-    if (a > (b - c) and ((n - b) >= 0))
-    {
-        int count = ((n - c) / (b - c));
-        n -= (count * (b - c));
-        count += (n / a);
-
-        cout << count << el;
-        return;
+        cout << "YES" << el;
     }
     else
     {
-        cout << (n / a) << el;
-        return;
+        cout << "NO" << el;
     }
 }

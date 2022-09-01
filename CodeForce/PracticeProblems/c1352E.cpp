@@ -1,3 +1,4 @@
+// https://codeforces.com/contest/1352/problem/E
 #pragma GCC optimize("Ofast")
 #pragma GCC target("avx,avx2,fma")
 #include <bits/stdc++.h>
@@ -29,28 +30,38 @@ int32_t main()
 }
 void solve()
 {
-    int n, k;
-    cin >> n >> k;
+    int n;
+    cin >> n;
     int arr[n];
-    vector<int> c(31);
+    vector<int> v1(n + 1, 0);
     for (int i = 0; i < n; i++)
     {
         cin >> arr[i];
-        for (int j = 30; j >= 0; j--)
-        {
-            if (arr[i] & (1 << j))
-                c[j]++;
-        }
+        v1[arr[i]] += 1;
     }
-    int s = 0;
-    for (int j = 30; j >= 0; j--)
+
+    if (n == 1 || n == 2)
     {
-        int need = n - c[j];
-        if (need <= k)
+        cout << 0 << el;
+        return;
+    }
+    int count = 0;
+    for (int i = 0; i < n; i++)
+    {
+        int s = arr[i];
+        for (int j = i + 1; j < n; j++)
         {
-            k -= need;
-            s += (1 << j);
+            s += arr[j];
+            if (s > n)
+            {
+                break;
+            }
+            if (v1[s] >= 1)
+            {
+                count += v1[s];
+                v1[s] = 0;
+            }
         }
     }
-    cout << s << el;
+    cout << count << el;
 }

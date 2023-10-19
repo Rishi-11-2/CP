@@ -1,0 +1,74 @@
+#pragma GCC optimize("Ofast")
+#pragma GCC target("avx,avx2,fma")
+#include <bits/stdc++.h>
+using namespace std;
+#define el endl
+#define vi vector<int>
+#define pb push_back
+#define all(v) (v).begin(), (v).end()
+#define ht unordered_map
+#define uset unordered_set
+#define int long long int
+#define lld long double
+#define INF INT_MAX
+int P(int k, int a)
+{
+    int res = 1;
+    for (int i = 1; i <= a; i++)
+        res *= k;
+    return res;
+}
+template <typename T>
+istream &operator>>(istream &in, vector<T> &v)
+{
+    for (auto &x : v)
+        in >> x;
+    return in;
+}
+template <typename T>
+ostream &operator<<(ostream &out, const vector<T> &v)
+{
+    for (auto &x : v)
+        out << x << ' ';
+    return out;
+}
+double PI = acos(-1);
+void solve();
+int32_t main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    solve();
+
+#ifndef ONLINE_JUDGE
+    cerr << "time taken : " << (float)clock() / CLOCKS_PER_SEC << " secs" << endl;
+#endif
+}
+void solve()
+{
+    int a, b, c;
+    cin >> a >> b >> c;
+    vector<int> v;
+    for (int i = 1; i < 82; i++)
+    {
+        int z = P(i, a) * b;
+        z = z + c;
+        int k = z;
+        int cj = 0;
+        while (k > 0)
+        {
+            cj += (k % 10);
+            k /= 10;
+        }
+        if (cj == i and z < 1000000000)
+            v.pb(z);
+    }
+    cout << v.size() << el;
+    for (auto it : v)
+    {
+        cout << it << " ";
+    }
+    cout << el;
+}

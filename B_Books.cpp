@@ -1,0 +1,47 @@
+#pragma GCC optimize("Ofast")
+#pragma GCC target("avx,avx2,fma")
+#include <bits/stdc++.h>
+using namespace std;
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+#define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>
+#define all(v) (v).begin(), (v).end()
+#define int long long int
+#define lld long double
+void solve();
+int32_t main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    solve();
+
+#ifndef ONLINE_JUDGE
+    cerr << "time taken : " << (float)clock() / CLOCKS_PER_SEC << " secs" << endl;
+#endif
+}
+void solve()
+{
+    int n, m;
+    cin >> n >> m;
+    int arr[n];
+    int prefix[n];
+    for (int i = 0; i < n; i++)
+    {
+        cin >> arr[i];
+    }
+    prefix[0] = arr[0];
+    for (int i = 1; i < n; i++)
+        prefix[i] = arr[i] + prefix[i - 1];
+    int res = upper_bound(prefix, prefix + n, m) - prefix;
+    int s = arr[0];
+    for (int i = 1; i < n; i++)
+    {
+        int x = upper_bound(prefix, prefix + n, s + m) - prefix;
+        res = max(res, x - i);
+        s += arr[i];
+    }
+    cout << res << endl;
+}

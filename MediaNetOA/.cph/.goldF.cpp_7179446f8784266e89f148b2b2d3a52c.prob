@@ -1,0 +1,1 @@
+{"name":"Local: goldF","url":"d:\\CP\\MediaNetOA\\goldF.cpp","tests":[{"id":1692464912955,"input":"3\n1 32 1\n10","output":"2"},{"id":1692465004453,"input":"4\n16 1 4 1\n23","output":"-1"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\CP\\MediaNetOA\\goldF.cpp","group":"local","local":true}

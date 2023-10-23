@@ -36,7 +36,7 @@ void solve()
         // cout<<count<<endl;
         if(grid[0][i]=='B' && grid[1][i]=='W')
         {
-            if(flag==-1 && count==0)
+            if(flag==-1)
             {
                 flag=1;
                 count=0;
@@ -53,13 +53,13 @@ void solve()
             }
             else if(flag!=1)
             {
-                flag=-1;
+                flag=1;
                 count=0;
             }
         }
         else if(grid[0][i]=='W' && grid[1][i]=='B')
         {
-            if(flag==-1 && count==0)
+            if(flag==-1)
             {
                 flag=2;
                 count=0;
@@ -76,7 +76,7 @@ void solve()
             }
             else if(flag!=2)
             {
-                flag=-1;
+                flag=2;
                 count=0;
             }
         }

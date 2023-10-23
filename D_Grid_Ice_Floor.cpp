@@ -15,69 +15,78 @@ void solve()
     int n, m;
     cin >> n >> m;
     vector<vector<char>> grid(n + 1, vector<char>(m + 1, '/'));
-    vector<vector<int>> vis(n + 1, vector<int>(m + 1, 0));
+    int vis[n+1][m+1][4];
     for (int i = 1; i <= n; i++)
     {
         for (int j = 1; j <= m; j++)
         {
+            for(int k=0;k<4;k++)
+            {
+                vis[i][j][k]=0;
+            }
             cin >> grid[i][j];
         }
     }
     queue<vector<int>> q;
-    q.push({2, 2});
-    int count = 1;
+    int count = 0;
     int a[] = {-1, 1, 0, 0};
     int b[] = {0, 0, -1, 1};
-    pair<int, int> dir = {a[0], b[0]};
-    vis[2][2] = 1;
-    while (!q.empty())
+    for(int k=0;k<4;k++)
     {
-        auto it = q.front();
-        q.pop();
-        int i = it[0];
-        int j = it[1];
-        int x = i + dir.first;
-        int y = j + dir.second;
-        int flag = 0;
-        if (x >= 0 && y >= 0 && x <= n && y <= m)
+        vis[2][2][k] = 1;
+        q.push({2,2,k});
+    }
+        while (!q.empty())
         {
-            if (vis[x][y] == 0 && grid[x][y] == '.')
+            auto it = q.front();
+            q.pop();
+            int i = it[0];
+            int j = it[1];
+            int dir=it[2];
+            int x = i + a[dir];
+            int y = j + b[dir];
+            int flag = 0;
+            if (x >= 1 && y >= 1 && x <= n && y <= m)
             {
-                count++;
-                flag = 1;
-                q.push({x, y});
-                vis[x][y] = 1;
-            }
-        }
-        if (!flag)
-        {
-            int flag2 = 0;
-            for (int k = 0; k < 4; k++)
-            {
-                pair<int, int> cc = {a[k], b[k]};
-                if (cc == dir)
-                    continue;
-                int x = i + a[k];
-                int y = j + b[k];
-                if (x >= 0 && y >= 0 && x <= n && y <= m)
+                if (vis[x][y][dir] == 0 && grid[x][y] == '.')
                 {
-                    if (vis[x][y] == 0 && grid[x][y] == '.')
+                    flag = 1;
+                    q.push({x, y,dir});
+                    vis[x][y][dir] = 1;
+                }
+            }
+            if (!flag && grid[x][y]=='#')
+            {
+                for (int k1 = 0; k1 < 4; k1++)
+                {
+                    int x = i + a[k1];
+                    int y = j + b[k1];
+                    if (x >= 1 && y >= 1 && x <= n && y <= m)
                     {
-                        count++;
-                        flag = 1;
-                        q.push({x, y});
-                        vis[x][y] = 1;
-                        dir = cc;
-                        flag2 = 1;
-                        break;
+                        if (vis[x][y][k1] == 0 && grid[x][y] == '.')
+                        {
+                            q.push({x, y,k1});
+                            vis[x][y][k1] = 1;
+                            // break;
+                        }
                     }
                 }
             }
-            if (!flag2)
+        }
+    for(int i=1;i<=n;i++)
+    {
+        for(int j=1;j<=m;j++)
+        {
+            int flag=0;
+            for(int k=0;k<4;k++)
             {
-                cout << count << endl;
-                return;
+                if(vis[i][j][k]==1)
+                flag=1;
             }
+            if(flag)
+            count++;
         }
     }
+       
+    cout<<count<<endl;
 }

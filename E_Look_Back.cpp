@@ -20,23 +20,21 @@ void solve()
 {
     long long n;
     cin>>n;
-    long long a[n];
+    long long arr[n];
     for(long long i=0;i<n;i++)
-    cin>>a[i];
-    long long sum=0;
-    long long res=0;
-    for(long long i=n-1;i>=0;i--)
+    cin>>arr[i];
+    
+    long long prev=arr[0];
+    long long count=0LL;
+    for(long long i=1;i<n;i++)
     {
-        if(i%2==0)
+        long long x=arr[i]*1LL;
+        while(x<prev)
         {
-            res=max(res,sum+a[i]);
+            x=(x*(2*1LL));
+            count++;
         }
-        else
-        {
-            res=max(res,sum);
-        }
-        if(a[i]>0)
-        sum+=a[i];
+        prev=x;
     }
-    cout<<res<<endl;
+    cout<<count<<endl;
 }

@@ -1,3 +1,5 @@
-https://atcoder.jp/contests/abc311/tasks/abc311_d
 
-https://atcoder.jp/contests/abc308/tasks/abc308_e
+https://atcoder.jp/contests/abc308/tasks/abc308_e(Pending)
+
+
+https://atcoder.jp/contests/abc312/editorial/6864(Yet to be asked)

@@ -22,58 +22,41 @@ void solve()
     cin>>n;
     string s;
     cin>>s;
-    vector<set<int>>attackedBy(n+1);
-    vector<set<int>>attackedTo(n+1);
-    for(int i=1;i<=n;i++)
+    int count=0;
+    while(!s.empty() && s[0]==s.back())
     {
-        int right=(i+1)%(n+1);
-        int left=(i-1);
-        if(left<1)
-        left+=n;
-        if(s[i-1]=='R')
+        count++;
+        s.pop_back();
+    }
+    if(s.empty())
+    {
+        if(count==2)
         {
-            attackedTo[i].insert(right);
-            attackedBy[right].insert(i);
+            cout<<0<<endl;
+
         }
-        else if(s[i-1]=='L')
+        else if(count==3)
         {
-            attackedTo[i].insert(left);
-            attackedBy[left].insert(i);
+            cout<<1<<endl;
+        }
+        else
+        {
+            cout<<(count+2)/3<<endl;
+
+        }
+        return;
+    }
+    s.push_back('@');
+    n=(int)(s.size());
+    int ans=0;
+    for(int i=0;i<n-1;i++)
+    {
+        count++;
+        if(s[i]!=s[i+1])
+        {
+            ans+=(count/3);
+            count=0;
         }
     }
-    map<pair<int,vector<int>>,int>mp;
-    function<int(int,vector<set<int>>,vector<set<int>>)>f=[&](int i,vector<set<int>>attackedBy,vector<set<int>>attackedTo)->int{
-        if(i==n)
-        {
-             for(int i=1;i<=n;i++)
-            {
-                if(attackedBy[i].size()==1)
-                {
-                    if(attackedBy[i]!=attackedTo[i])
-                    {
-                        // cout<<i<<endl;
-                        return 0x3f3f3f3f;
-                    }
-                }
-            }
-            return 0;
-        }
-        int res=f(i+1,attackedBy,attackedTo);
-        if(attackedBy[i].size()==1)
-        {
-            if(attackedBy[i]!=attackedTo[i])
-            {
-                // cout<<i<<endl;
-                int x=*attackedBy[i].begin();
-                int y=*attackedTo[i].begin();
-                attackedBy[y].erase(i);
-                attackedTo[i].erase(y);
-                attackedTo[i].insert(x);
-                res=min(res,1+f(i+1,attackedBy,attackedTo));
-            }
-        }
-        return  res;
-    };
-    int count=f(0,attackedBy,attackedTo);
-    cout<<count<<endl;
+    cout<<ans<<endl;
 }

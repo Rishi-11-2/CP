@@ -20,28 +20,39 @@ void solve()
 {
     int n;
     cin>>n;
-    int a[n];
+    int b[n];
     for(int i=0;i<n;i++)
-    cin>>a[i];
-    vector<int>dp(n+1,0);
-    dp[0]=1;
-    for(int i=1;i<=n;i++)
+    cin>>b[i];
+    vector<int>dp(n+1,-1);
+    map<int,vector<int>>mp;
+    for(int i=0;i<n;i++)
     {
-        if(i+a[i-1]<=n && dp[i-1]==1)
+        if((i-b[i])>=0)
         {
-            dp[i+a[i-1]]=1;
-        }
-        if(i-(a[i-1]+1)>=0 && dp[i-(a[i-1]+1)]==1)
-        {
-            dp[i]=1;
+            mp[i-b[i]].push_back(i);
         }
     }
-    if(dp[n]==1)
-    {
-        cout<<"YES"<<endl;
-    }
+    function<int(int)>f=[&](int i)->int{
+        if(i>n)
+        return 0;
+        if(i==n)
+        {
+            return 1;
+        }
+        if(dp[i]!=-1)
+        return dp[i];
+       int res=f(i+b[i]+1);
+       for(auto it:mp[i])
+       {
+          int x=f(it+1);
+          res=res|x;
+       }
+       return dp[i]= res;
+    };
+    int x=f(0);
+    // int x=0;
+    if(x)
+    cout<<"YES"<<endl;
     else
-    {
-        cout<<"NO"<<endl;
-    }
+    cout<<"NO"<<endl;
 }

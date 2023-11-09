@@ -9,21 +9,41 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     srand(time(NULL));
-    int t;
-    cin >> t;
+    long long t;
+    // cin >> t;
         solve();
 }
 void solve()
 {
-    int n,c;
+    long long n,c;
     cin>>n>>c;
-    int a[n];
-    for(int i=0;i<n;i++)
+    long long a[n];
+    for(long long i=0;i<n;i++)
     cin>>a[i];
-    function<int(int)>f=[&](int i)->int{
-        if(i==n)
+    
+    deque<long long>dq;
+    vector<long long>dp(n+2,0);
+    long long sum=0LL;
+    dp[0]=0;
+    for(long long i=1;i<=n;i++)
+    {
+        if(i>c)
+        sum-=a[i-(c+1)];
+        while(!dq.empty() && dq.front()<i-c)
         {
-            
+            dq.pop_front();
         }
-    };
+        while(!dq.empty() && a[dq.back()]>a[i-1])
+        {
+            dq.pop_back();
+        }
+        dq.push_back(i-1);
+        sum+=a[i-1];
+        dp[i]=dp[i-1]+a[i-1];
+        if(i>=c && !dq.empty())
+        {
+            dp[i]=min(dp[i],dp[i-(c)]+sum-a[dq.front()]);
+        }
+    }
+    cout<<dp[n]<<endl;
 }

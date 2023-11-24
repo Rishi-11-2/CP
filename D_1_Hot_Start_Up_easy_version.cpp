@@ -11,7 +11,7 @@ signed main()
     srand(time(NULL));
     long long t;
     cin >> t;
-    while(t--)
+    while (t--)
     {
         solve();
     }
@@ -23,44 +23,37 @@ void solve()
     long long a[n];
     for(long long i=0;i<n;i++)
     cin>>a[i];
-    vector<long long>hot;
-    // vector<long long>cold;
-    vector<long long>cold;
-    hot.push_back(0);
-    cold.push_back(0);
+    
+    long long hot[k];
+    long long cold[k];
     for(long long i=0;i<k;i++)
-    {
-        long long x;
-        cin>>x;
-        cold.push_back(x);
-    }
+    cin>>cold[i];
     for(long long i=0;i<k;i++)
-    {
-        long long x;
-        cin>>x;
-        hot.push_back(x);
-    }
-    // cout<<hot[2]<<endl;
-    // vector<vector<vector<long long>>>dp(n+1,vector<)
-    map<vector<long long>,long long>mp;
-    function<long long(long long,long long,long long)>f=[&](long long i,long long prev1,long long prev2)->long long{
-        if(i==n)
+    cin>>hot[i];
+     vector<vector<long long>>dp(n+1,vector<long long>(n+1,-1));
+    function<long long(long long,long long)>f=[&](long long i,long long j)->long long{
+        long long currIndex=1+max(i,j);
+        if(currIndex==n)
         return 0;
-        if(mp.find({i,prev1,prev2})!=mp.end())
-        return mp[{i,prev1,prev2}]; 
-        long long x=cold[a[i]];
-        long long y=x+min(f(i+1,a[i],prev2),f(i+1,prev1,a[i]));
-        long long res=y;
-        if(a[i]==prev1)
+        long long currProgramId=a[currIndex];
+        long long res=0LL;
+        if(dp[i+1][j+1]!=-1)
+        return dp[i+1][j+1];
+        if(i!=- 1 && currProgramId==a[i])
         {
-            res=min(res,hot[a[i]]+f(i+1,a[i],prev2));
+            res=hot[currProgramId-1]+f(currIndex,j);
         }
-        if(a[i]==prev2)
+        else if( j!=-1 && currProgramId==a[j])
         {
-            res=min(res,hot[a[i]]+f(i+1,prev1,a[i]));
+            res=hot[currProgramId-1]+f(i,currIndex);
         }
-        return  mp[{i,prev1,prev2}]=res;
+        else
+        {
+            res=cold[currProgramId-1]+min(f(i,currIndex),f(currIndex,j));
+        }
+        return dp[i+1][j+1]=res;
     };
-    long long x=f(0,0,0);
+
+    long long x= f(-1,-1);
     cout<<x<<endl;
 }

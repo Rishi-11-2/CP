@@ -37,7 +37,9 @@ void solve()
         {
             x1=max(0LL,a[i]+x+f(i+1,k1-1));
         }
-        if(k1<n-i)
+        if(k1<n-i)// wiil have to ensure that exactly k operations are performed
+        // else we will get wrong answer and that is what was happening
+        // Therefore we ensures that k operations are only performed
         x2=max(0LL,a[i]-x+f(i+1,k1));
         res=max(x1,x2);
         return dp[i][k1]=res;

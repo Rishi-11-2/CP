@@ -9,7 +9,7 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     srand(time(NULL));
-    int t;
+    long long t;
     cin >> t;
     while (t--)
     {
@@ -18,26 +18,35 @@ signed main()
 }
 void solve()
 {
-    int n,k,x;
+    long long n,k,x;
     cin>>n>>k>>x;
-    int a[n];
-    for(int i=0;i<n;i++)
+    long long a[n];
+    for(long long i=0;i<n;i++)
     cin>>a[i];
-    function<int(int,int)>f=[&](int i,int k1)->int{
-        if(k1<0)
-        return -0x3f3f3f3f;
+     vector<vector<long long>>dp(n+1,vector<long long>(k+1,-1));
+    function<long long(long long,long long)>f=[&](long long i,long long k1)->long long{
         if(i==n)
         {
-            if(k1==0)
             return 0;
-            else
-            return -0x3f3f3f3f; 
         }
-        int x1=a[i]-x+f(i+1,k1);
-        int x2=a[i]+x+f(i+1,k1-1);
-        int res=max(x1,x2);
-        return res;
+        if(dp[i][k1]!=-1)
+        return dp[i][k1];
+        long long res=0;
+        long long x1=0,x2=0;
+        if(k1)
+        {
+            x1=max(0LL,a[i]+x+f(i+1,k1-1));
+        }
+        if(k1<n-i)
+        x2=max(0LL,a[i]-x+f(i+1,k1));
+        res=max(x1,x2);
+        return dp[i][k1]=res;
     };
-    int yy=f(0,k);
-    cout<<yy<<endl;
+    f(0,k);
+    long long res=0;
+    for(long long i=0;i<n;i++)
+    {
+        res=max(res,*max_element(all(dp[i])));
+    }
+    cout<<res<<endl;
 }

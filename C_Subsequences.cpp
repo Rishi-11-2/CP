@@ -10,9 +10,34 @@ signed main()
     cout.precision(10);
     srand(time(NULL));
     int t;
-    
         solve();
-    
+}
+int seg[12][(int)(4e5)];
+void update(int id,int s,int e,int l, int r,int val,int level)
+{
+    if(l>=e || s>=r)
+    return ;
+
+    if(s>=l && e<=r)
+    {
+        seg[level][id]=val;
+    }
+    int mid=(s+e)/2;
+    update(2*id,s,mid,l,r,val,level);
+    update(2*id+1,mid+1,e,l,r,val,level);
+    seg[level][id]=seg[level][2*id]+seg[level][2*id+1];
+}
+
+int get(int id,int s,int e,int l,int r,int level)
+{
+    if(l>=e|| r<=s)
+    return 0;
+    if(s>=l && e<=r)
+    {
+        return seg[level][id];
+    }
+    int mid=(s+e)/2;
+    return get(2*id,s,mid,l,r,level)+get(2*id+1,mid+1,e,l,r,level);
 }
 void solve()
 {
@@ -21,28 +46,19 @@ void solve()
     int a[n];
     for(int i=0;i<n;i++)
     cin>>a[i];
-    vector<vector<int>>dp(n+1,vector<int>(11,-1));
-    function<int(int,int,int)>f=[&](int i,int len,int prev)->int{
-        if(i==n)
-        {
-            if(len==k+1)
-            return 1;
-            return 0;
-        }
-        if(len==k+1)
-        return dp[i][len]= 1;
-        if(dp[i][len]!=-1)
-        return dp[i][len];
-        int res=0;
-        if(a[i]>prev)
-        {
-            res+=f(i+1,len+1,a[i]);
-        }
-        // res+=f(i+1,1,a[i]);
-        res+=f(i+1,len,prev);
-        return dp[i][len]=res;
-    };
+    vector<vector<int>>dp(12,vector<int>(n+1,0));
 
-    int xx=f(0,0,0);
-    cout<<xx<<endl;
+    for(int i=0;i<n;i++)
+    {
+        dp[1][a[i]]=1;
+    }
+    for(int k1=2;k1<=k;k1++)
+    {
+        for(int i=0;i<n;i++)
+        {
+            update(1,0,n+1,a[i],a[i]+1,dp[k1-1][a[i]],k1-1);
+            dp[k1][a[i]]=get(1,0,n+1,0,a[i]-1,k1-1);
+        }
+    }
+    cout<<get(1,0,n,0,n+1,k+1)<<endl;
 }

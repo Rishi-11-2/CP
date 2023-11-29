@@ -9,56 +9,58 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     srand(time(NULL));
-    int t;
         solve();
 }
-int seg[12][(int)(4e5)];
-void update(int id,int s,int e,int l, int r,int val,int level)
+long long seg[12][(long long)(4e5)];
+void update(long long id,long long s,long long e,long long l, long long r,long long val,long long level)
 {
-    if(l>=e || s>=r)
+    // cout<<s<<" "<<e<<endl;
+    if(l>e || s>r)
     return ;
-
     if(s>=l && e<=r)
     {
+        // cout<<l<<" "<<r<<" "<<level<<endl;
         seg[level][id]=val;
+        return ;
     }
-    int mid=(s+e)/2;
+    long long mid=(s+e)/2;
     update(2*id,s,mid,l,r,val,level);
     update(2*id+1,mid+1,e,l,r,val,level);
     seg[level][id]=seg[level][2*id]+seg[level][2*id+1];
 }
 
-int get(int id,int s,int e,int l,int r,int level)
+long long get(long long id,long long s,long long e,long long l,long long r,long long level)
 {
-    if(l>=e|| r<=s)
+    if(l>e|| r<s)
     return 0;
     if(s>=l && e<=r)
     {
         return seg[level][id];
     }
-    int mid=(s+e)/2;
+    long long mid=(s+e)/2;
     return get(2*id,s,mid,l,r,level)+get(2*id+1,mid+1,e,l,r,level);
 }
 void solve()
 {
-    int n,k;
+    long long n,k;
     cin>>n>>k;
-    int a[n];
-    for(int i=0;i<n;i++)
+    long long a[n];
+    for(long long i=0;i<n;i++)
     cin>>a[i];
-    vector<vector<int>>dp(12,vector<int>(n+1,0));
+    vector<vector<long long>>dp(12,vector<long long>(n+1,0));
 
-    for(int i=0;i<n;i++)
-    {
-        dp[1][a[i]]=1;
-    }
-    for(int k1=2;k1<=k;k1++)
-    {
-        for(int i=0;i<n;i++)
+    dp[0][0]=1;
+    update(1,0,n,0,0,1,0);
+    for(long long i=0;i<n;i++)
+     {
+        for(long long k1=1;k1<=k+1;k1++)
         {
-            update(1,0,n+1,a[i],a[i]+1,dp[k1-1][a[i]],k1-1);
-            dp[k1][a[i]]=get(1,0,n+1,0,a[i]-1,k1-1);
+            long long x=get(1,0,n,0,a[i]-1,k1-1);
+            // cout<<x<<" "<<a[i]<<" "<<k1<<endl;
+            dp[k1][a[i]]=x;
+            update(1,0,n,a[i],a[i],dp[k1][a[i]],k1);
         }
     }
-    cout<<get(1,0,n,0,n+1,k+1)<<endl;
+    long long ans=get(1,0,n,0,n,k+1);
+    cout<<ans<<endl;
 }

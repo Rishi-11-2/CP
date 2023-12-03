@@ -15,34 +15,45 @@ void solve()
 {
     int n,k;
     cin>>n>>k;
-    int arr[n];
-    for(int i=0;i<n;i++)
-    cin>>arr[i];
-    vector<int>dp(n+1,-1);
-    function<int(int,int)>f=[&](int i,int x)->int{
-
-        if(i>n)
+    vector<vector<int>>dp(n+1,vector<int>(n+1,-1));
+    const int mod=(int)(998244353);
+    function<int(int ,int)>f=[&](int i,int k1)->int{
+        if(i<0)
         return 0;
-
-        if(i==n)
-        return 1;
-        
-        if(dp[i]!=-1)
-        return dp[i];
-        int res=0;
-        int  j=k+x;
-        while(j<n)
+        if(i==0)
         {
-            res=res+f(i+j,x+1);
-            j+=(k+x);
+            if(k1<k)
+            return 1;
+            return 0;
+        }
+        if(k1<k)
+        return 0;
+        if(dp[i][k1]!=-1)
+        return dp[i][k1];
+        int y=k1;
+        int c=1;
+        int res=0;
+        while(y<=i)
+        {
+            res=(res%mod+f(i-y,k1-1)%mod)%mod;
+            c++;
+            y=c*k1;
         }
 
-        return dp[i]= res;
+        return dp[i][k1]=res%mod;
     };
-
-    int x=f(0,0);
-    cout<<x<<endl;
+    vector<int>res;
     for(int i=1;i<=n;i++)
-    cout<<dp[i]<<" ";
+    {
+        int ans=0;
+        for(int j=k;j<=i;j++)
+        {
+            ans=(ans%mod+f(i,j)%mod)%mod;
+        }
+        res.push_back(ans%mod);
+    }
+
+    for(auto it:res)
+    cout<<it<<" ";
     cout<<endl;
 }

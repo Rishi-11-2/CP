@@ -20,23 +20,27 @@ void solve()
     cin>>a[i];
     const long long mod=998244353;
      /* curr -> i+1, nright-> i+2*/
-     vector<vector<long long>>dp(300,vector<long long>(620,-1));
-    function<long long(long long,long long,long long)>f=[&](long long i,long long curr,long long nright)->long long{
-        if(i==n-3)
+     long long maxm=(2*300*300);
+     vector<vector<long long>>dp(300,vector<long long>(maxm+10,-1));
+    function<long long(long long,long long)>f=[&](long long i,long long curr)->long long{
+        if(i==n-1)
         {
             return 1;
         }
-        if(dp[i][nright+300]!=-1)
-        return dp[i][nright+300];
-        long long x1=f(i+1,nright-a[i+1],a[i+3])%mod;
-        long long x2=f(i+1,nright+a[i+1],a[i+3])%mod;
-        long long res=(x1%mod+x2%mod)%mod;
-        return dp[i][nright+300]= res%mod;
+        if(dp[i][curr+maxm/2]!=-1)
+        return dp[i][curr+maxm/2];
+        long long res=0;
+        if(curr==0)
+        {
+            res=(res%mod+f(i+1,a[i+1])%mod)%mod;
+        }
+        else
+        {
+            res=(res%mod+f(i+1,a[i+1]-curr));
+            res=(res%mod+f(i+1,a[i+1]+curr));
+        }
+        return dp[i][curr+maxm/2]= res%mod;
     };
-    long long x=f(0,a[1],a[2]);
-    // if(n>3)
-    // {
-    //     x-=1;
-    // }
+    long long x=f(1,a[1]);
     cout<<x<<endl;
 }

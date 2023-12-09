@@ -13,6 +13,10 @@ signed main()
 }
 void solve()
 {
+    /* Simple Intuition based. Does not even require DP. Can be solved easily by the concept of volumes
+    We just need to take care of the the minimum time required to fill all the locks if 
+    all the pipes are opened . Thats it .  for each query greater than the minimum time
+    we can simply divide it by the time to fill all the locks and it will give the numebr of pipes*/
     long long n;
     cin>>n;
     long long arr[n];

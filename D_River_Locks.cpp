@@ -35,7 +35,10 @@ void solve()
         cout<<-1<<endl;
         else
         {
-            cout<<(s+x-1)/x<<endl;
+            long long y=s/x;
+            if(s%x)
+            y++;
+           cout<<y<<endl;
         }
     }
 }

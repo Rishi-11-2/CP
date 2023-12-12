@@ -1,5 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
+#define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
+template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
+template <typename T1, typename... T2>
+void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 #define all(v) (v).begin(), (v).end()
 void solve();
 signed main()
@@ -7,68 +11,58 @@ signed main()
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.setf(ios::fixed);
-    cout.precision(17);
+    cout.precision(18);
     srand(time(NULL));
         solve();
-}
-double dp[16][(1<<16)+1];
-double f(long long i,long long mask,vector<double>v,vector<double>&w,int n,int d,double avg)
-{
-    if(i==n)
-        {
-            // cout<<mask<<endl;
-            double res=0.0;
-            for(long long j=0;j<d;j++)
-            {
-                // cout<<v[j]<<" ";
-                res+=((v[j]-avg)*(v[j]-avg)*1.0);
-            }
-            // cout<<endl;
-            // cout<<res<<endl;
-            res=res/(d*1.0);
-            return res;
-        }
-        if(dp[i][mask]!=-1)
-        return dp[i][mask];
-        double res=0;
-
-        double ans=1e15;
-
-        // ans=min(ans,f(i+1,mask,v,w,n,d,avg));
-        long long newMask=mask;
-            // ans=min(ans,f(i+1,newMask,v,w,n,d,avg));
-        for(long long j=0;j<d;j++)
-        {
-
-            v[j]+=w[i];
-            newMask=mask|(1<<j);
-            ans=min(ans,f(i+1,newMask,v,w,n,d,avg));
-            v[j]-=w[i];
-        }
-        return dp[i][mask]= ans;
 }
 void solve()
 {
     long long n,d;
     cin>>n>>d;
-    vector<double>w(n);
-    double s=0;
+    long long wt[n];
+    long double avg=0;
     for(long long i=0;i<n;i++)
     {
-        cin>>w[i];
-        s+=w[i]*1.0;
+        cin>>wt[i];
+        avg+=wt[i]*1.0;
     }
-    for(long long i=0;i<=(15*1LL);i++)
+    avg=(avg/(d*1.0));
+    vector<long long>sum((1<<n)+1,0);
+    for(long long i=0;i<=(1<<n);i++)
     {
-        for(long long j=0;j<=((1<<16)*1LL);j++)
-        dp[i][j]=-1;
+        for(long long j=0;j<n;j++)
+        {
+            if(i&(1<<j))
+            {
+                sum[i]+=wt[j];
+            }
+        }
+        // cout<<sum[i]<<endl;
     }
-    double avg=((s*1.0)/(d*1.0));
     // cout<<avg<<endl;
-    vector<double>bags(d,0);
+    vector<vector<long double>>dp(d+1,vector<long double>((1<<n)+1,-1.0));
+    function<long double(long long,long long)>f=[&](long long i,long long mask)->long double{
 
-    /* i- bag index mask- will be used to identify whether the item has chosen yet or not*/
-    double x=f(0,0,bags,w,n,d,avg)*1.0;
-    cout<<x<<endl;
-
+        if(i==d)
+        {
+            if(mask!=0)
+            return 1e18*1.0;
+            // cout<<mask<<endl;
+            return 0.0;
+        }
+        if(dp[i][mask]+1.0>0.0)
+        return dp[i][mask];
+        long double res=f(i+1,mask)+avg*avg;
+        long long submask=mask;
+        while(submask>0)
+        {
+            // cout<<submask<<endl;
+            res=min(res,(sum[submask]*1.0-avg)*(sum[submask]*1.0-avg)*1.0+f(i+1,mask^submask));
+            submask=(submask-1)&mask;
+        }
+        return dp[i][mask]= res;
+    };
+    long long mask=(1<<n)-1;
+    long double res=f(0,mask)/(d*1.0);
+    cout<<res<<endl;
 }

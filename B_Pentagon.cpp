@@ -13,42 +13,37 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     srand(time(NULL));
-    int t;
-    cin >> t;
-    while (t--)
-    {
         solve();
-    }
 }
 void solve()
 {
     string s;
+    string t;
     cin>>s;
-    int n=s.length();
-    int flag=(s[0]=='B'||s[n-1]=='B');
-    for(int i=0;i<n-1;i++)
+    cin>>t;
+
+    map<string,int>mp;
+    mp["AB"]=1;
+    mp["BC"]=1;
+    mp["CD"]=1;
+    mp["DE"]=1;
+    mp["EA"]=1;
+    mp["AC"]=2;
+    mp["AD"]=2;
+    mp["BD"]=2;
+    mp["CE"]=2;
+    mp["BE"]=2;
+    for(auto it:mp)
     {
-        if(s[i]=='B' && s[i+1]=='B')
-        flag=1;
+        string x=it.first;
+        reverse(all(x));
+        mp[x]=it.second;
     }
-    int curr=0;
-    vector<int>len;
-    for(int i=0;i<n;i++)
-    {
-        if(s[i]=='A')
-        curr++;
-        else
-        {
-            len.push_back(curr);
-            curr=0;
-        }
-    }
-    if(curr!=0)
-    len.push_back(curr);
-    int res=0;
-    for(auto it:len)
-    res+=it;
-    if(!flag)
-    res-=*min_element(all(len));
-    cout<<res<<endl;    
+
+    int a=mp[s];
+    int b=mp[t];
+    if(a==b)
+    cout<<"Yes"<<endl;
+    else
+    cout<<"No"<<endl;
 }

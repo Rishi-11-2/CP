@@ -22,33 +22,25 @@ signed main()
 }
 void solve()
 {
-    string s;
-    cin>>s;
-    int n=s.length();
-    int flag=(s[0]=='B'||s[n-1]=='B');
-    for(int i=0;i<n-1;i++)
+    int n;
+    cin>>n;
+    vector<int>adj[n+1];
+    for(int i=1;i<n;i++)
     {
-        if(s[i]=='B' && s[i+1]=='B')
-        flag=1;
+        int x,y;
+        cin>>x>>y;
+        adj[x].push_back(y);
+        adj[y].push_back(x);
     }
-    int curr=0;
-    vector<int>len;
-    for(int i=0;i<n;i++)
+    int count=0;
+    for(int i=1;i<=n;i++)
     {
-        if(s[i]=='A')
-        curr++;
-        else
-        {
-            len.push_back(curr);
-            curr=0;
-        }
+        int sz=(int)(adj[i].size());
+        if(sz==1)
+        count++;
     }
-    if(curr!=0)
-    len.push_back(curr);
-    int res=0;
-    for(auto it:len)
-    res+=it;
-    if(!flag)
-    res-=*min_element(all(len));
-    cout<<res<<endl;    
+    int res=count/2;
+    if(count%2)
+    res++;
+    cout<<res<<endl;
 }

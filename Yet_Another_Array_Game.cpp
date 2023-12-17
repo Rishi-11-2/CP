@@ -26,48 +26,31 @@ void solve()
     long long n;
     cin>>n;
     long long arr[n];
-    multiset<long long>st;
     for(long long i=0;i<n;i++)
+    cin>>arr[i];
+    sort(arr,arr+n);
+    vector<long long>prefix(n,0);
+    prefix[0]=arr[0];
+    for(long long i=1;i<n;i++)
     {
-        cin>>arr[i];
-        st.insert(arr[i]);
+        prefix[i]=prefix[i-1]+arr[i];
     }
-
-    long long sum=0;
-    long long p=0;
-    while(!st.empty())
+    long long terms=1;
+    long long ans=0;
+    long long x=0;
+    for(long long i=n-1;i>=0;i-=2)
     {
-        if(p==0)
-        {
-            if((long long)st.size()==2)
-            {
-                sum+=*st.rbegin();
-                auto it=st.end();
-                it--;
-                st.erase(it);
-            }
-            else
-            {
-                sum+=*st.begin();
-               st.erase(st.begin());
-            }
-            p=1;
-        }
-        else if(p==1)
-        {
-            auto it=st.end();
-            it--;
-            st.erase(it);
-            p=0;
-        }
-    }
-    if(s==1)
-    {
-        cout<<max(sum,*max_element(arr,arr+n))<<endl;
+        long long sum=prefix[i+terms-1];
+        if(i>0)
+        sum-=prefix[i-1];
+        // debug(sum);
+        ans=max(ans,sum);
+        terms++;
+        x=sum;
 
     }
-    else if(s==0)
-    {
-        cout<<sum<<endl;
-    }
+    if(s)
+    cout<<ans<<endl;
+    else
+    cout<<x<<endl;
 }

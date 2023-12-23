@@ -15,53 +15,45 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    int t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
     int n;
     cin>>n;
-    vector<pair<int,int>>v;
-    for(int i=1;i<=n;i++)
+    int arr[n];
+    int diff=1;
+    int prev=-1;
+    for(int i=0;i<n;i++)
     {
-        int t,x;
-        cin>>t>>x;
-        v.push_back({t,x});
-    }
-    multiset<int>s;
-    int count=0;
-    int res=0;
-    vector<int>ans;
-    for(int i=n-1;i>=0;i--)
-    {
-        if(v[i].first==2)
+        cin>>arr[i];
+        if(i==0)
         {
-            s.insert(v[i].second);
-            count++;
+            prev=arr[0];
         }
         else
         {
-            if(s.find(v[i].second)!=s.end())
-            {
-                ans.push_back(1);
-                s.erase(s.find(v[i].second));
-                count--;
-            }
-            else
-            ans.push_back(0);
+            if(arr[i]!=prev)
+            diff=0;
         }
-        // debug(count);
-        res=max(res,count);
-
-    }
-    if(count!=0)
+    }  
+    if(diff)
     {
-        cout<<-1<<endl;
+        cout<<"NO"<<endl;
         return;
     }
-    cout<<res<<endl;
-    reverse(all(ans));
-    for(auto it:ans)
-    cout<<it<<" ";
-    cout<<endl;
+    if(n==4)
+    {
+        if(arr[0]+arr[1]!=arr[2]+arr[3])
+        cout<<"YES"<<endl;
+        else
+        cout<<"NO"<<endl;
+    }
+    else
+    cout<<"YES"<<endl;
 }

@@ -15,53 +15,49 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    
         solve();
+    
+}
+int make_query(int l,int r)
+{
+    if(l>=r)
+    return -1;
+
+    cout<<"? "<<l+1<<" "<<r+1<<endl;
+    int codeforcesOutput;
+    cin>>codeforcesOutput;
+    return codeforcesOutput-1;
 }
 void solve()
 {
     int n;
     cin>>n;
-    vector<pair<int,int>>v;
-    for(int i=1;i<=n;i++)
+    int low=0;
+    int high=n-1;
+    int res=n;
+    while(low<high)
     {
-        int t,x;
-        cin>>t>>x;
-        v.push_back({t,x});
-    }
-    multiset<int>s;
-    int count=0;
-    int res=0;
-    vector<int>ans;
-    for(int i=n-1;i>=0;i--)
-    {
-        if(v[i].first==2)
+        int mid=(low+high)/2;
+        int smax=make_query(low,high);
+        if(smax<=mid)
         {
-            s.insert(v[i].second);
-            count++;
+            int idx=make_query(low,mid);
+            if(idx==smax)
+            high=mid;
+            else
+            {
+                low=mid+1;
+            }
         }
         else
         {
-            if(s.find(v[i].second)!=s.end())
-            {
-                ans.push_back(1);
-                s.erase(s.find(v[i].second));
-                count--;
-            }
+            int idx=make_query(mid+1,high);
+            if(idx==smax)
+            low=mid+1;
             else
-            ans.push_back(0);
+            high=mid;
         }
-        // debug(count);
-        res=max(res,count);
-
     }
-    if(count!=0)
-    {
-        cout<<-1<<endl;
-        return;
-    }
-    cout<<res<<endl;
-    reverse(all(ans));
-    for(auto it:ans)
-    cout<<it<<" ";
-    cout<<endl;
+    cout<<"! "<<low+1<<endl;
 }

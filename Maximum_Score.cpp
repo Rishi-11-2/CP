@@ -24,5 +24,21 @@ signed main()
 }
 void solve()
 {
-    cout<<getRandomNumber(1,2)<<endl;
+    int n;
+    cin>>n;
+    int arr[n];
+    for(int i=0;i<n;i++)
+    cin>>arr[i];
+    
+    int zero=0;
+    int one=0;
+    for(int i=0;i<n;i++)
+    {
+        if(arr[i]==1)
+        one++;
+        if(arr[i]==0)
+        zero++;
+    }
+
+    cout<<min(zero,one)<<endl;
 }

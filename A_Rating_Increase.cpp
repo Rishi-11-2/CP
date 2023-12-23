@@ -24,5 +24,26 @@ signed main()
 }
 void solve()
 {
-    cout<<getRandomNumber(1,2)<<endl;
+    string s;
+    cin>>s;
+    int n=s.length();
+    string x=to_string(s[0]-'0');
+    for(int i=1;i<n;i++)
+    {
+        if(s[i]=='0')
+        {
+            x+=s[i];
+            continue;
+        }
+        string y=s.substr(i);
+        int a=stoi(x);
+        int b=stoi(y);
+        if(b>a)
+        {
+            cout<<a<<" "<<b<<endl;
+            return ;
+        }
+        x+=s[i];
+    }
+    cout<<-1<<endl;
 }

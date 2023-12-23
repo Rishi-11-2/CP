@@ -1,5 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
+using namespace chrono;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
+#define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
+template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
+template <typename T1, typename... T2>
+void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 #define all(v) (v).begin(), (v).end()
 void solve();
 signed main()
@@ -8,52 +15,42 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    srand(time(NULL));
         solve();
+    
 }
 void solve()
 {
+   /*dp solution
+    from (i,j)===(position,step) we can go to either (i-1,j-1) or (i-1,j)(this is because we at any step we can make a move which will be the multiple of (k+step-1))*/
+
+    /* now suppose from k=1 after 3 steps we will have to be atleast in this position : (1+2+3)=6 i.e. (n*(n+1))/2*/
+    /* for k=2 it will only increase*/
+
     int n,k;
     cin>>n>>k;
-    vector<vector<int>>dp(n+1,vector<int>(n+1,-1));
     const int mod=(int)(998244353);
-    function<int(int ,int)>f=[&](int i,int k1)->int{
-        if(i<0)
-        return 0;
-        if(i==0)
-        {
-            if(k1<k)
-            return 1;
-            return 0;
-        }
-        if(k1<k)
-        return 0;
-        if(dp[i][k1]!=-1)
-        return dp[i][k1];
-        int y=k1;
-        int c=1;
-        int res=0;
-        while(y<=i)
-        {
-            res=(res%mod+f(i-y,k1-1)%mod)%mod;
-            c++;
-            y=c*k1;
-        }
-
-        return dp[i][k1]=res%mod;
-    };
-    vector<int>res;
-    for(int i=1;i<=n;i++)
+    vector<int>prev(n+1,0);
+    vector<int>ans(n+1,0);
+    prev[0]=1;
+    for(int j=1;j<=650;j++)
     {
-        int ans=0;
-        for(int j=k;j<=i;j++)
+        vector<int>curr(n+1,0);
+        for(int i=1;i<=n;i++)
         {
-            ans=(ans%mod+f(i,j)%mod)%mod;
+            /* dp[i][j]=dp[i-move][j-1]+dp[i-move][j] */
+
+            int move=(j+k-1);
+            if(i-move>=0)
+            {
+                curr[i]=(prev[i-move]%mod+curr[i-move]%mod)%mod;
+            }
+            ans[i]=(ans[i]%mod+curr[i]%mod)%mod;
         }
-        res.push_back(ans%mod);
+        prev=curr;
     }
 
-    for(auto it:res)
-    cout<<it<<" ";
+    for(int i=1;i<=n;i++)
+    cout<<ans[i]<<" ";
     cout<<endl;
+
 }

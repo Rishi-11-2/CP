@@ -2,7 +2,7 @@
 using namespace std;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
+// long long getRandomNumber(long long l, long long r) {return uniform_long long_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -15,7 +15,7 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t;
+    long long t;
     cin >> t;
     while (t--)
     {
@@ -24,5 +24,21 @@ signed main()
 }
 void solve()
 {
-    cout<<getRandomNumber(1,2)<<endl;
+    long long n;
+    cin>>n;
+    long long count=0;
+    long long limit=(2LL*n);
+    // limit;
+    for(long long i=1;i*i<=limit;i++)
+    {
+        long long x=(i*i)*1LL;
+        long long y=x-1LL;
+        if(y%2==0)
+        {
+            long long c=(y/(2*1LL));
+            if(c>=1)
+            count++;
+        }
+    }
+    cout<<count<<endl;
 }

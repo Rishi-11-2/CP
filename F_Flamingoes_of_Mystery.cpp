@@ -15,14 +15,40 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t;
-    cin >> t;
-    while (t--)
-    {
         solve();
-    }
+    
+}
+int make_query(int l,int r)
+{
+    cout<<"?"<<" "<<l<<" "<<r<<endl;
+    int codeforcesOutput;
+    cin>>codeforcesOutput;
+    return codeforcesOutput;
 }
 void solve()
 {
-    cout<<getRandomNumber(1,2)<<endl;
+    int n;
+    cin>>n;
+    int prefix[n];
+
+   for(int i=1;i<n;i++)
+   {
+      int x=make_query(1,i+1);
+    //   cout<<x<<endl;
+      prefix[i]=x;
+   }   
+   int y=make_query(2,3);
+   prefix[0]=prefix[2]-y;
+   int arr[n];
+   arr[0]=prefix[0];
+   for(int i=1;i<n;i++)
+   {
+      arr[i]=prefix[i]-prefix[i-1];
+   }
+   cout<<"!"<<" ";
+   for(int i=0;i<n;i++)
+   {
+    cout<<arr[i]<<" ";
+   }
+   cout<<endl;
 }

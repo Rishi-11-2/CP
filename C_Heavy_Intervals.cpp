@@ -28,39 +28,42 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
-    long long a[n];
+    long long n;
+    cin>>n;
+    long long l[n];
+    set<long long>s;
     for(long long i=0;i<n;i++)
-    cin>>a[i];
-    
-    long long h[n];
-    for(long long i=0;i<n;i++)
-    cin>>h[i];
-    
-    long long i=0;
-    long long j=0;
-    long long s=0;
-    long long res=0;
-    while(j<n)
     {
-        s+=a[j];
-        while(i<=j && s>k)
-        {
-            s-=a[i];
-            i++;
-        }
-        if(j<n-1 && h[j]%h[j+1])
-        {
-            res=max(res,j-i+1);
-            s=0;
-            j++;
-            i=j;
-            continue;
-        }
-        // debug(i,j);
-        res=max(res,(j-i+1));
-        j++;
+        cin>>l[i];
     }
-    cout<<res<<endl;
+    
+    long long r[n];
+    for(long long i=0;i<n;i++)
+    {
+        cin>>r[i];
+        s.insert(r[i]);
+    }
+    long long c[n];
+    for(long long i=0;i<n;i++)
+    cin>>c[i];
+     sort(l,l+n,greater<long long>());
+    sort(c,c+n);
+    vector<long long>v;
+    for(long long i=0;i<n;i++)
+    {
+        auto it=s.upper_bound(l[i]);
+        if(it==s.end())
+        it--;
+        // debug(*it);
+        v.push_back(*it-l[i]);
+        s.erase(it);
+    }
+    sort(all(v));
+    long long res1=0;
+    // long long res2=0;
+    for(long long i=0;i<n;i++)
+    {
+        res1+=(v[i]*c[n-i-1]);
+    }
+    cout<<res1<<endl;
 }

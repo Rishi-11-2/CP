@@ -26,41 +26,39 @@ signed main()
         solve();
     }
 }
+long long binPow(long long a,long long b,long long mod)
+{
+    long long res=1;
+    while(b>0)
+    {
+        if(b&1)
+        {
+            res=(res%mod*a%mod)%mod;
+        }
+        a=(a%mod*(a%mod))%mod;
+        b>>=1;
+    }
+    return res;
+}
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n;
+    cin>>n;
     long long a[n];
     for(long long i=0;i<n;i++)
     cin>>a[i];
     
-    long long h[n];
-    for(long long i=0;i<n;i++)
-    cin>>h[i];
-    
-    long long i=0;
-    long long j=0;
-    long long s=0;
+    long long k=n-2;
     long long res=0;
-    while(j<n)
+    const long long mod=998244353;
+    for(long long i=1;i<n;i++)
     {
-        s+=a[j];
-        while(i<=j && s>k)
-        {
-            s-=a[i];
-            i++;
-        }
-        if(j<n-1 && h[j]%h[j+1])
-        {
-            res=max(res,j-i+1);
-            s=0;
-            j++;
-            i=j;
-            continue;
-        }
-        // debug(i,j);
-        res=max(res,(j-i+1));
-        j++;
+        long long x=abs(a[i]-a[0]);
+        x=binPow(x,7,mod);
+        long long y=binPow(2,k,mod);
+        k--;
+        long long z=((x%mod)*(y%mod))%mod;
+        res=(res%mod+z%mod)%mod;
     }
     cout<<res<<endl;
 }

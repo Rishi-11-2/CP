@@ -20,33 +20,62 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    int t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    int n,t;
-    cin>>n>>t;
+    string s;
+    cin>>s;
+    int n=s.length();
 
-    int a[n];
+    vector<int>even;
+    vector<int>odd;
+
     for(int i=0;i<n;i++)
-    cin>>a[i];    
-    int res=0;
+    {
+        int x=(s[i]-'0');
+        if(x%2)
+        {
+            odd.push_back(x);
+        }
+        else
+        {
+            even.push_back(x);
+        }
+    }
+    string z="";
     int i=0;
     int j=0;
-    int s=0;
-    while(j<n)
+    int n1=(int)(odd.size());
+    int n2=(int)(even.size());
+    // sort(all(odd));
+    // sort(all(even));
+    while(i<n1 && j<n2)
     {
-        s+=a[j];
-        while(i<j && s>t)
-        {
-            s-=a[i];
+        if(odd[i]<even[j]){
+            z+=to_string(odd[i]);
             i++;
         }
-        if(s<=t)
+        else
         {
-            res=max(res,j-i+1);
+            z+=to_string(even[j]);
+            j++;
         }
+    }
+    while(i<n1)
+    {
+        z+=to_string(odd[i]);
+        i++;
+    }
+    while(j<n2)
+    {
+        z+=to_string(even[j]);
         j++;
     }
-    cout<<res<<endl;
+    cout<<z<<endl;
 }

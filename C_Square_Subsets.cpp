@@ -1,6 +1,17 @@
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 using namespace std;
+using namespace __gnu_pbds;
+using namespace chrono;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+#define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
+template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
+template <typename T1, typename... T2>
+void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 #define all(v) (v).begin(), (v).end()
+//(data type to be stored (pair,long long,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaralong longs)
+typedef tree < pair<long long,long long>, null_type,less<pair<long long,long long>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
 void solve();
 signed main()
 {
@@ -8,111 +19,102 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    srand(time(NULL));
         solve();
 }
-bool is_prime(int n)
+bool isPrime(long long i)
 {
-    for(int i=2;i*i<=n;i++)
+    for(long long j=2;j<i;j++)
     {
-        if(n%i==0)
+        if(i%j==0)
         return 0;
     }
     return 1;
 }
+long long binpow(long long a,long long b,long long mod)
+{
+    long long res=1;
+    while(b>0)
+    {
+        if(b&1)
+        {
+            res=(res%mod*a%mod)%mod;
+        }
+        a=(a%mod*(a%mod))%mod;
+        b>>=1;
+    }
+
+    return res;
+}
 void solve()
 {
-    int n;
+    long long n;
     cin>>n;
-    int a[n];
-    map<int,int>mp2;
-    for(int i=0;i<n;i++)
+    long long arr[n];
+    unordered_map<long long,long long>mp;
+    // for(long long i=1;i<=70;i++)
+    // {
+    //     mp[i]=
+    // }
+    for(long long i=0;i<n;i++)
     {
-        cin>>a[i];
-        mp2[a[i]]++;
+        cin>>arr[i];
+        mp[arr[i]]++;
     }
-    vector<int>v;
-    vector<int>maskk(71,0);
-    const int mod=(int)(1e9)+7;
-    vector<int>ways(100005,0);
-    ways[0]=1;
-    for(int i=1;i<=(int)(1e5);i++)
-    {
-        ways[i]=(ways[i-1]%mod*2%mod)%mod;
-    }
-    // cout<<ways[4]<<endl;
-    for(int i=2;i<=70;i++)
-    {
-        if(is_prime(i))
-        v.push_back(i);
 
-    //    mp2[i]++;
-    }
-    int m=(int)v.size();
-    // cout<<m<<endl;
-    for(int i=2;i<=70;i++)
+    const long long mod=(long long)(1e9+7);
+    long long count=0;
+    vector<long long>mask(80,0);
+    vector<long long>countP(80,0);
+
+    for(int i=1;i<=70;i++)
     {
-        int yy=i;
-        map<int,int>mp;
-        int idx=0;
-        while(yy>1)
+        if(mp[i]==0)
+        continue;
+        countP[i]=binpow(2,mp[i]-1,mod);
+    }
+    for(long long j=2;j<71;j++)
+    {
+        if(!isPrime(j))
+        continue;
+        for(long long i=1;i<71;i++)
         {
-            if(yy%v[idx]==0)
+            long long x=i;
+            while(x%j==0)
             {
-                yy/=v[idx];
-                mp[v[idx]]++;
+                x/=j;
+                mask[i]^=(1<<count);
+            }
+        }
+        count++;
+    }
+
+
+
+    /* states (i,mask)*/
+    vector<long long>prev((1<<20)+1,0);
+    vector<long long>curr((1<<20)+1,0);
+    /*dp[i][mask]+=dp[i-1][mask]*2^(mp[arr[i]]-1)*/
+    prev[0]=1;
+    for(long long i=1;i<=70;i++)
+    {
+        for(long long j=0;j<((1<<20)*1LL);j++)
+        {
+            if(mp[i]==0)
+            {
+                curr[j]=(curr[j]%mod+prev[j])%mod;
             }
             else
-            idx++;
-        }
-        int newMask=0;
-
-        for(int i=0;i<20;i++)
-        {
-            if(mp[v[i]]%2)
             {
-                newMask=newMask|(1<<i);
+                curr[j]=(curr[j]%mod+(prev[j]%mod*countP[i]%mod)%mod)%mod;
+                curr[j^mask[i]]=(curr[j^mask[i]]%mod+(prev[j]%mod*countP[i]%mod))%mod;
             }
+            // if(i==1)
+            // debug()
         }
-        // cout<<i<<" "<<newMask<<endl;
-        maskk[i]=newMask;   
+            // debug(curr[0]);
+        prev=curr;
+        curr.assign((1<<20)+1,0);
     }
-    int mm=(1<<(m+1));
-    mm--;
-    vector<vector<int>>dp(72,vector<int>(mm+1,-1));
-    function<int(int,int)>f=[&](int i,int mask)->int{
-        if(i==71)
-        {
-            // cout<<mask<<endl;
-            for(int j=0;j<20;j++)
-            {
-                if(mask&(1<<j))
-                return 0;
-            }
-            return 1;
-        }
-        if(dp[i][mask]!=-1)
-        return dp[i][mask];
-        int res=0;
-        // cout<<mp2[i]<<endl;
-        if(mp2[i]==0)
-        res=f(i+1,mask);
-        else if(mp2[i]%2==0)
-        res=ways[mp2[i]-1]*f(i+1,mask);
-        else
-        {
-            int newMask=mask;
-            for(int j=0;j<20;j++)
-            {
-                if((mask&(1<<j))>0 && (maskk[i] & (1<<j))>0)
-                {
-                    newMask=newMask&~(1<<j);
-                } 
-            }
-            res=ways[mp2[i]-1]*f(i+1,newMask);
-        }
-        return dp[i][mask]= res;
-    };
-    int x=f(1,0);
-    cout<<x-1<<endl;
+
+    cout<<prev[0]-1<<endl;
 }

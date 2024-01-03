@@ -20,33 +20,39 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    int t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    int n,t;
-    cin>>n>>t;
-
-    int a[n];
+    int n;
+    cin>>n;
+    int arr[n];
     for(int i=0;i<n;i++)
-    cin>>a[i];    
-    int res=0;
-    int i=0;
-    int j=0;
-    int s=0;
-    while(j<n)
+    cin>>arr[i];
+    
+    vector<int>previousGreater(n,-1);
+    stack<int>st;
+    for(int i=0;i<n;i++)
     {
-        s+=a[j];
-        while(i<j && s>t)
+        while(!st.empty() && arr[st.top()]<arr[i])
         {
-            s-=a[i];
-            i++;
+            st.pop();
         }
-        if(s<=t)
-        {
-            res=max(res,j-i+1);
-        }
-        j++;
+        previousGreater[i]=(st.empty())?-1:st.top();
+        st.push(i);
+
+
     }
-    cout<<res<<endl;
+    int count=0;
+    for(int i=0;i<n;i++)
+    {
+        if(previousGreater[i]!=-1)
+        count++;
+    }
+    cout<<count<<endl;
 }

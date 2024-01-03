@@ -28,39 +28,67 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
-    long long a[n];
+    long long n,k,d;
+    cin>>n>>k>>d;
+    long long arr[n];
     for(long long i=0;i<n;i++)
-    cin>>a[i];
+    cin>>arr[i];
     
-    long long h[n];
-    for(long long i=0;i<n;i++)
-    cin>>h[i];
+    long long b[k];
+
+    for(long long i=0;i<k;i++)
+    cin>>b[i];
     
-    long long i=0;
-    long long j=0;
-    long long s=0;
     long long res=0;
-    while(j<n)
+    long long days=1;
+    long long ans=0;
+    for(long long i=0;i<n;i++)
     {
-        s+=a[j];
-        while(i<=j && s>k)
+        if(arr[i]==(i+1))
         {
-            s-=a[i];
-            i++;
+            // days=1;
+            res++;
         }
-        if(j<n-1 && h[j]%h[j+1])
-        {
-            res=max(res,j-i+1);
-            s=0;
-            j++;
-            i=j;
-            continue;
-        }
-        // debug(i,j);
-        res=max(res,(j-i+1));
-        j++;
     }
-    cout<<res<<endl;
+    long long rest=max(0LL,(d-days)/(2*1LL));
+            // days=j+2;
+    ans=max(ans,res+rest);
+    // debug(ans);
+    long long flag=1;
+    long long j=0;
+    while(j<=(3*n))
+    {
+        for(long long i=0;i<b[j%k];i++)
+        {
+            arr[i]+=1;
+        }
+        long long count=0;
+        // flag=0;
+        for(long long i=0;i<n;i++)
+        {
+            if(arr[i]==(i+1))
+            {
+                count++;
+            }
+        }
+        // if(arr[0]>n)
+        // {
+        //     flag=0;
+        // }
+        if((j+2)<=d)
+        {
+            res=count;
+            days=j+2;
+            long long rest=max(0LL,(d-days)/(2*1LL));
+            ans=max(ans,res+rest);
+        }
+        j=(j+1);
+        // if(!flag)
+        // break;
+    }
+    // if(days==0)
+    // days=+1;
+    // debug(rest,days,d);
+    cout<<ans<<endl;
+
 }

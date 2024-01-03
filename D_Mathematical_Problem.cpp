@@ -20,33 +20,65 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    int t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    int n,t;
-    cin>>n>>t;
-
-    int a[n];
-    for(int i=0;i<n;i++)
-    cin>>a[i];    
-    int res=0;
-    int i=0;
-    int j=0;
-    int s=0;
-    while(j<n)
+    int n;
+    cin>>n;
+    if(n==1)
     {
-        s+=a[j];
-        while(i<j && s>t)
-        {
-            s-=a[i];
-            i++;
-        }
-        if(s<=t)
-        {
-            res=max(res,j-i+1);
-        }
-        j++;
+        cout<<1<<endl;
+        return;
     }
-    cout<<res<<endl;
+    map<int,vector<string>>mp;
+    mp[3].push_back("169");
+    mp[3].push_back("961");
+    mp[3].push_back("196");
+
+    for(int i=5;i<=n;i+=2)
+    {
+        for(auto it:mp[i-2])
+        {
+            mp[i].push_back(it+"00");
+        }
+        string s="1";
+        int x=i-3;
+        x=x/2;
+        for(int j=1;j<=x;j++)
+        {
+            s+=(to_string(0));
+        }
+        s+="6";
+        for(int j=1;j<=x;j++)
+        {
+            s+=(to_string(0));
+        }
+        s+="9";
+        mp[i].push_back(s);
+
+        string s1="9";
+        for(int j=1;j<=x;j++)
+        {
+            s1+=(to_string(0));
+        }
+        s1+="6";
+        for(int j=1;j<=x;j++)
+        {
+            s1+=(to_string(0));
+        }
+        s1+="1";
+        mp[i].push_back(s1);
+    }
+
+
+    for(auto it:mp[n])
+    {
+        cout<<it<<endl;
+    }
 }

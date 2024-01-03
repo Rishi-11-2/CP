@@ -28,39 +28,49 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
-    long long a[n];
-    for(long long i=0;i<n;i++)
-    cin>>a[i];
-    
-    long long h[n];
-    for(long long i=0;i<n;i++)
-    cin>>h[i];
-    
-    long long i=0;
-    long long j=0;
-    long long s=0;
-    long long res=0;
-    while(j<n)
+    long long n,m;
+    cin>>n>>m;
+    vector<pair<long long,long long>>adj[n+1];
+    for(long long i=1;i<=m;i++)
     {
-        s+=a[j];
-        while(i<=j && s>k)
-        {
-            s-=a[i];
-            i++;
-        }
-        if(j<n-1 && h[j]%h[j+1])
-        {
-            res=max(res,j-i+1);
-            s=0;
-            j++;
-            i=j;
-            continue;
-        }
-        // debug(i,j);
-        res=max(res,(j-i+1));
-        j++;
+        long long x,y,w;
+        cin>>x>>y>>w;
+        adj[x].push_back({y,w});
+        adj[y].push_back({x,w});
+
     }
-    cout<<res<<endl;
+    long long s[n+1];
+    for(long long i=1;i<=n;i++)
+    {
+        cin>>s[i];
+    }
+    priority_queue<tuple<long long,long long,long long>,vector<tuple<long long,long long,long long>> , greater<tuple<long long,long long,long long>> >pq;
+    pq.push(make_tuple(0,s[1],1));
+    set<pair<int,int>>st;
+    while(!pq.empty())
+    {
+        long long dist,ss,u;
+        tie(dist,ss,u)=pq.top();
+        pq.pop();
+        // debug(dist,ss,u);
+
+        if(u==n)
+        {
+            cout<<dist<<endl;
+            return;
+        }
+        if(st.find({u,ss})!=st.end())
+        continue;
+         
+         st.insert({u,ss});
+        for(auto it:adj[u])
+        {
+            long long v=it.first;
+            long long w=it.second;
+            long long newDist=dist+w*ss;
+            long long sss=min(ss,s[v]);  
+            auto  t=make_tuple(newDist,sss,v);
+            pq.push(t);
+        }
+    }
 }

@@ -19,48 +19,31 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    long long t;
-    cin >> t;
-    while (t--)
-    {
         solve();
-    }
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n,m;
+    cin>>n>>m;
     long long a[n];
+    long long b[m];
     for(long long i=0;i<n;i++)
-    cin>>a[i];
-    
-    long long h[n];
-    for(long long i=0;i<n;i++)
-    cin>>h[i];
-    
-    long long i=0;
-    long long j=0;
-    long long s=0;
-    long long res=0;
-    while(j<n)
     {
-        s+=a[j];
-        while(i<=j && s>k)
-        {
-            s-=a[i];
-            i++;
-        }
-        if(j<n-1 && h[j]%h[j+1])
-        {
-            res=max(res,j-i+1);
-            s=0;
-            j++;
-            i=j;
-            continue;
-        }
-        // debug(i,j);
-        res=max(res,(j-i+1));
-        j++;
+        cin>>a[i];
+    }
+    for(long long i=0;i<m;i++)
+    {
+        cin>>b[i];
+    }
+    long long res=0;
+    map<long long,long long>mp;
+    for(long long i=0;i<n;i++)
+    {
+        mp[a[i]]++;
+    }
+    for(long long i=0;i<m;i++)
+    {
+        res+=mp[b[i]];
     }
     cout<<res<<endl;
 }

@@ -28,45 +28,76 @@ signed main()
 }
 void solve()
 {
-    long long n,h;
-    cin>>n>>h;
+    long long n,k;
+    cin>>n>>k;
     long long a[n];
     for(long long i=0;i<n;i++)
     cin>>a[i];
-    long long x=h;
-    sort(a,a+n);
-    vector<long long>v;
+    
+    long long low=0;
+    long long high=n;
     long long res=0;
-    v.push_back(2);
-    v.push_back(2);
-    v.push_back(3);
-    do
-    {
-        // for(auto it:v)
-        // cout<<it<<" ";
-        // cout<<endl;
+    long long left=-1;
+    long long l=-1;
+    function<long long(long long)>f=[&](long long mid)->long long{
         long long count=0;
-        long long i=0;
-        long long k=0;
-        h=x;
-        while(i<n)
+        l=-1;
+        set<long long>s;
+        for(long long i=0;i<k;i++)
         {
-            if(h>a[i])
+            if(i>0 && i<k-1)
             {
-                h+=(a[i]/2);
-                count++;
-                i++;
-            }
-            else
-            {
-                if(k==3)
-                break;
-                h=(v[k]*h);
-                k++;
+                if(a[i]>a[i-1] && a[i]>a[i+1])
+                {
+                    count++;
+                    s.insert(i);
+                }
             }
         }
-        // cout<<count<<endl;
-       res=max(res,count);
-    }while(next_permutation(all(v)));
-    cout<<res<<endl;
+        if(count+1>=mid)
+        {
+            l=0;
+            return 1;
+        }
+        for(long long i=k;i<n;i++)
+        {
+            if(s.find(i-k+1)!=s.end())
+            {
+                count--;
+            }
+            if(s.find(i-k)!=s.end())
+            {
+                s.erase(i-k);
+            }
+            if(a[i-1]>a[i-2] && a[i-1]>a[i])
+            {
+                s.insert(i-1);
+                count++;
+            }
+
+           if(count+1>=mid)
+           {
+                l=(i-k+1);
+                return 1;
+           }
+        }
+        return 0;
+    };
+    while(low<=high)
+    {
+        long long mid=(low+high)/2;
+        if(f(mid))
+        {
+            left=l;
+            res=mid;
+            low=mid+1;
+        }
+        else
+        {
+            high=mid-1;
+        }
+    }
+
+    cout<<res<<" "<<left+1<<endl;
+
 }

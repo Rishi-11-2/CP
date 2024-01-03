@@ -24,29 +24,31 @@ signed main()
 }
 void solve()
 {
-    int n,t;
-    cin>>n>>t;
-
+    int n,m,s,A,B;
+    cin>>n>>m>>s>>A>>B;
     int a[n];
     for(int i=0;i<n;i++)
-    cin>>a[i];    
-    int res=0;
+    cin>>a[i];
+    
+    int b[m];
+    for(int i=0;i<m;i++)
+    cin>>b[i];
+    
     int i=0;
     int j=0;
-    int s=0;
-    while(j<n)
+    sort(a,a+n,greater<int>());
+    sort(b,b+m,greater<int>());
+    if(A<B)
     {
-        s+=a[j];
-        while(i<j && s>t)
-        {
-            s-=a[i];
-            i++;
-        }
-        if(s<=t)
-        {
-            res=max(res,j-i+1);
-        }
-        j++;
+        swap(A,B);
+        swap(a,b);
     }
-    cout<<res<<endl;
+    while(i<n && j<m && s>0)
+    {
+        if(a[i]>=b[j])
+        {
+            s-=A;
+
+        }
+    }
 }

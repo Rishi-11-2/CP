@@ -28,39 +28,53 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
-    long long a[n];
+    long long n;
+    cin>>n;
+    vector<long long>v(n,0);
     for(long long i=0;i<n;i++)
-    cin>>a[i];
+    cin>>v[i];
     
-    long long h[n];
-    for(long long i=0;i<n;i++)
-    cin>>h[i];
-    
-    long long i=0;
-    long long j=0;
-    long long s=0;
-    long long res=0;
-    while(j<n)
+    long long low=0;
+    long long high=(long long)(1e12);
+    long long res=low;
+
+    function<long long(long long)>f=[&](long long mid)->long long{
+        auto vv=v;
+        for(long long i=n-1;i>=2;i--)
+        {
+            long long x=vv[i]-mid;
+            if(x<0)
+            return 0;
+            long long d=min(v[i],x)/3;
+            vv[i]-=(3*d);
+            vv[i-1]+=d;
+            vv[i-2]+=2*d;
+            // for(auto it:vv)
+            // {
+            //     cout<<it<<" ";
+            // }
+            // cout<<endl;
+        }
+        long long minm=*min_element(all(vv));
+        if(minm>=mid)
+        return 1;
+        
+        return 0;
+    };
+    // cout<<f(15)<<endl;
+    while(low<=high)
     {
-        s+=a[j];
-        while(i<=j && s>k)
+        long long mid=(low+high)/2;
+        if(f(mid))
         {
-            s-=a[i];
-            i++;
+            // debug(mid);
+            res=mid;
+            low=mid+1;
         }
-        if(j<n-1 && h[j]%h[j+1])
+        else
         {
-            res=max(res,j-i+1);
-            s=0;
-            j++;
-            i=j;
-            continue;
+            high=mid-1;
         }
-        // debug(i,j);
-        res=max(res,(j-i+1));
-        j++;
     }
     cout<<res<<endl;
 }

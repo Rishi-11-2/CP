@@ -28,38 +28,36 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n,k,d;
+    cin>>n>>k>>d;
+
     long long a[n];
     for(long long i=0;i<n;i++)
     cin>>a[i];
-    
-    long long h[n];
-    for(long long i=0;i<n;i++)
-    cin>>h[i];
-    
+    set<long long>st;
+    multiset<long long>s;
+
     long long i=0;
     long long j=0;
-    long long s=0;
-    long long res=0;
+    // s.insert(a[i]);
+    long long res=INT_MAX;
     while(j<n)
     {
-        s+=a[j];
-        while(i<=j && s>k)
+        s.insert(a[j]);
+        st.insert(a[j]);
+        while(i<j && (long long)(s.size())>d)
         {
-            s-=a[i];
+            s.erase(s.find(a[i]));
+            if(s.find(a[i])==s.end())
+            {
+                st.erase(a[i]);
+            }
             i++;
         }
-        if(j<n-1 && h[j]%h[j+1])
+        if((long long)(s.size())>=d)
         {
-            res=max(res,j-i+1);
-            s=0;
-            j++;
-            i=j;
-            continue;
+            res=min(res,(long long)(st.size()));
         }
-        // debug(i,j);
-        res=max(res,(j-i+1));
         j++;
     }
     cout<<res<<endl;

@@ -28,39 +28,36 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n;
+    cin>>n;
     long long a[n];
-    for(long long i=0;i<n;i++)
-    cin>>a[i];
-    
-    long long h[n];
-    for(long long i=0;i<n;i++)
-    cin>>h[i];
-    
-    long long i=0;
-    long long j=0;
     long long s=0;
-    long long res=0;
-    while(j<n)
+    for(long long i=0;i<n;i++)
     {
-        s+=a[j];
-        while(i<=j && s>k)
-        {
-            s-=a[i];
-            i++;
-        }
-        if(j<n-1 && h[j]%h[j+1])
-        {
-            res=max(res,j-i+1);
-            s=0;
-            j++;
-            i=j;
-            continue;
-        }
-        // debug(i,j);
-        res=max(res,(j-i+1));
-        j++;
+        cin>>a[i];
+        s+=a[i];
     }
-    cout<<res<<endl;
+
+    long long low=1;
+    long long high=(long long)(1e9);
+    long long res=low;
+    while(low<=high)
+    {
+        long long mid=(low+high)/2;
+        long long xx=mid*mid;
+        if(xx<=s)
+        {
+            res=mid;
+            low=mid+1;
+        }
+        else
+        {
+            high=mid-1;
+        }
+    }
+
+    if(res*res==s)
+    cout<<"YES"<<endl;
+    else
+    cout<<"NO"<<endl;
 }

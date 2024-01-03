@@ -20,33 +20,19 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    int t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    int n,t;
-    cin>>n>>t;
+   int a,b,c;
+   cin>>a>>b>>c;
 
-    int a[n];
-    for(int i=0;i<n;i++)
-    cin>>a[i];    
-    int res=0;
-    int i=0;
-    int j=0;
-    int s=0;
-    while(j<n)
-    {
-        s+=a[j];
-        while(i<j && s>t)
-        {
-            s-=a[i];
-            i++;
-        }
-        if(s<=t)
-        {
-            res=max(res,j-i+1);
-        }
-        j++;
-    }
-    cout<<res<<endl;
+   int x=a^b^c;
+
+   cout<<x<<endl; 
 }

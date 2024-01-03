@@ -26,41 +26,37 @@ signed main()
         solve();
     }
 }
+bool compare(pair<long long,long long>&a,pair<long long,long long>&b)
+{
+    if(a.first==b.first)
+    return a.second<b.second;
+
+    return a.first<b.first;
+}
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
-    long long a[n];
-    for(long long i=0;i<n;i++)
-    cin>>a[i];
-    
-    long long h[n];
-    for(long long i=0;i<n;i++)
-    cin>>h[i];
-    
-    long long i=0;
-    long long j=0;
-    long long s=0;
-    long long res=0;
-    while(j<n)
+    long long n;
+    cin>>n;
+
+    tree < long long,null_type, greater<long long> ,rb_tree_tag, tree_order_statistics_node_update  > s;
+    vector<pair<long long,long long>>v;
+    for(long long i=1;i<=n;i++)
     {
-        s+=a[j];
-        while(i<=j && s>k)
-        {
-            s-=a[i];
-            i++;
-        }
-        if(j<n-1 && h[j]%h[j+1])
-        {
-            res=max(res,j-i+1);
-            s=0;
-            j++;
-            i=j;
-            continue;
-        }
-        // debug(i,j);
-        res=max(res,(j-i+1));
-        j++;
+        long long x,y;
+        cin>>x>>y;
+        v.push_back({x,y});
     }
-    cout<<res<<endl;
+    sort(all(v),compare);
+    long long count=0;
+    s.insert(v[0].second);
+    for(long long i=1;i<n;i++)
+    {
+        long long x=s.order_of_key(v[i].second);
+        count +=x;
+        s.insert(v[i].second);
+    }
+    // for(auto it:s)
+    // cout<<it<<" ";
+    // cout<<endl;
+    cout<<count<<endl;
 }

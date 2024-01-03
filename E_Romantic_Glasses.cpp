@@ -28,39 +28,49 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
-    long long a[n];
+    long long n;
+    cin>>n;
+    long long arr[n];
     for(long long i=0;i<n;i++)
-    cin>>a[i];
+    cin>>arr[i];
     
-    long long h[n];
-    for(long long i=0;i<n;i++)
-    cin>>h[i];
-    
-    long long i=0;
-    long long j=0;
-    long long s=0;
-    long long res=0;
-    while(j<n)
+    vector<long long>odd(n+1,0);
+    vector<long long>even(n+1,0);
+    unordered_set<long long>e;
+    unordered_set<long long>o;
+    set<long long>s;
+    // e.insert(0);
+    // o.insert(0);
+    // unordered_set<long long>o;
+    for(long long i=1;i<=n;i++)
     {
-        s+=a[j];
-        while(i<=j && s>k)
+        odd[i]=odd[i-1];
+        even[i]=even[i-1];
+        if(i%2)
         {
-            s-=a[i];
-            i++;
+            odd[i]+=arr[i-1];
         }
-        if(j<n-1 && h[j]%h[j+1])
+        else
         {
-            res=max(res,j-i+1);
-            s=0;
-            j++;
-            i=j;
-            continue;
+            even[i]+=arr[i-1];
         }
-        // debug(i,j);
-        res=max(res,(j-i+1));
-        j++;
+        long long diff=odd[i]-even[i];
+        if(s.find(diff)!=s.end())
+        {
+            cout<<"YES"<<endl;
+            return;
+        }
+        s.insert(odd[i]-even[i]);
     }
-    cout<<res<<endl;
+
+    for(long long i=1;i<=n;i++)
+    {
+        if(odd[i]==even[i])
+        {
+            cout<<"YES"<<endl;
+            return;
+        }
+    }
+    cout<<"NO"<<endl;
+
 }

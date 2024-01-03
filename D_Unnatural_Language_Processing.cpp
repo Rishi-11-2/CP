@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -20,33 +19,51 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    int t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    int n,t;
-    cin>>n>>t;
+    int n;
+    cin>>n;
+    string s;
+    cin>>s;
 
-    int a[n];
-    for(int i=0;i<n;i++)
-    cin>>a[i];    
-    int res=0;
-    int i=0;
-    int j=0;
-    int s=0;
-    while(j<n)
+    set<char>C;
+    set<char>V;
+    C.insert('b');
+    C.insert('c');
+    C.insert('d');
+    V.insert('a');
+    V.insert('e');
+    vector<string>res;
+    int i=n-1;
+    int start=1;
+    while(i>=0)
     {
-        s+=a[j];
-        while(i<j && s>t)
+        int len=0;
+        int limit=3;
+        if(V.find(s[i])!=V.end())
+        limit=2;
+        string z="";
+        while(i>=0 && len<limit)
         {
-            s-=a[i];
-            i++;
+            z+=s[i];
+            i--;
+            len++;
         }
-        if(s<=t)
-        {
-            res=max(res,j-i+1);
-        }
-        j++;
+        reverse(all(z));
+        res.push_back(z);
     }
-    cout<<res<<endl;
+    reverse(all(res));
+    int m=res.size();
+    for(int i=0;i<m-1;i++)
+    {
+        cout<<res[i]<<".";
+    }
+    cout<<res[m-1]<<endl;
 }

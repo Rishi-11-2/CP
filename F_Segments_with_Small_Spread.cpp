@@ -19,12 +19,7 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    long long t;
-    cin >> t;
-    while (t--)
-    {
         solve();
-    }
 }
 void solve()
 {
@@ -33,33 +28,25 @@ void solve()
     long long a[n];
     for(long long i=0;i<n;i++)
     cin>>a[i];
-    
-    long long h[n];
-    for(long long i=0;i<n;i++)
-    cin>>h[i];
-    
+
     long long i=0;
     long long j=0;
-    long long s=0;
+    multiset<long long>s;
     long long res=0;
     while(j<n)
     {
-        s+=a[j];
-        while(i<=j && s>k)
+        s.insert(a[j]);
+        long long minm=*(s.begin());
+        long long maxm=*(s.rbegin());
+        while(i<=j && maxm-minm>k)
         {
-            s-=a[i];
+            s.erase(s.find(a[i]));
             i++;
+            minm=*(s.begin());
+            maxm=*(s.rbegin());
         }
-        if(j<n-1 && h[j]%h[j+1])
-        {
-            res=max(res,j-i+1);
-            s=0;
-            j++;
-            i=j;
-            continue;
-        }
-        // debug(i,j);
-        res=max(res,(j-i+1));
+
+        res+=((j-i+1)*1LL);
         j++;
     }
     cout<<res<<endl;

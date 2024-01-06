@@ -19,57 +19,46 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    
         solve();
-    
 }
 void solve()
 {
-    long long n,m,s,A,B;
-    cin>>n>>m>>s>>A>>B;
-    long long a[n];
-    for(long long i=0;i<n;i++)
-    cin>>a[i];
-    
-    long long b[m];
-    for(long long i=0;i<m;i++)
-    cin>>b[i];
-    
-    sort(a,a+n,greater<long long>());
-    sort(b,b+m,greater<long long>());
-
-
-    vector<long long>prefixB(m,0);
-    prefixB[0]=b[0];
-    for(long long i=1;i<m;i++)
-    {
-        prefixB[i]=prefixB[i-1]+b[i];
-    }
-
-
-    vector<long long>prefixA(n,0);
-
-    prefixA[0]=a[0];
-
-    for(long long i=1;i<n;i++)
-    {
-        prefixA[i]=prefixA[i]+a[i];
-    }
-    long long x=(s/A);
-    long long res=0;
+    long long n,c;
+    cin>>n>>c;
+    long long a=0;
+    long long b=0;
+    string s;
+    cin>>s;
+    long long i=0;
+    long long j=0;
     long long sum=0;
-    for(long long i=0;i<=min(x,n);i++)
+    long long res=0;
+    while(j<n)
     {
-        long long y=s-i*A;
-        long long z=min((y/B),m);
-        long long zz=0;
-        if(z>=1)
+        if(s[j]=='a')
+        a++;
+        if(s[j]=='b')
         {
-            zz=prefixB[z-1];
+            sum+=a;
+            b++;
         }
-        res=max(res,sum+zz);
-        if(i<n)
-        sum+=a[i];
+        while(i<=j && (sum)>c)
+        {
+            if(s[i]=='a')
+            {
+                a--;
+                sum-=b;
+            }
+            if(s[i]=='b')
+            {
+                b--;
+            }
+           i++;
+        }
+        res=max(res,j-i+1);
+        j++;
     }
+
     cout<<res<<endl;
+
 }

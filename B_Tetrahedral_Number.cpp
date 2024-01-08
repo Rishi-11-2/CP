@@ -24,27 +24,19 @@ signed main()
 }
 void solve()
 {
-    int n,s;
-    cin>>n>>s;
-    int a[n];
-    for(int i=0;i<n;i++)
-    cin>>a[i];
-    
-    int i=0;
-    int j=0;
-    int sum=0;
-    int res=0;
-    while(j<n)
+    int n;
+    cin>>n;
+    for(int i=0;i<=n;i++)
     {
-        sum+=a[j];
-        while(i<=j && sum>s)
+        for(int j=0;j<=n;j++)
         {
-            sum-=a[i];
-            i++;
+            for(int k=0;k<=n;k++)
+            {
+                if(i+j+k<=n)
+                {
+                    cout<<i<<" "<<j<<" "<<k<<endl;
+                }
+            }
         }
-        debug(i,j);
-        res+=(j-i+1)*(j-i+1);
-        j++;
     }
-    cout<<res<<endl;
 }

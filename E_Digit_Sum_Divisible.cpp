@@ -20,51 +20,47 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     long long t;
-    cin >> t;
-    while (t--)
-    {
+    // cin >> t;
+    // while (t--)
+    // {
         solve();
+}
+long long digsum(long long n)
+{
+    long long sum=0;
+    while(n>0)
+    {
+        sum+=(n%10);
+        n/=10;
     }
+    return sum;
 }
 void solve()
 {
     long long n;
     cin>>n;
-    long long arr[n];
-    for(long long i=0;i<n;i++)
-    cin>>arr[i];
-    long long idx=-1;
-    long long s=0;
 
-    for(long long i=0;i<n;i++)
-    {
-        if(arr[i]==0)
-        {
-            if(idx==-1)
-            {
-                idx=i;
-            }
-            else
-            {
-                arr[idx]=-s;
-                idx=i;
-                s=0;
-            }
-            // continue;
-        }
-        s+=arr[i];
-    }
-    arr[idx]=-s;
-    // for(int i=0;i<n;i++)
-    // cout<<arr[i]<<" ";
+    map<int,int>mp;
+    function<int(int)>f=[&](int i)->int{
+      if(i<0)
+      return 0;
+      if(i==0)
+      return 1;
+
+       if(mp.find(i))
+       int res=0;
+       for(int j=0;j<=9;j++)
+       {
+          res+=f(i-j);
+       }  
+
+       return res;
+    };
     long long count=0;
-    s=0;
-    for(long long i=0;i<n;i++)
+    for(long long i=1;i<=126;i++)
     {
-        s+=arr[i];
-        if(s==0)
-        count++;
+      
+         count+=f(i);
     }
     cout<<count<<endl;
-
 }

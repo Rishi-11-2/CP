@@ -20,51 +20,75 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     long long t;
-    cin >> t;
-    while (t--)
-    {
         solve();
+}
+long long count(long long d)
+{
+    long long c=0;
+    while(d>0)
+    {
+        c+=(d%10);
+        d/=10;
     }
+    return c;
+}
+long long sqrt22(long long n)
+{
+    long long low=1;
+    long long high=(long long)(1e9+100);
+    long long res=high;
+    while(low<=high)
+    {
+        long long mid=(low+high)/2LL;
+        long long ss=mid*mid;
+        if(ss==n)
+        return mid;
+        
+        if(ss<n)
+        {
+            res=mid;
+            low=mid+1;
+        }
+        else
+        {
+            high=mid-1;
+        }
+    }
+    return res;
 }
 void solve()
 {
     long long n;
     cin>>n;
-    long long arr[n];
-    for(long long i=0;i<n;i++)
-    cin>>arr[i];
-    long long idx=-1;
-    long long s=0;
-
-    for(long long i=0;i<n;i++)
+        long long z=(long long)1e12;
+    for(long long i=1;i<=100;i++)
     {
-        if(arr[i]==0)
+        long long y=sqrt22(i*i+4LL*n);
+        if(y*y!=(i*i+(4LL*n)))
+        continue;
+        long long x1=(-i+y)/2;
+        long long x2=(-i-y)/2;
+        long long y1=x1*x1+count(abs(x1))*x1-n;
+        long long y2=x2*x2+count(abs(x2))*x2-n;
+        if(y1==0)
         {
-            if(idx==-1)
+            if(x1>0)
             {
-                idx=i;
+                // debug(y,x1,x2,i);
+                z=min(z,x1);
             }
-            else
-            {
-                arr[idx]=-s;
-                idx=i;
-                s=0;
-            }
-            // continue;
         }
-        s+=arr[i];
-    }
-    arr[idx]=-s;
-    // for(int i=0;i<n;i++)
-    // cout<<arr[i]<<" ";
-    long long count=0;
-    s=0;
-    for(long long i=0;i<n;i++)
-    {
-        s+=arr[i];
-        if(s==0)
-        count++;
-    }
-    cout<<count<<endl;
+        if(y2==0)
+        {
+            if(x2>0)
+            {
+                z=min(z,x2);
+            }
+        }
 
+    }
+    if(z==(long long)(1e12))
+    cout<<-1<<endl;
+    else
+    cout<<z<<endl;
 }

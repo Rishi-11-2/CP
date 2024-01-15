@@ -1,98 +1,86 @@
-#pragma GCC optimize("Ofast")
-#pragma GCC target("avx,avx2,fma")
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 using namespace std;
-#define el endl
-#define vi vector<int>
-#define pb push_back
+using namespace __gnu_pbds;
+using namespace chrono;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+#define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
+template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
+template <typename T1, typename... T2>
+void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 #define all(v) (v).begin(), (v).end()
-#define ht unordered_map
-#define uset unordered_set
-#define int long long int
-#define lld long double
-#define INF INT_MAX
-template <typename T>
-istream &operator>>(istream &in, vector<T> &v)
-{
-    for (auto &x : v)
-        in >> x;
-    return in;
-}
-template <typename T>
-ostream &operator<<(ostream &out, const vector<T> &v)
-{
-    for (auto &x : v)
-        out << x << ' ';
-    return out;
-}
-double PI = acos(-1);
-int mulmod(int a, int b, int mod)
-{
-    int res = 0; // Initialize result
-    a = a % mod;
-    while (b > 0)
-    {
-
-        if (b % 2 == 1)
-            res = (res + a) % mod;
-
-        a = (a * 2) % mod;
-
-        b /= 2;
-    }
-    return res % mod;
-}
+#define nline "\n" 
+//(data type to be stored (pair,long long,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaralong longs)
+typedef tree < pair<long long,long long>, null_type,less<pair<long long,long long>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
 void solve();
-int32_t main()
+signed main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-    cout.tie(NULL);
-    int t;
+    cout.setf(ios::fixed);
+    cout.precision(10);
+    long long t;
     cin >> t;
     while (t--)
     {
         solve();
     }
-#ifndef ONLINE_JUDGE
-    cerr << "time taken : " << (float)clock() / CLOCKS_PER_SEC << " secs" << endl;
-#endif
 }
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
-    int arr[n];
-    for (int i = 0; i < n; i++)
-        cin >> arr[i];
-    priority_queue<int, vector<int>, greater<int>> pq;
-    priority_queue<int> pr;
-    int s = 0;
-    int c = 0;
-    for (int i = m - 1; i >= 1; i--)
+    long long n,m;
+    cin>>n>>m;
+    long long a[n];
+
+    for(long long i=0;i<n;i++)
+    cin>>a[i];
+    if(n==1)
     {
-        s += arr[i];
-        if (arr[i] > 0)
-            pq.push(-arr[i]);
-        if (s > 0)
-        {
-            s += 2 * pq.top();
-            pq.pop();
-            c++;
-        }
+        cout<<0<<endl;
+        return;
     }
-    s = 0;
-    for (int i = m; i < n; i++)
+    long long sum=0;
+    long long count=0;
+    multiset<long long>s;
+        for(long long i=m-1;i>0;i--)
+        {
+            sum+=a[i];
+            s.insert(a[i]);
+            // debug(i);
+            while(sum>0)
+            {
+                // debug(sum);
+                auto it=*s.rbegin();
+                sum-=it;
+                sum-=it;
+                count++;
+                s.insert(-(it));
+                s.erase(s.find(it));
+            }
+        }
+    // debug(sum);
+    s.clear();
+    // debug(count);
+    // s.insert(a[m-1]);
+    sum=0;
+    for(long long i=m;i<n;i++)
     {
-        s += arr[i];
-        if (arr[i] < 0)
-            pr.push(-arr[i]);
-        if (s < 0)
+        sum+=a[i];
+        s.insert(a[i]);
+        // prefixes.insert(sum);
+        while(sum<0)
         {
-            s += 2 * pr.top();
-            pr.pop();
-            c++;
+            auto it=*s.begin();
+            sum-=it;
+            sum-=it;
+            count++;
+            s.insert(-(it));
+            s.erase(s.find(it));
+            
         }
+        // s.insert(sum);
     }
-    cout << c << el;
+    cout<<count<<endl;
+
 }

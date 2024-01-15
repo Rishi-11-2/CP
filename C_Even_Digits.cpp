@@ -19,52 +19,69 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    long long t;
-    cin >> t;
-    while (t--)
-    {
         solve();
+}
+long long binpow(long long a,long long b)
+{
+    long long res=1;
+    while(b>0)
+    {
+        if(b&1)
+        {
+            res=res*a;
+        }
+        a=a*a;
+        b>>=1;
     }
+    return res;
 }
 void solve()
 {
+    long long count=1;
     long long n;
     cin>>n;
-    long long arr[n];
-    for(long long i=0;i<n;i++)
-    cin>>arr[i];
-    long long idx=-1;
-    long long s=0;
-
-    for(long long i=0;i<n;i++)
+    long long arr[6]={-1,0,2,4,6,8};
+    if(n<=5)
     {
-        if(arr[i]==0)
-        {
-            if(idx==-1)
-            {
-                idx=i;
-            }
-            else
-            {
-                arr[idx]=-s;
-                idx=i;
-                s=0;
-            }
-            // continue;
-        }
-        s+=arr[i];
+        cout<<arr[n]<<endl;
+        return;
     }
-    arr[idx]=-s;
-    // for(int i=0;i<n;i++)
-    // cout<<arr[i]<<" ";
-    long long count=0;
-    s=0;
-    for(long long i=0;i<n;i++)
+
+    n-=5;
+    count=2;
+    long long product=20;
+    while(n-product>0)
     {
-        s+=arr[i];
-        if(s==0)
+        n-=product;
+        product*=5;
         count++;
     }
-    cout<<count<<endl;
-
+    string res;
+    long long flag=0;
+        long long x=binpow(5,count-1);
+    while(count>0)
+    {
+        // debug(n,x);
+        long long y=1;
+        if(n>=x)
+        {
+             y=(n+x-1)/x;
+            n=n%x;
+            if(n==0)
+            n=(x);
+        }
+        // debug(y);
+        if(flag==0)
+        {
+            // product/=4;
+            y++;
+            flag=1;
+        }
+        x/=5;
+        // if(n==0)
+        // y=4;
+        res+=to_string(arr[y]);
+        count--;
+    }
+    cout<<res<<endl;
 }

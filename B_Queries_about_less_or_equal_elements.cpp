@@ -19,52 +19,42 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    long long t;
-    cin >> t;
-    while (t--)
-    {
+    
         solve();
-    }
+    
 }
 void solve()
 {
-    long long n;
-    cin>>n;
-    long long arr[n];
+    long long n,m;
+    cin>>n>>m;
+    long long a[n];
+    long long b[m];
     for(long long i=0;i<n;i++)
-    cin>>arr[i];
-    long long idx=-1;
-    long long s=0;
-
-    for(long long i=0;i<n;i++)
+    cin>>a[i];
+    
+    vector<pair<long long,long long>>v;
+    for(long long i=0;i<m;i++)
     {
-        if(arr[i]==0)
-        {
-            if(idx==-1)
-            {
-                idx=i;
-            }
-            else
-            {
-                arr[idx]=-s;
-                idx=i;
-                s=0;
-            }
-            // continue;
-        }
-        s+=arr[i];
+        cin>>b[i];
+        v.push_back({b[i],i});
     }
-    arr[idx]=-s;
-    // for(int i=0;i<n;i++)
-    // cout<<arr[i]<<" ";
+    sort(all(v));
+    sort(a,a+n);
+    long long i=0;
+    long long j=0;
     long long count=0;
-    s=0;
-    for(long long i=0;i<n;i++)
+    vector<long long>ans(m,0);
+    while(j<m)
     {
-        s+=arr[i];
-        if(s==0)
-        count++;
+        while(i<n && v[j].first>=a[i])
+        {
+            count++;
+            i++;
+        }
+        ans[v[j].second]=count;
+        j++;
     }
-    cout<<count<<endl;
-
+    for(auto it:ans)
+    cout<<it<<" ";
+    cout<<endl;
 }

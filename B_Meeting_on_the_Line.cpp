@@ -28,43 +28,57 @@ signed main()
 }
 void solve()
 {
-    long long n;
+    int n;
     cin>>n;
-    long long arr[n];
+    vector<long long>x(n,0);
     for(long long i=0;i<n;i++)
-    cin>>arr[i];
-    long long idx=-1;
-    long long s=0;
-
+    cin>>x[i];
+    
+    vector<long long>time(n,0);
+    long double minm=1e9;
     for(long long i=0;i<n;i++)
     {
-        if(arr[i]==0)
+        cin>>time[i];
+        minm=min(minm,(long double)time[i]);
+    }
+    long double error=1e-7;
+    long double low=minm;
+    long double high=1e9;
+    long double res=low;
+    // debug(minm);
+    int flag=0;
+     long double pos=0;
+    function<long long(long double)>f=[&](long double mid)->long long{
+        long double maxm=1e9;
+        long double minm=0;
+        for(long long i=0;i<n;i++)
         {
-            if(idx==-1)
-            {
-                idx=i;
-            }
-            else
-            {
-                arr[idx]=-s;
-                idx=i;
-                s=0;
-            }
-            // continue;
+            maxm=min(maxm,(long double)x[i]+(mid-(long double)time[i]));
+            minm=max(minm,(long double)x[i]-(mid-(long double)time[i]));
         }
-        s+=arr[i];
-    }
-    arr[idx]=-s;
-    // for(int i=0;i<n;i++)
-    // cout<<arr[i]<<" ";
-    long long count=0;
-    s=0;
-    for(long long i=0;i<n;i++)
+        if(minm>maxm)
+        return 0;
+        if(flag)
+        {
+            pos=maxm;
+        }
+        return 1;
+    };
+    while(high-low>=error)
     {
-        s+=arr[i];
-        if(s==0)
-        count++;
-    }
-    cout<<count<<endl;
+        long double mid=(low+high)/(2.0);
 
+        if(f(mid))
+        {
+            res=mid;
+            high=mid-error;
+        }
+        else
+        {
+            low=mid+error;
+        }
+    }
+    flag=1;
+    long double z=f(res);
+    cout<<pos<<endl;
 }

@@ -33,38 +33,56 @@ void solve()
     long long arr[n];
     for(long long i=0;i<n;i++)
     cin>>arr[i];
-    long long idx=-1;
-    long long s=0;
+    
+    multiset<long long>left;
+    multiset<long long>right;
 
-    for(long long i=0;i<n;i++)
+    left.insert(arr[0]);
+    for(long long i=1;i<n;i++)
+    right.insert(arr[i]);
+    
+    long long res=-1;
+    for(long long i=1;i<n-1;i++)
     {
-        if(arr[i]==0)
+        auto it1=left.lower_bound(arr[i]);
+        right.erase(right.find(arr[i]));
+        auto it2=right.lower_bound(arr[i]);
+        for(auto it:left)
+        cout<<it<<" ";
+        cout<<endl;
+        for(auto it:right)
+        cout<<it<<" ";
+        cout<<endl;
+        if(it1==left.begin())
         {
-            if(idx==-1)
-            {
-                idx=i;
-            }
-            else
-            {
-                arr[idx]=-s;
-                idx=i;
-                s=0;
-            }
-            // continue;
+            left.insert(arr[i]);
+             continue;
         }
-        s+=arr[i];
+        if(it2==right.begin())
+        {
+            left.insert(arr[i]);
+            continue;
+        }
+        it1--;
+        it2--;
+        debug(i,*it1,*it2);
+        vector<long long>v1;
+        v1.push_back(*it1);
+        v1.push_back(*it2);
+        v1.push_back(arr[i]);
+        sort(all(v1));
+        // debug(v1[0],v1[1],v1[2]);
+        res=max(res,((v1[0]+v1[1])*v1[2]));
+        left.insert(arr[i]);
     }
-    arr[idx]=-s;
-    // for(int i=0;i<n;i++)
-    // cout<<arr[i]<<" ";
-    long long count=0;
-    s=0;
-    for(long long i=0;i<n;i++)
+
+    if(res==-1)
     {
-        s+=arr[i];
-        if(s==0)
-        count++;
+        cout<<"NA"<<endl;
     }
-    cout<<count<<endl;
+    else
+    {
+        cout<<res<<endl;
+    }
 
 }

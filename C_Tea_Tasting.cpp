@@ -5,6 +5,7 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+// long long getRandomNumber(long long l, long long r) {return uniform_long long_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -30,41 +31,30 @@ void solve()
 {
     long long n;
     cin>>n;
-    long long arr[n];
+    long long a[n],b[n];
     for(long long i=0;i<n;i++)
-    cin>>arr[i];
-    long long idx=-1;
-    long long s=0;
+    cin>>a[i];
+    
+    for(long long i=0;i<n;i++)
+    cin>>b[i];
+    vector<long long>prefix(n+1,0);
+    // prefix[0]=b[0];
+    for(long long i=0;i<n;i++)
+    prefix[i+1]=prefix[i]+b[i];
+    vector<long long>count(n+1,0);
+    vector<long long>add(n+1,0);
+    for(long long i=0;i<n;i++)
+    {
+        long long j=upper_bound(prefix.begin(),prefix.end(),a[i]+prefix[i])-prefix.begin()-1;
+        add[j]+=a[i]-prefix[j]+prefix[i];
+        count[i]+=1;
+        count[j]-=1;
+    }
 
     for(long long i=0;i<n;i++)
     {
-        if(arr[i]==0)
-        {
-            if(idx==-1)
-            {
-                idx=i;
-            }
-            else
-            {
-                arr[idx]=-s;
-                idx=i;
-                s=0;
-            }
-            // continue;
-        }
-        s+=arr[i];
+        cout<<add[i]+b[i]*count[i]<<" ";
+        count[i+1]+=count[i];
     }
-    arr[idx]=-s;
-    // for(int i=0;i<n;i++)
-    // cout<<arr[i]<<" ";
-    long long count=0;
-    s=0;
-    for(long long i=0;i<n;i++)
-    {
-        s+=arr[i];
-        if(s==0)
-        count++;
-    }
-    cout<<count<<endl;
-
+    cout<<endl;
 }

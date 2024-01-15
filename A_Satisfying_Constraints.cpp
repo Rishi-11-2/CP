@@ -30,41 +30,40 @@ void solve()
 {
     long long n;
     cin>>n;
-    long long arr[n];
-    for(long long i=0;i<n;i++)
-    cin>>arr[i];
-    long long idx=-1;
-    long long s=0;
-
-    for(long long i=0;i<n;i++)
+    long long start=0;
+    long long end=(long long)(1e9+1);
+    set<long long>s;
+    for(long long i=1;i<=n;i++)
     {
-        if(arr[i]==0)
+        long long a;
+        cin>>a;
+        if(a==1)
         {
-            if(idx==-1)
-            {
-                idx=i;
-            }
-            else
-            {
-                arr[idx]=-s;
-                idx=i;
-                s=0;
-            }
-            // continue;
+            long long x;
+            cin>>x;
+            start=max(start,x);
         }
-        s+=arr[i];
+        else if(a==2)
+        {
+            long long x;
+            cin>>x;
+            end=min(end,x);
+        }
+        else
+        {
+            long long x;
+            cin>>x;
+            s.insert(x);
+        }
     }
-    arr[idx]=-s;
-    // for(int i=0;i<n;i++)
-    // cout<<arr[i]<<" ";
     long long count=0;
-    s=0;
-    for(long long i=0;i<n;i++)
+    for(auto it:s)
     {
-        s+=arr[i];
-        if(s==0)
+        if(it>=start && it<=end)
         count++;
     }
-    cout<<count<<endl;
-
+    long long res=(end-start+1);
+    res-=count;
+    res=max(res,0LL);
+    cout<<res<<endl;
 }

@@ -28,43 +28,44 @@ signed main()
 }
 void solve()
 {
-    long long n;
-    cin>>n;
+    long long n,k,x;
+    cin>>n>>k>>x;
     long long arr[n];
+    long long sum=0;
     for(long long i=0;i<n;i++)
-    cin>>arr[i];
-    long long idx=-1;
-    long long s=0;
-
-    for(long long i=0;i<n;i++)
-    {
-        if(arr[i]==0)
-        {
-            if(idx==-1)
-            {
-                idx=i;
-            }
-            else
-            {
-                arr[idx]=-s;
-                idx=i;
-                s=0;
-            }
-            // continue;
-        }
-        s+=arr[i];
+    { 
+        cin>>arr[i];
+        sum+=arr[i];
     }
-    arr[idx]=-s;
-    // for(int i=0;i<n;i++)
-    // cout<<arr[i]<<" ";
+    sort(arr,arr+n,greater<long long>());
+
+    long long aliceSum=0;
+    long long bobSum=0;
+    for(long long i=0;i<min(k,n);i++)
+    {
+        aliceSum+=arr[i];
+    }
+    long long j=k;
     long long count=0;
-    s=0;
-    for(long long i=0;i<n;i++)
+    while(count<x && j<n)
     {
-        s+=arr[i];
-        if(s==0)
         count++;
+        bobSum+=arr[j];
+        j++;
     }
-    cout<<count<<endl;
-
+    long long i=min(k-1,n-1);
+    long long res=sum-(aliceSum)-(2*bobSum);
+    // debug(sum,aliceSum,bobSum);
+    while(i>=0)
+    {
+        aliceSum-=arr[i];
+        bobSum+=arr[i];
+        if(i+x<n)
+        bobSum-=arr[i+x];
+        // debug(sum,aliceSum,bobSum);
+        res=max(res,sum-(aliceSum)-(2*bobSum));
+        i--;
+    
+    }
+    cout<<res<<endl;
 }

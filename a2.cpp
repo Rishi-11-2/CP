@@ -29,22 +29,5 @@ signed main()
 }
 void solve()
 {
-    int n;
-    cin>>n;
-    int arr[n];
-    for(int i=0;i<n;i++)
-    {
-        cin>>arr[i];
-    }
-    int low=0;
-    int high=n-1;
-    int g=0;
-    while(low<high)
-    {
-        int diff=abs(arr[low]-arr[high]);
-        g=__gcd(g,diff);
-        low++;
-        high--;
-    }
-    cout<<g<<endl;
+
 }

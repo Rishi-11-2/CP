@@ -20,31 +20,41 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t;
-    cin >> t;
-    while (t--)
-    {
         solve();
-    }
 }
 void solve()
 {
-    int n;
-    cin>>n;
-    int arr[n];
-    for(int i=0;i<n;i++)
-    {
-        cin>>arr[i];
-    }
-    int low=0;
-    int high=n-1;
-    int g=0;
-    while(low<high)
-    {
-        int diff=abs(arr[low]-arr[high]);
-        g=__gcd(g,diff);
-        low++;
-        high--;
-    }
-    cout<<g<<endl;
+    int n,k;
+    cin>>n>>k;
+    double p;
+    cin>>p;
+    function<double(int ,int )>f=[&](int i,int flag)->double{
+
+        if(i==n)
+        {
+            if(flag==1)
+            return 1;
+            
+            return 0;
+        }
+        int minm=k;
+        if(flag==1)
+        {
+            minm=1;
+        }
+        int res=f(i+1,flag);
+        double product=1;
+        for(int j=1;j<=k;j++)
+        {
+            product=product*p;
+        }
+        for(int j=i+minm;j<n;j++)
+        {
+            res+=f(j,1)*product;
+            product*=p;
+        }
+        return res;
+    };
+    double x=f(0,0);
+    cout<<x<<endl;
 }

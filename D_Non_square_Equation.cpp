@@ -32,19 +32,19 @@ long long count(long long d)
     }
     return c;
 }
-long long sqrt22(long long n)
+long long sqrt22(long double n)
 {
-    long long low=1;
-    long long high=(long long)(1e9+100);
-    long long res=high;
+    long double low=1;
+    long double high=(long double)(1e9);
+    long double res=high;
     while(low<=high)
     {
-        long long mid=(low+high)/2LL;
-        long long ss=mid*mid;
-        if(ss==n)
+        long double mid=(low+high)/2;
+        // long long ss=mid*mid;
+        if(mid==(n/mid))
         return mid;
         
-        if(ss<n)
+        if(mid<(n/mid))
         {
             res=mid;
             low=mid+1;
@@ -60,10 +60,10 @@ void solve()
 {
     long long n;
     cin>>n;
-        long long z=(long long)1e12;
+        long long z=(long long )1e12;
     for(long long i=1;i<=100;i++)
     {
-        long long y=sqrt22(i*i+4LL*n);
+        long long  y=sqrt22(i*i+4LL*n);
         if(y*y!=(i*i+(4LL*n)))
         continue;
         long long x1=(-i+y)/2;

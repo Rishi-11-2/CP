@@ -19,21 +19,12 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    long long t;
+    // cin >> t;
+    // while (t--)
+    // {
         solve();
-}
-long long binpow(long long a,long long b,long long mod)
-{
-    long long res=1;
-    while(b>0)
-    {
-        if(b&1)
-        {
-            res=(res*a)%mod;
-        }
-        b>>=1;
-        a=(a*a)%mod;
-    }
-    return res;
+    // }
 }
 void solve()
 {
@@ -41,23 +32,24 @@ void solve()
     cin>>n;
     long long arr[n+1];
     for(long long i=1;i<=n;i++)
-    {
-        cin>>arr[i];
-    }
-    const long long mod=(long long)( 998244353);
-    long long res=0;
+    cin>>arr[i];
+    long long b[n];
     for(long long i=1;i<=n;i++)
     {
-        long long maxm=arr[i];
-        long long count=0;
-        for(long long j=2*i;j<=n;j+=i)
+        b[i-1]=arr[i];
+        for(long long j=i;j<=n;j+=i)
         {
-            count++;
-            maxm=max(maxm,arr[i]);
+            b[i-1]=max(b[i-1],arr[j]);
         }
-        long long x=binpow(2,count,mod);
-        long long y=(maxm%mod*x%mod)%mod;
-        res=(res%mod+y)%mod;
+    }
+    const long long mod=(long long)(998244353);
+    sort(b,b+n);
+    long long p=1;
+    long long res=0;
+    for(long long i=0;i<n;i++)
+    {
+        res=(res%mod+((p%mod)*(b[i]%mod))%mod)%mod;
+        p=(p%mod*2LL%mod)%mod;
     }
     cout<<res<<endl;
 }

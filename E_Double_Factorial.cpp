@@ -13,71 +13,51 @@ void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 //(data type to be stored (pair,long long,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaralong longs)
 typedef tree < pair<long long,long long>, null_type,less<pair<long long,long long>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
 void solve();
-vector<long long>spf;
 signed main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    long long m=100000;
-    spf.assign(m+1,0);
-
-    for(long long i=0;i<=m;i++)
-    {
-        spf[i]=i;
-
-    }
-    for(long long i=4;i<=m;i+=2)
-    spf[i]=2;
-    for(long long i=3;i*i<=m;i++)
-    {
-        if(spf[i]==i)
-        {
-            for(long long j=i*i;j<=m;j+=i)
-            {
-                if(spf[j]==j)
-                spf[j]=i;
-            }
-        }
-    }
-    long long t;
-    cin >> t;
-    while (t--)
-    {
         solve();
-    }
 }
 void solve()
 {
     long long n;
     cin>>n;
-    long long arr[n];
-    for(long long i=0;i<n;i++)
+    if(n%2)
     {
-        cin>>arr[i];
+        cout<<0<<endl;
+        return;
     }
-    // debug(spf[2]);
-    long long count=0;
-    // if((odd==n||even==n) && n>1)
-    // count++;
-    for(long long i=1;i<=n;i++)
+    long long x=10;
+    long long res=0;
+    int count=0;
+    // debug("jo");
+    // debug("jo");
+    for(int i=n;i>=2;i-=2)
     {
-        if(n%i==0)
+    // debug("jo");
+        // cout<<i<<" ";
+        int y=i;
+        while((y%10)==0)
         {
-                long long g=0;
-            for(long long j=0;j<i;j++)
-            {
-                long long k=j+i;
-                while(k<n)
-                {
-               a     g=__gcd(g,abs(arr[k]-arr[k-i]));
-                    k+=i;
-                }
-            }
-                if(g!=1)
-                count++;
+            y=y/10;
+            count++;
         }
+
     }
-    cout<<count<<endl;
+    // cout<<count<<endl;
+    // cout<<endl;
+    while(x<=n)
+    {
+        // long long y=x;
+        debug(x,n/x);
+        res+=(n/x);
+        if(x==n)
+        break;
+        x=x*10;
+
+    }
+    cout<<res<<endl;
 }

@@ -24,40 +24,37 @@ signed main()
 }
 void solve()
 {
-    int n,k;
-    cin>>n>>k;
-    double p;
-    cin>>p;
-    double win =p;
-    double lose=1-p;
-    //(i,j,flag)-> i denotes the first i games where you have won exactly last j games 
-    //flag indicates whether you have achieved a win streak of k or not uptill i
-    vector<vector<vector<double>>>dp(n+1,vector<vector<double>>(n+1,vector<double>(2,-1)));
-    function<double(int,int,int)>f=[&](int i,int j,int flag)->double{
-
-        // debug(i,j,flag);
-        if(i==n)
+    int n;
+    cin>>n;
+    int arr[n+1];
+    for(int i=1;i<=n;i++)
+    {
+        cin>>arr[i];
+    }
+    vector<int>v(n+1,-1);
+    int start=-1;
+    for(int i=1;i<=n;i++)
+    {
+        if(arr[i]==-1)
         {
-            if(flag)
-            return (double)1;
-            
-            return (double)0;
+            start=i;
         }
-        if(dp[i][j][flag]!=-1)
-        return dp[i][j][flag];
-        double l=lose*f(i+1,0,flag);
-        int newJ=j+1;
-        int newFlag=flag;
-        if(newJ>=k)
-        newFlag=1;
-        //  debug(i,j);
-        double w=win*f(i+1,newJ,newFlag);
-
-        double res=w+l;
-        // debug(res);
-
-        return dp[i][j][flag]= res;
-    };
-
-    cout<<f(0,0,0)<<endl;
+        else
+        {
+            v[arr[i]]=i;
+        }
+    }
+    // for(auto it:v)
+    // cout<<it<<" ";
+    // cout<<endl;
+    int i=start;
+    vector<int>res;
+    while(i!=-1)
+    {
+        res.push_back(i);
+        i=v[i];
+    }
+    for(auto it:res)
+    cout<<it<<" ";
+    cout<<endl;
 }

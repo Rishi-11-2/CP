@@ -15,7 +15,7 @@ typedef tree < pair<long long,long long>, null_type,less<pair<long long,long lon
 void solve();
 vector<long long>fact;
 vector<long long>ifact;
-const long long mod=(long long)(998244353);
+const long long mod=(long long)(1e9+7);
 long long binpow(long long a,long long b)
 {
     long long res=1;
@@ -23,16 +23,16 @@ long long binpow(long long a,long long b)
     {
         if(b&1)
         {
-            res=(res%mod*a%mod)%mod;
+            res=(res%mod*a%mod);
         }
         a=(a%mod*a%mod)%mod;
         b>>=1;
     }
     return res;
 }
-long long modinverse(long long n)
+long long modinverse(long long a,long long mod)
 {
-    return binpow(n,mod-2);
+    return binpow(a,mod-2);
 }
 signed main()
 {
@@ -40,7 +40,8 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    long long n=(long long)(5e5);
+    long long t;
+    long long n=(long long)(1e3);
     fact.assign(n+1,0);
     ifact.assign(n+1,0);
     fact[0]=1;
@@ -48,12 +49,11 @@ signed main()
     {
         fact[i]=(fact[i-1]%mod*i%mod)%mod;
     }
-    ifact[n]=modinverse(fact[n]);
+    ifact[n]=modinverse(fact[n],mod);
     for(long long i=n-1;i>=0;i--)
     {
         ifact[i]=(ifact[i+1]%mod*(i+1)%mod)%mod;
     }
-    long long t;
     cin >> t;
     while (t--)
     {
@@ -62,44 +62,34 @@ signed main()
 }
 long long nCr(long long n,long long r)
 {
-    long long y=(fact[n]%mod*(ifact[r]%mod*ifact[n-r]%mod)%mod)%mod;
-    return y;
+   long long res= (fact[n]%mod*(ifact[r]%mod*ifact[n-r]%mod)%mod)%mod;
+   return res;
 }
 void solve()
 {
-    long long n;
-    cin>>n;
+    long long n,k;
+    cin>>n>>k;
     long long arr[n];
-    set<long long>s;
     map<long long,long long>mp;
+    set<long long,greater<long long>>s;
     for(long long i=0;i<n;i++)
     {
         cin>>arr[i];
         mp[arr[i]]++;
         s.insert(arr[i]);
     }
-
     vector<long long>v(all(s));
-    long long m=(long long)(v.size());
-    if(mp[v[m-1]]>1)
+    long long i=k;
+    long long res=1;
+    long long j=0;
+    // debug(nCr(1,1),fact[1],ifact[2]);
+    while(i>0)
     {
-       cout<<fact[n]<<endl;
-        return ;
+        res=(res%mod*(nCr(mp[v[j]],min(i,mp[v[j]])))%mod)%mod;
+        // debug(i,nCr(mp[v[j]],min(i,mp[v[j]])));
+        i-=mp[v[j]];
+        i=max(i,0LL);
+        j++;
     }
-    if(v[m-1]>(v[m-2]+1))
-    {
-        cout<<0<<endl;
-        return ;
-    }
-    long long rs=n-1-mp[v[m-2]];
-    long long res=0;
-    for(long long i=0;i<=rs;i++)
-    {
-        long long y=((nCr(rs,i)%mod*fact[i]%mod)%mod*fact[n-1-i]%mod)%mod;
-        res=(res%mod+y%mod)%mod;
-    }
-    long long ans=fact[n];
-    // debug(ans,res);
-    ans=(ans%mod-res%mod+mod)%mod;
-    cout<<ans<<endl;
+    cout<<res<<endl;
 }

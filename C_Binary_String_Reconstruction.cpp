@@ -19,42 +19,67 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    long long t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
-    vector<long long>d(11,0);
-    d[1]=0;
-    d[2]=1;
-    /*https://medium.com/@harshittheone007/counting-derangements-b97ae9ec4582*/
-    for(long long i=3;i<=10;i++)
-    {
-        d[i]=(i-1)*(d[i-1]+d[i-2]);
-    }
-    vector<vector<long long>>c(n+1,vector<long long>(k+1,0));
+    string s;
+    cin>>s;
+    long long x;
+    cin>>x;
+    long long n=s.length();
+    vector<long long>no(n+1,0);
 
-    for(long long i=0;i<=n;i++)
+    for(long long i=0;i<n;i++)
     {
-        for(long long j=0;j<=min(i,k);j++)
+        if(s[i]=='0')
         {
-            if(i==0||j==0)
+            long long j=i+1;
+
+            if(j-x>=1)
             {
-                c[i][j]=1;
-                continue;
+                no[j-x]=1;
             }
-            c[i][j]=c[i-1][j-1]+c[i-1][j];
+            if(j+x<=n)
+            {
+                no[j+x]=1;
+            }
         }
     }
-
-    long long res=0;
-    for(long long i=0;i<=k;i++)
+    vector<long long>yes(n+1,0);
+    for(long long i=0;i<n;i++)
     {
-        // debug(i,d[i],c[n][i]);
-        res=(res+d[i]*c[n][i]);
-
+        if(s[i]=='1')
+        {
+            long long j=i+1;
+            if(j-x>=1 && !no[j-x])
+            {
+                yes[j-x]=1;
+            }
+            else if(j+x<=n && !no[j+x])
+            {
+                yes[j+x]=1;
+            }
+            else{
+                cout<<-1<<endl;
+                return ;
+            }
+        }
     }
-    cout<<res+1<<endl;
+    string res="";
+    for(long long i=1;i<=n;i++)
+    {
+        if(yes[i])
+        res+=to_string(1);
+        else
+        res+=to_string(0);
+    }
+    cout<<res<<endl;
+
 
 }

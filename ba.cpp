@@ -1,82 +1,49 @@
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
+
 using namespace std;
-using namespace __gnu_pbds;
-using namespace chrono;
-mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
-#define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
-template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
-template <typename T1, typename... T2>
-void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
-#define all(v) (v).begin(), (v).end()
-//(data type to be stored (pair,int,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaraints)
-typedef tree < pair<int,int>, null_type,less<pair<int,int>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
-void solve();
-signed main()
-{
+
+#define ll long long
+#define int long long
+// ---------------------------------power---------------------------------------
+
+ll bin(ll a, ll b){ if(b == 0){return 1;} else{ if(b%2 == 0){return (bin(a,b/2)*bin(a,b/2));} else{return (bin(a,b/2)*bin(a,b/2)*a);} } } 
+ll bpm(ll  a,ll  b, ll  m) { a %= m; ll res = 1; while (b > 0) { if (b & 1) res = res * a %m; a = a * a % m; b >>= 1; } return res; }
+ll modInverse(ll n,int p){return bpm(n, p - 2, p);}
+// return (fac[n] * modInverse(fac[r], p) % p * modInverse(fac[n - r], p) % p)% p;
+
+//-----------------------start your code----------------------------------------
+
+signed main(){
+    
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-    cout.setf(ios::fixed);
-    cout.precision(10);
-        solve();
-}
-void solve()
-{
-    int num1,num2;
-    cin>>num1>>num2;
-    int m=(int)(1e5);
-      vector<bool>isPrime(m+1,1);
-      isPrime[0]=isPrime[1]=0;
-      for(int i=2;i*i<=m;i++)
-      {
-          if(isPrime[i])
-          {
-              for(int j=i*i;j<=m;j+=i)
-              {
-                  isPrime[j]=0;
-              }
-          }
-      }
-      string x=to_string(num1);
-      string y=to_string(num2);
-       queue<pair<string,int>>q;
-      set<string>vis;
-      vis.insert(x);
-       q.push({x,0});
-       int res=INT_MAX;
-       while(!q.empty())
-       {
-           string a=q.front().first;
-           int d=q.front().second;
-           if(a==y)
-           {
-               res=min(res,d);
-           }
-           q.pop();
-           
-           for(int j=0;j<4;j++)
-           {
-               for(int k=0;k<=9;k++)
-               {
-                   if(j==0 && k==0)
-                   continue;
-                   char c=a[j];
-                   a[j]=char(k+'0');
-                   if(vis.find(a)!=vis.end())
-                   continue;
-                   int num=stoi(a);
-                   if(isPrime[num])
-                   {
-                //    cout<<a<<endl;
-                      vis.insert(a);
-                       q.push({a,d+1});
-                   }
-                   a[j]=c;
-               }
-           }
-       }
+    cout.tie(NULL);
+    
+    ll n;
+    cin >> n;
 
-       cout<<res<<endl;
+    ll m = (1e9 + 7);
+    ll m2 = modInverse(2, m);
+
+    ll ans = n;
+    ll prev = n;
+    ll j = n+1;
+
+    for(ll i = 2; i*i <= n; i++){
+        j = i+1;
+        ll x = (n/i);
+        ll y = (x*i);
+        ans = (ans + y)%m;
+        ll sum = (((prev - x)%m)*((x + prev + 1)%m))%m;
+        sum = (sum * (i-1))%m;
+        sum = (sum * m2)%m;
+        ans = (ans + sum)%m;
+        prev = x;
+    }
+    for(ll i = j; i <= prev; i++){
+        ll x = (n/i);
+        ll y = (x*i);
+        ans = (ans + y)%m;
+    }
+    cout << ans << "\n";
 }

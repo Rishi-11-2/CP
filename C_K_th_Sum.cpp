@@ -25,36 +25,49 @@ void solve()
 {
     long long n,k;
     cin>>n>>k;
-    vector<long long>d(11,0);
-    d[1]=0;
-    d[2]=1;
-    /*https://medium.com/@harshittheone007/counting-derangements-b97ae9ec4582*/
-    for(long long i=3;i<=10;i++)
-    {
-        d[i]=(i-1)*(d[i-1]+d[i-2]);
-    }
-    vector<vector<long long>>c(n+1,vector<long long>(k+1,0));
+    long long a[n];
+    for(long long i=0;i<n;i++)
+    cin>>a[i];
+    long long b[n];
+    for(long long i=0;i<n;i++)
+    cin>>b[i];
 
-    for(long long i=0;i<=n;i++)
-    {
-        for(long long j=0;j<=min(i,k);j++)
+    sort(a,a+n);
+    sort(b,b+n);
+    long long low=a[0]+b[0];
+    long long high=a[n-1]+b[n-1];
+
+    function<long long(long long)>f=[&](long long mid)->long long{
+        long long count=0;
+        for(long long i=0;i<n;i++)
         {
-            if(i==0||j==0)
-            {
-                c[i][j]=1;
-                continue;
-            }
-            c[i][j]=c[i-1][j-1]+c[i-1][j];
+            if(b[i]>mid)
+            break;
+            
+            long long x=mid-b[i];
+
+            auto it=upper_bound(a,a+n,x)-a;
+            // debug(it);
+            count+=it;
+        }
+        return (count>=k);
+    };
+    // f(9);
+    long long res=low;
+    // debug(low,high);
+    while(low<=high)
+    {
+        long long mid=(low+high)/(2LL);
+        // debug(mid);
+        if(f(mid))
+        {
+            res=mid;
+            high=mid-1;
+        }
+        else
+        {
+            low=mid+1;
         }
     }
-
-    long long res=0;
-    for(long long i=0;i<=k;i++)
-    {
-        // debug(i,d[i],c[n][i]);
-        res=(res+d[i]*c[n][i]);
-
-    }
-    cout<<res+1<<endl;
-
+    cout<<res<<endl;
 }

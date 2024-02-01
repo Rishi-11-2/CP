@@ -19,42 +19,40 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    long long t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
     long long n,k;
     cin>>n>>k;
-    vector<long long>d(11,0);
-    d[1]=0;
-    d[2]=1;
-    /*https://medium.com/@harshittheone007/counting-derangements-b97ae9ec4582*/
-    for(long long i=3;i<=10;i++)
+    long long res=1;
+    for(long long i=1;i*i<=n;i++)
     {
-        d[i]=(i-1)*(d[i-1]+d[i-2]);
-    }
-    vector<vector<long long>>c(n+1,vector<long long>(k+1,0));
-
-    for(long long i=0;i<=n;i++)
-    {
-        for(long long j=0;j<=min(i,k);j++)
+        if(n%i==0)
         {
-            if(i==0||j==0)
+            long long y=i*k;
+            long long x=n-y;
+            if(x%i==0 && x>=0)
             {
-                c[i][j]=1;
-                continue;
+                // debug(i,x);
+                res=max(res,i);
             }
-            c[i][j]=c[i-1][j-1]+c[i-1][j];
+
+
+            long long j=(n/i);
+            y=j*k;
+            x=n-y;
+            if(x%j==0 && x>=0 )
+            {
+                // debug(j,x);
+                res=max(res,j);
+            }
         }
     }
-
-    long long res=0;
-    for(long long i=0;i<=k;i++)
-    {
-        // debug(i,d[i],c[n][i]);
-        res=(res+d[i]*c[n][i]);
-
-    }
-    cout<<res+1<<endl;
-
+    cout<<res<<endl;
 }

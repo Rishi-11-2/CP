@@ -19,37 +19,63 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    long long t;
-    cin >> t;
-    while (t--)
-    {
         solve();
-    }
 }
 void solve()
 {
-    long long n,c;
-    cin>>n>>c;
+    long long n,m;
+    cin>>n>>m;
     long long a[n];
     for(long long i=0;i<n;i++)
     cin>>a[i];
     
-    vector<long long>v;
+    long long div=(n/m);
+    map<long long,long long>mp;
+    set<pair<long long,long long>, greater<pair<long long,long long>> >s;
     for(long long i=0;i<n;i++)
     {
-        v.push_back(i+1+a[i]);
+        if(a[i]>m)
+        {
+            s.insert({a[i],i});
+        }
+        else if(mp[a[i]]>=div)
+        {
+            s.insert({a[i],i});
+        }
+        else
+        {
+            mp[a[i]]++;
+        }
     }
-    sort(all(v));
     long long count=0;
-    for(long long i=0;i<n;i++)
+    for(long long i=1;i<=m;i++)
     {
-        if(c<=0)
-        break;
-        if(c-v[i]<0)
-        break;
+            while(mp[i]<div)
+            {
+                auto it=*s.begin();
+                a[it.second]=i;
+                // debug(it.second);
+                s.erase(s.begin());
+                mp[i]++;
+                count++;
+            }
         
-        c-=v[i];
-        count++;
     }
-    cout<<count<<endl;
+    // while(!s.empty())
+    // {
+    //     auto it=*s.begin();
+    //     if(it.first>m)
+    //     {
+    //     count++;
+    //         a[it.second]=m;
+    //         mp[m]++;
+    //     }
+    //         s.erase(s.begin());
+    // }
+    cout<<div<<" "<<count<<endl;
+
+    for(long long i=0;i<n;i++)
+    cout<<a[i]<<" ";
+    cout<<endl;
+
 }

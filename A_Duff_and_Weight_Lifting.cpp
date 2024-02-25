@@ -19,40 +19,45 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    long long t;
-    cin >> t;
-    while (t--)
-    {
         solve();
-    }
 }
 void solve()
 {
-    long long n,c,d;
-    cin>>n>>c>>d;
+    long long n;
+    cin>>n;
     long long arr[n];
-    set<long long>s;
     for(long long i=0;i<n;i++)
-    {
-        cin>>arr[i];
-        s.insert(arr[i]);
-    }
-    vector<long long>v(all(s));
-    long long m=(long long)(v.size());
-    long long res=(n-m)*c;
-    long long ans=m*c+d;
-    long long prefixc=0;
-    long long curr=1;
-    for(long long i=0;i<m;i++)
-    {
-        prefixc+=(v[i]-curr)*d;
-        // debug(v[i]-curr);
-        curr=v[i]+1;
-        long long costOfRemoving=(m-(i+1))*c;
-        ans=min(ans,prefixc+costOfRemoving);
-        // debug(i,prefixc,costOfRemoving);
-        // debug(i,ans,(v[i]-curr)*d);
-    }
-    cout<<res+ans<<endl;
+    cin>>arr[i];
 
+   sort(arr,arr+n);
+   map<long long,long long>mp;
+   multiset<long long>s;
+
+   for(long long i=0;i<n;i++)
+   {
+     s.insert(arr[i]);
+   }
+   while((long long)(s.size())>0)
+   {
+     auto it=*s.begin();
+    //  debug(it);
+     mp[it]++;
+
+     s.erase(s.begin());
+     if(mp[it]>=2)
+     {
+        mp[it]-=2;
+        if(mp[it]==0)
+        mp.erase(it);
+        int x=2*it;
+        if(it==0)
+        x=1;
+        s.insert(x);
+     }
+   }
+//    for(auto it:mp)
+//    {
+//     debug(it.first,it.second);
+//    }
+   cout<<(long long)(mp.size())<<endl;
 }

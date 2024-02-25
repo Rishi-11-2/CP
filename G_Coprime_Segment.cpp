@@ -28,6 +28,14 @@ void solve()
     long long arr[n];
     for(long long i=0;i<n;i++)
     cin>>arr[i];
+    if(n==1)
+    {
+        if(arr[0]==1)
+        cout<<1<<endl;
+        else
+        cout<<-1<<endl;
+        return;
+    }
 
     vector<stack<long long>>left(2);
     vector<stack<long long>>right(2);
@@ -39,7 +47,10 @@ void solve()
     while(j<n)
     {
         right[0].push(arr[j]);
-        right[1].push(__gcd(arr[j],right[0].top()));
+        if(right[1].size()>0)
+        right[1].push(__gcd(arr[j],right[1].top()));
+        else
+        right[1].push(arr[j]);
         if(left[0].empty())
         {
             long long g=0;
@@ -52,16 +63,41 @@ void solve()
                 right[1].pop();
             }
         }
-        while(i<j  && !right[0].empty() && !left[0].empty() && __gcd(right[1].top(),left[1].top())==1)
+        
+        // cout <<i <<" "<<j <<endl;
+        long long g1= right[0].size()>0 ? right[1].top():0;
+        long long g2=left[0].size()>0 ? left[1].top():0;
+        // cout << g1<< " bahar "<<g2<<endl;
+        while(i<=j   && __gcd(g1,g2)==1)
         {
             res=min(res,j-i+1);
             i++;
             left[0].pop();
             left[1].pop();
+            if(left[0].empty())
+        {
+            long long g=0;
+            while(!right[0].empty())
+            {
+                left[0].push(right[0].top());
+                g=__gcd(g,right[0].top());
+                left[1].push(g);
+                right[0].pop();
+                right[1].pop();
+            }
+        }
+             g1= right[0].size()>0 ? right[1].top():0;
+         g2=left[0].size()>0 ? left[1].top():0;
+         
+        //  cout << g1<< " hello "<<g2<<endl;
+        //  cout << i << "lesss "<<j<<endl;
         }
 
         j++;
 
     }
+    if(res!=INT_MAX)
     cout<<res<<endl;
+    else
+    cout << -1 <<endl;
 }

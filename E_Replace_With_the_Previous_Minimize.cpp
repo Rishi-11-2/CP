@@ -28,31 +28,53 @@ signed main()
 }
 void solve()
 {
-    long long n,c,d;
-    cin>>n>>c>>d;
-    long long arr[n];
-    set<long long>s;
+    long long n,k;
+    cin>>n>>k;
+    string s;
+    cin>>s;
+    
+    set<long long>st;
     for(long long i=0;i<n;i++)
-    {
-        cin>>arr[i];
-        s.insert(arr[i]);
-    }
-    vector<long long>v(all(s));
-    long long m=(long long)(v.size());
-    long long res=(n-m)*c;
-    long long ans=m*c+d;
-    long long prefixc=0;
-    long long curr=1;
-    for(long long i=0;i<m;i++)
-    {
-        prefixc+=(v[i]-curr)*d;
-        // debug(v[i]-curr);
-        curr=v[i]+1;
-        long long costOfRemoving=(m-(i+1))*c;
-        ans=min(ans,prefixc+costOfRemoving);
-        // debug(i,prefixc,costOfRemoving);
-        // debug(i,ans,(v[i]-curr)*d);
-    }
-    cout<<res+ans<<endl;
+    st.insert(i);
 
+    while((long long)(st.size())>0 && k>0)
+    {
+        long long i=*st.begin();
+        long long x=s[i]-'a';
+        if(x>k)
+        x=k;
+        char c=(char)(s[i]-x);
+        char maxm=s[i];
+        long long diff=x;
+        // debug(c,diff);
+        for(long long j=0;j<n;j++)
+        {
+            long long y=s[j]-'a';
+            if(y>k)
+            break;
+            
+            char d=(char)(s[j]-y);
+            if(d==c)
+            {
+            //    debug(d,y);
+               maxm=max(maxm,s[j]);
+               diff=max(diff,y);
+            }
+        }
+        // debug(k);
+        for(long long j=0;j<n;j++)
+        {
+            if(st.find(j)==st.end())
+            continue;
+            if(s[j]<=maxm )
+            {
+                s[j]=min(s[j],c);
+                st.erase(j);
+            }
+        }
+        // debug(diff);
+        k-=diff;
+        // debug(k);
+    }
+    cout<<s<<endl;
 }

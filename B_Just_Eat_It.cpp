@@ -28,31 +28,46 @@ signed main()
 }
 void solve()
 {
-    long long n,c,d;
-    cin>>n>>c>>d;
+    long long n;
+    cin>>n;
     long long arr[n];
-    set<long long>s;
+    long long flag=1;
     for(long long i=0;i<n;i++)
     {
         cin>>arr[i];
-        s.insert(arr[i]);
+        if(arr[i]<=0)
+        flag=0;
     }
-    vector<long long>v(all(s));
-    long long m=(long long)(v.size());
-    long long res=(n-m)*c;
-    long long ans=m*c+d;
-    long long prefixc=0;
-    long long curr=1;
-    for(long long i=0;i<m;i++)
+    if(flag)
     {
-        prefixc+=(v[i]-curr)*d;
-        // debug(v[i]-curr);
-        curr=v[i]+1;
-        long long costOfRemoving=(m-(i+1))*c;
-        ans=min(ans,prefixc+costOfRemoving);
-        // debug(i,prefixc,costOfRemoving);
-        // debug(i,ans,(v[i]-curr)*d);
+        cout<<"YES"<<endl;
+        return;
     }
-    cout<<res+ans<<endl;
-
+    long long sum=0;
+    long long res=0;
+    long long ts=0;
+    long long idx=0;
+    int flag1=0;
+    for(long long i=0;i<n;i++)
+    {
+        sum+=arr[i];
+        if(sum<=0)
+        {
+            sum=0;
+            flag1=1;
+        }
+        ts+=arr[i];
+        if(!flag1 && i==n-1)
+        continue;
+        res=max(res,sum);
+    }
+    // debug(res,ts);
+    if(res>=ts)
+    {
+        cout<<"NO"<<endl;
+    }
+    else
+    {
+        cout<<"YES"<<endl;
+    }
 }

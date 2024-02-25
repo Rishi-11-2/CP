@@ -19,40 +19,39 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    long long t;
-    cin >> t;
-    while (t--)
-    {
         solve();
-    }
+}
+bool compare(pair<long long,long long>&a,pair<long long,long long>&b)
+{
+    if(a.second==b.second)
+    return a.first<b.first;
+
+    return a.second<b.second;
 }
 void solve()
 {
-    long long n,c,d;
-    cin>>n>>c>>d;
-    long long arr[n];
-    set<long long>s;
+    long long n;
+    cin>>n;
+    vector<pair<long long,long long>>v;
+    for(long long i=1;i<=n;i++)
+    {
+        long long x,y;
+        cin>>x>>y;
+        v.push_back({x,y});
+    }
+    sort(all(v),compare);
+
+    long long curr=0;
+
     for(long long i=0;i<n;i++)
     {
-        cin>>arr[i];
-        s.insert(arr[i]);
-    }
-    vector<long long>v(all(s));
-    long long m=(long long)(v.size());
-    long long res=(n-m)*c;
-    long long ans=m*c+d;
-    long long prefixc=0;
-    long long curr=1;
-    for(long long i=0;i<m;i++)
-    {
-        prefixc+=(v[i]-curr)*d;
-        // debug(v[i]-curr);
-        curr=v[i]+1;
-        long long costOfRemoving=(m-(i+1))*c;
-        ans=min(ans,prefixc+costOfRemoving);
-        // debug(i,prefixc,costOfRemoving);
-        // debug(i,ans,(v[i]-curr)*d);
-    }
-    cout<<res+ans<<endl;
+        curr+=v[i].first;
+        if(curr>v[i].second)
+        {
+            cout<<"No"<<endl;
+            return;
+        }
 
+    }
+    cout<<"Yes"<<endl;
 }

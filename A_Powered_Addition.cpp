@@ -28,31 +28,35 @@ signed main()
 }
 void solve()
 {
-    long long n,c,d;
-    cin>>n>>c>>d;
+    long long n;
+    cin>>n;
     long long arr[n];
-    set<long long>s;
     for(long long i=0;i<n;i++)
-    {
-        cin>>arr[i];
-        s.insert(arr[i]);
-    }
-    vector<long long>v(all(s));
-    long long m=(long long)(v.size());
-    long long res=(n-m)*c;
-    long long ans=m*c+d;
-    long long prefixc=0;
-    long long curr=1;
-    for(long long i=0;i<m;i++)
-    {
-        prefixc+=(v[i]-curr)*d;
-        // debug(v[i]-curr);
-        curr=v[i]+1;
-        long long costOfRemoving=(m-(i+1))*c;
-        ans=min(ans,prefixc+costOfRemoving);
-        // debug(i,prefixc,costOfRemoving);
-        // debug(i,ans,(v[i]-curr)*d);
-    }
-    cout<<res+ans<<endl;
+    cin>>arr[i];
 
+    long long prev=arr[0];
+    long long maxm=0;
+    for(long long i=1;i<n;i++)
+    {
+        if(arr[i]<prev)
+        {
+            long long  a=0;
+            long long x=arr[i];
+            long long count=0;
+            while(x<prev)
+            {
+                x+=(1LL<<a);
+                a=a+1;
+                count++;
+            }
+            maxm=max(maxm,count);
+            // debug(i,count,x);
+            /* here we are not updating prev as we can always form any difference with the powers
+            of 2 . we can represent any number in its equivalent binary representation so we will not update prev value*/
+        }
+        else
+        prev=arr[i];
+
+    }
+    cout<<maxm<<endl;
 }

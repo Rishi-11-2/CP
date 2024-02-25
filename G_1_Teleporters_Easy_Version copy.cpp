@@ -13,7 +13,6 @@ void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 //(data type to be stored (pair,long long,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaralong longs)
 typedef tree < pair<long long,long long>, null_type,less<pair<long long,long long>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
 void solve();
-signed main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
@@ -28,31 +27,28 @@ signed main()
 }
 void solve()
 {
-    long long n,c,d;
-    cin>>n>>c>>d;
-    long long arr[n];
-    set<long long>s;
+    long long n,c;
+    cin>>n>>c;
+    long long a[n];
+    for(long long i=0;i<n;i++)
+    cin>>a[i];
+    
+    vector<long long>v;
     for(long long i=0;i<n;i++)
     {
-        cin>>arr[i];
-        s.insert(arr[i]);
+        v.push_back(i+1+a[i]);
     }
-    vector<long long>v(all(s));
-    long long m=(long long)(v.size());
-    long long res=(n-m)*c;
-    long long ans=m*c+d;
-    long long prefixc=0;
-    long long curr=1;
-    for(long long i=0;i<m;i++)
+    sort(all(v));
+    long long count=0;
+    for(long long i=0;i<n;i++)
     {
-        prefixc+=(v[i]-curr)*d;
-        // debug(v[i]-curr);
-        curr=v[i]+1;
-        long long costOfRemoving=(m-(i+1))*c;
-        ans=min(ans,prefixc+costOfRemoving);
-        // debug(i,prefixc,costOfRemoving);
-        // debug(i,ans,(v[i]-curr)*d);
+        if(c<=0)
+        break;
+        if(c-v[i]<0)
+        break;
+        
+        c-=v[i];
+        count++;
     }
-    cout<<res+ans<<endl;
-
+    cout<<count<<endl;
 }

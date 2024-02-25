@@ -28,31 +28,29 @@ signed main()
 }
 void solve()
 {
-    long long n,c,d;
-    cin>>n>>c>>d;
-    long long arr[n];
-    set<long long>s;
-    for(long long i=0;i<n;i++)
-    {
-        cin>>arr[i];
-        s.insert(arr[i]);
-    }
-    vector<long long>v(all(s));
-    long long m=(long long)(v.size());
-    long long res=(n-m)*c;
-    long long ans=m*c+d;
-    long long prefixc=0;
-    long long curr=1;
-    for(long long i=0;i<m;i++)
-    {
-        prefixc+=(v[i]-curr)*d;
-        // debug(v[i]-curr);
-        curr=v[i]+1;
-        long long costOfRemoving=(m-(i+1))*c;
-        ans=min(ans,prefixc+costOfRemoving);
-        // debug(i,prefixc,costOfRemoving);
-        // debug(i,ans,(v[i]-curr)*d);
-    }
-    cout<<res+ans<<endl;
+    long long n,k;
+    cin>>n>>k;
 
+    long long d=n/2;
+    if(n%2)
+    d++;
+    if(k<=d)
+    {
+        long long y=1+(k-1)*2;
+        cout<<y<<endl;
+        return;
+    }
+    k-=d;
+    long long x=2;
+    long long count=(n-x)/(2*x);
+    count++;
+    while(count<k)
+    {
+        k-=count;
+        x=x*2;
+        count=(n-x)/(2*x);
+        count++;
+    }
+    long long ans=x+(k-1)*(2*x);
+    cout<<ans<<endl;
 }

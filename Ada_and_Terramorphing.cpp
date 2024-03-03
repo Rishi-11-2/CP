@@ -14,11 +14,16 @@ void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 //(data type to be stored (pair,long long,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaralong longs)
 typedef tree < pair<long long,long long>, null_type,less<pair<long long,long long>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
 void solve();
-const long long mod1=(long long)(1e12+7);
-const long long mod2=(long long)(1e11+1);
-const long long mod3=(long long)(2e15+1);
+const long long mod1=(long long)(1e9+7);
+const long long mod2=(long long)(1e9+1);
+const long long mod3=(long long)(1e12+1);
 const long long p1=uniform_int_distribution<long long>(0,mod1-1)(rng);
 const long long p2=uniform_int_distribution<long long>(0,mod2-1)(rng);
+const long long p3=uniform_int_distribution<long long>(0,mod3-1)(rng);
+
+/* this question is not getting accepted on SPOJ 
+ I am very frustated:  https://www.spoj.com/problems/ADAPHOTO/
+ */
 struct Hash{
 
     long long *pref1;
@@ -28,6 +33,10 @@ struct Hash{
     long long *pref2;
     string s;
     long long n;
+    Hash()
+    {
+
+    }
     Hash(const string &a)
     {
         s=a;
@@ -42,26 +51,25 @@ struct Hash{
         pref2[0]=1;
         for(long long i=1;i<=n;i++)
         {
-            base_pow1[i]=(p1%mod1*base_pow1[i-1]%mod1)%mod1;
-            base_pow2[i]=(p2%mod2*base_pow2[i-1]%mod2)%mod2;
-            pref1[i]=((pref1[i-1]%mod1*p1%mod1)%mod1+s[i-1]+997)%mod1;
-            pref2[i]=((pref2[i-1]%mod2*p2%mod2)%mod2+s[i-1]+997)%mod2;
+            base_pow1[i]=(p1*base_pow1[i-1])%mod1;
+            base_pow2[i]=(p2*base_pow2[i-1])%mod2;
+            pref1[i]=((pref1[i-1]*p1)%mod1+s[i-1]+997)%mod1;
+            pref2[i]=((pref2[i-1]*p2)%mod2+s[i-1]+997)%mod2;
         }
     }
 
-    long long get_hash(long long l,long long r)
+    inline long long get_hash(long long l,long long r)
     {
-        long long h1=pref1[r+1]%mod1-(pref1[l]%mod1*base_pow1[r-l+1]%mod1)%mod1;
-        long long h2=pref2[r+1]%mod2-(pref2[l]%mod2*base_pow2[r-l+1]%mod2)%mod2;
+        long long h1=pref1[r+1]-(pref1[l]*base_pow1[r-l+1])%mod1;
+        long long h2=pref2[r+1]-(pref2[l]*base_pow2[r-l+1])%mod2;
         if(h1<0)
         h1+=mod1;
         
         if(h2<0)
         h2+=mod2;
         
-        long long h3=h1+h2;
-        if(h3>=mod3)
-        h3-=mod3;
+        long long h3=(p3*h1)%mod3;
+        h3=(h3+h2)%mod3;
         return h3;
     }
 
@@ -89,7 +97,15 @@ void solve()
 
     Hash h1(a);
     Hash h2(b);
-   
+    string x="";
+    if(n1>n2)
+    {
+        x=a;
+    }
+    else{
+        x=b;
+    }
+    Hash h(x);
    int low=1;
    int res=0;
    int high=min(n1,n2);
@@ -98,24 +114,29 @@ void solve()
    {
       int mid=(low+high)/2;
       
-      gp_hash_table<long long,long long>mp;
+      cc_hash_table<long long,bool>mp;
        int flag=0;
     // unordered_map<long long,long long>mp2;
         // vector<pair<long long ,long long>>v;
-        for(int i=0;i+mid-1<n1;i++)
+        for(int i=0;i+mid-1<min(n1,n2);i++)
         {
-            auto x=h1.get_hash(i,i+mid-1);
+            long long x=h1.get_hash(i,i+mid-1);
+            long long y=h2.get_hash(i,i+mid-1);
             // debug(x,mid,1);
-            // if(mp.find(x)==mp.end())
-            mp[x]++;
+            if(mp.find(x)==mp.end())
+            mp[x]=1;
+            if(mp[y])
+            {
+                flag=1;
+                break;
+            }
         }
-        // set<pair<long long,long long>>s(all(v));
-        // vector<pair<long long ,long long>>v1;
-        for(int i=0;i+mid-1<n2;i++)
+        
+        for(int i=min(n1,n2);i+mid-1<max(n1,n2);i++)
         {
-            auto x=h2.get_hash(i,i+mid-1);
             // debug(x,mid,2);
-            if(mp[x]>0)
+            long long x=h.get_hash(i,i+mid-1);
+            if(mp[x])
             {
                 flag=1;
                 break;

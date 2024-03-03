@@ -1,15 +1,10 @@
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
-
-#pragma GCC optimize("O3,unroll-loops")
-#pragma GCC tar("avx2,bmi,bmi2,lzcnt,popcnt")
-#pragma GCC optimize("Ofast")
 using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -21,17 +16,16 @@ void solve();
 signed main()
 {
     ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
+    cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-        solve();
+       solve();
 }
 const long long mod1=(long long)(1e9+7);
 const long long mod2=(long long)(1e9+1);
-const long long mod3=(long long)(1e15+5);
+// const long long mod3=(long long)(2e15+1);
 const long long p1=uniform_int_distribution<long long>(0,mod1-1)(rng);
 const long long p2=uniform_int_distribution<long long>(0,mod2-1)(rng);
-const long long p3=uniform_int_distribution<long long>(0,mod3-1)(rng);
 struct Hash{
 
     long long *pref1;
@@ -55,25 +49,24 @@ struct Hash{
         pref2[0]=1;
         for(long long i=1;i<=n;i++)
         {
-            base_pow1[i]=(p1*base_pow1[i-1])%mod1;
-            base_pow2[i]=(p2*base_pow2[i-1])%mod2;
-            pref1[i]=((pref1[i-1]*p1)%mod1+s[i-1]+997)%mod1;
-            pref2[i]=((pref2[i-1]*p2)%mod2+s[i-1]+997)%mod2;
+            base_pow1[i]=(p1%mod1*base_pow1[i-1]%mod1)%mod1;
+            base_pow2[i]=(p2%mod2*base_pow2[i-1]%mod2)%mod2;
+            pref1[i]=((pref1[i-1]%mod1*p1%mod1)%mod1+s[i-1]+997)%mod1;
+            pref2[i]=((pref2[i-1]%mod2*p2%mod2)%mod2+s[i-1]+997)%mod2;
         }
     }
 
-    long long get_hash(long long l,long long r)
+    pair<long long,long long> get_hash(long long l,long long r)
     {
-        long long h1=pref1[r+1]-(pref1[l]*base_pow1[r-l+1])%mod1;
-        long long h2=pref2[r+1]-(pref2[l]*base_pow2[r-l+1])%mod2;
+        long long h1=pref1[r+1]%mod1-(pref1[l]%mod1*base_pow1[r-l+1]%mod1)%mod1;
+        long long h2=pref2[r+1]%mod2-(pref2[l]%mod2*base_pow2[r-l+1]%mod2)%mod2;
         if(h1<0)
         h1+=mod1;
         
         if(h2<0)
         h2+=mod2;
-        long long h3=(h1*p1)%mod3;
-        h3=(h3+h2)%mod3;
-        return h3;
+        
+        return make_pair(h1,h2);
     }
 
 };
@@ -82,48 +75,53 @@ void solve()
     string s;
     cin>>s;
     long long n=s.length();
-    vector<long long>v(26,0);
-    string x;
-    cin>>x;
-    long long m=x.length();
-    for(long long i=0;i<m;i++)
-    {
-        long long  val=(x[i]-'0');
-        v[i]=(1-val);
-    }
     Hash h(s);
-    long long k;
-    cin>>k;
-    vector<long long>prefix(n,0);
-    prefix[0]=v[s[0]-'a'];
-    for(long long i=1;i<n;i++)
+    vector<int>prefixes;
+    for(int i=1;i<=n;i++)
     {
-        prefix[i]=prefix[i-1]+v[s[i]-'a'];
+        int a=n-i;
+        auto x=h.get_hash(0,i-1);
+        auto y=h.get_hash(n-i,n-1);
+        if(x==y)
+        prefixes.push_back(i);
     }
-    // for(auto it:prefix)
-    // {
-    //     cout<<it<<" ";
-    // }
-    // cout<<endl;
-    long long count=0;
-    gp_hash_table<long long,long long>st;
-    for(long long i=0;i<n;i++)
-    {
-        for(long long j=0;j<=i;j++)
+    // debug(n);
+    long long low=0;
+    long long high=(long long)(prefixes.size())-1;
+    long long res=-1;
+    function<long long(long long)>f=[&](long long mid)->long long{
+        long long x=prefixes[mid];
+        auto val1=h.get_hash(0,x-1);
+        for(long long i=1;(i+x-1)<(n-1);i++)
         {
-            long long val=prefix[i];
-            if(j>0)
-            {
-                val-=prefix[j-1];
-            }
-            if(val<=k)
-            {
-                auto vvv=h.get_hash(j,i);
-                // debug(j,i,vvv);
-                st[vvv]=1;
-            }
+            auto val3=h.get_hash(i,i+x-1);
+            // debug(i,i+mid-1,val3[0],val3[1]);
+            if(val3==val1)
+            return 1;
+        }
+
+        return 0;
+    };
+    while(low<=high)
+    {
+        long long mid=(low+high)/2LL;
+
+        if(f(mid))
+        {
+            res=mid;
+            low=mid+1;
+        }
+        else
+        {
+            high=mid-1;
         }
     }
-    count=(long long)(st.size());
-    cout<<count<<'\n';
+    if(res==-1)
+    {
+        cout<<"Just a legend"<<endl;
+    }
+    else{
+        cout<<s.substr(0,prefixes[res])<<endl;
+    }
+
 }

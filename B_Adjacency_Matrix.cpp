@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -14,30 +13,37 @@ void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 //(data type to be stored (pair,int,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaraints)
 typedef tree < pair<int,int>, null_type,less<pair<int,int>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
 void solve();
- constexpr uint64_t mod = 11;
-int64_t modmul(uint64_t a, uint64_t b){
-    uint64_t l1 = (uint32_t)a, h1 = a >> 32, l2 = (uint32_t)b, h2 = b >> 32;
-    uint64_t l = l1 * l2, m = l1 * h2 + l2 * h1, h = h1 * h2;
-    debug(l,l & mod);
-    uint64_t ret = (l & mod) + (l >> 61) + (h << 3) + (m >> 29) + (m << 35 >> 3) + 1;
-    debug(ret);
-    ret = (ret & mod) + (ret >> 61);
-    ret = (ret & mod) + (ret >> 61);
-    return ret - 1;
-}
 signed main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    
         solve();
-    
 }
 void solve()
 {
-    int a,b;
-    cin>>a>>b;
-    cout<<modmul(a,b)<<" "<<(a*b)%mod;
+    int n;
+    cin>>n;
+    int arr[n][n];
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        cin>>arr[i][j];
+    }
+
+    for(int i=0;i<n;i++)
+    {
+        vector<int>v;
+        for(int j=0;j<n;j++)
+        {
+            if(arr[i][j]==1)
+            {
+                v.push_back(j+1);
+            }
+        }
+        for(auto it:v)
+        cout<<it<<" ";
+        cout<<endl;
+    }
 }

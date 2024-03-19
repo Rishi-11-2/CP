@@ -30,47 +30,73 @@ void solve()
 {
     string s;
     cin>>s;
-    int n=s.length();
-    sort(all(s));
-    // reverse(all(s));
-    string y1="";
-    string y2="";
-    string rem="";
-    int flag=0;
-    for(int i=0;i<n;i++)
-    {
-        rem+=s[i];
-        if(rem.length()==2)
-        {
-            sort(all(rem));
 
-            if(flag)
+    sort(all(s));
+    string left="";
+    string right="";
+    int n=s.length();
+    if(n<=2)
+    {
+        reverse(all(s));
+        cout<<s<<endl;
+        return;
+    }
+    for(int i=0;i<n;i+=2)
+    {
+        if(i==n-1)
+        {
+            // left+=s[i];
+            reverse(all(right));
+            string ans=left+s[i]+right;
+            cout<<ans<<endl;
+            return;
+        }
+        // debug(i);
+        if(s[i]==s[i+1])
+        {
+            left+=s[i];
+            right+=s[i+1];
+        }
+        else{
+            if((i+1)<n-1 && s[i+1]==s[n-1])
             {
-                y1+=rem[0];
-                y2=rem[1]+y2;
+                int cc=(n-1)-(i+1)+1;
+                // debug(cc);
+                int kk=cc/2;
+                if(cc%2)
+                kk++;
+                for(int j=1;j<=kk;j++)
+                {
+                    left+=s[i+1];
+                }
+                kk=cc/2;
+                for(int j=1;j<=kk;j++)
+                {
+                    right+=s[i+1];
+                }
+                // left+=s[i]
+
+                reverse(all(right));
+                // debug(left,right);
+                string ans=left+s[i]+right;
+                cout<<ans<<endl;
+                return;
             }
             else
             {
-                if(rem[0]!=rem[1])
-                flag=1;
-                y1+=rem[1];
-                y2=rem[0]+y2;
+                string x="";
+                if(i+2<n)
+                x=s.substr(i+2);
+                reverse(all(right));
+                // debug(x,left,right);
+                string ans=left+s[i+1]+x+s[i]+right;
+                cout<<ans<<endl;
+                return ;
             }
-            rem="";
         }
     }
-    string res=y1+rem+y2;
-    int i=0;
-    int j=res.length()-1;
-    while(i+1<j)
-    {
-        if(res[i]>res[j]  && (res[j-1]==res[i]))
-        {
-            // cout<<i<<" "<<j<<endl;
-            swap(res[j],res[j-1]);
-        }
-        i++;
-        j--;
-    }
-    cout<<res<<endl;
+    // debug(left,right);
+    reverse(all(right));
+
+    cout<<left+right<<endl;
 }

@@ -19,33 +19,45 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    
+    long long t;
+    cin >> t;
+    while (t--)
+    {
         solve();
-    
+    }
 }
-inline void solve()
+void solve()
 {
-   long long n;
-   cin>>n;
-   long long arr[n];
-   vector<long long>count((long long)(1e7));
-   for(long long i=0;i<n;i++)
-   {
-      cin>>arr[i];
-      count[arr[i]]++;
-   }
-   long long ans=0;
-   for(long long i=0;i<(long long)(1e7)-1;i++)
-   {
-      long long w=count[i]-count[i]%2;
+    long long n,c;
+    cin>>n>>c;
 
-      count[i]=count[i]%2;
+    long long x=((c+1)*(c+2));
+    x=x/2;
+    // debug(x);
+    long long a[n];
+    for(long long i=0;i<n;i++)
+    cin>>a[i];
+    long long ce=0;
+    long long co=0;
+    for(long long i=0;i<n;i++)
+    {
+        if(a[i]%2==0)
+        ce++;
+        else
+        co++;
 
-      ans+=count[i];
+        long long x1=(a[i]/2);
+        x1++;
+        // if(a[i]>0 && a[i]%2==0)
+        // x1++;
+        
+        long long y1=(c-a[i]+1);
+        // debug(i,x1,y1); 
+        long long ans=(x1+y1);
 
-      w=w/2;
-
-      count[i+1]+=w;
-   }
-   cout<<ans<<endl;
+        x-=ans;
+    }
+    x+=((ce*(ce+1))/2);
+    x+=((co*(co+1))/2);
+    cout<<x<<endl;
 }

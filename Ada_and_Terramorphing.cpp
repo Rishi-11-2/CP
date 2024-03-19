@@ -14,6 +14,11 @@ void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 //(data type to be stored (pair,long long,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaralong longs)
 typedef tree < pair<long long,long long>, null_type,less<pair<long long,long long>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
 void solve();
+template <class K, class V>
+using ht = gp_hash_table<
+    K, V, hash<K>, equal_to<K>, direct_mask_range_hashing<>, linear_probe_fn<>,
+    hash_standard_resize_policy<hash_exponential_size_policy<>,
+                                hash_load_check_resize_trigger<>, true>>;
 const long long mod1=(long long)(1e9+7);
 const long long mod2=(long long)(1e9+1);
 const long long mod3=(long long)(1e12+1);
@@ -114,7 +119,7 @@ void solve()
    {
       int mid=(low+high)/2;
       
-      cc_hash_table<long long,bool>mp;
+       ht<long long, bool> mp({}, {}, {}, {}, {1 << 16});
        int flag=0;
     // unordered_map<long long,long long>mp2;
         // vector<pair<long long ,long long>>v;

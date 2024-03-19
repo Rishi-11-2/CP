@@ -19,33 +19,64 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    
         solve();
-    
 }
-inline void solve()
+void solve()
 {
-   long long n;
-   cin>>n;
-   long long arr[n];
-   vector<long long>count((long long)(1e7));
-   for(long long i=0;i<n;i++)
+    long long n;
+    cin>>n;
+    long long a[n];
+    for(long long i=0;i<n;i++)
+    cin>>a[i];
+    
+    long long m;
+    cin>>m;
+    long long b[m];
+    for(long long i=0;i<m;i++)
+    cin>>b[i];
+    
+    long long l;
+    cin>>l;
+    long long c[l];
+    for(long long i=0;i<l;i++)
+    cin>>c[i];
+    
+
+    long long q;
+    cin>>q;
+    set<long long>s;
+    long long x[q];
+    for(long long i=0;i<q;i++)
    {
-      cin>>arr[i];
-      count[arr[i]]++;
+     cin>>x[i];
+     s.insert(x[i]);
    }
-   long long ans=0;
-   for(long long i=0;i<(long long)(1e7)-1;i++)
-   {
-      long long w=count[i]-count[i]%2;
+    
+    for(long long i=0;i<n;i++)
+    {
+        for(long long j=0;j<m;j++)
+        {
+            for(long long k=0;k<l;k++)
+            {
+                long long s1=a[i]+b[j]+c[k];
+                if(s.find(s1)!=s.end())
+                {
+                    // debug(s1);
+                    s.erase(s1);
+                }
+            }
+        }
+    }
 
-      count[i]=count[i]%2;
-
-      ans+=count[i];
-
-      w=w/2;
-
-      count[i+1]+=w;
-   }
-   cout<<ans<<endl;
+    for(long long i=0;i<q;i++)
+    {
+        if(s.find(x[i])==s.end())
+        {
+            cout<<"Yes"<<endl;
+        }
+        else
+        {
+            cout<<"No"<<endl;
+        }
+    }
 }

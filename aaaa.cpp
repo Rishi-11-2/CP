@@ -14,17 +14,6 @@ void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 //(data type to be stored (pair,int,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaraints)
 typedef tree < pair<int,int>, null_type,less<pair<int,int>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
 void solve();
- constexpr uint64_t mod = 11;
-int64_t modmul(uint64_t a, uint64_t b){
-    uint64_t l1 = (uint32_t)a, h1 = a >> 32, l2 = (uint32_t)b, h2 = b >> 32;
-    uint64_t l = l1 * l2, m = l1 * h2 + l2 * h1, h = h1 * h2;
-    debug(l,l & mod);
-    uint64_t ret = (l & mod) + (l >> 61) + (h << 3) + (m >> 29) + (m << 35 >> 3) + 1;
-    debug(ret);
-    ret = (ret & mod) + (ret >> 61);
-    ret = (ret & mod) + (ret >> 61);
-    return ret - 1;
-}
 signed main()
 {
     ios_base::sync_with_stdio(false);
@@ -33,11 +22,88 @@ signed main()
     cout.precision(10);
     
         solve();
-    
 }
+ vector<vector<long long>>mul(vector<vector<long long>>res,vector<vector<long long>>mat,int m)
+    {
+        // for(auto it:res)
+        // {
+        //   for(auto i:it)
+        //   cout<<i<<" ";
+        //   cout<<"LU"<<endl;
+        // }
+        // cout<<"LV"<<endl;
+        int n1=res.size();
+        int n2=res[0].size();
+        int n3=mat[0].size();
+        debug(n1,n2,n3);
+        vector<vector<long long>>v(n1,vector<long long>(n3,0));
+       for(int i=0;i<n1;i++)
+       {
+           for(int j=0;j<n3;j++)
+           {
+                long long s=0;
+               for(int k=0;k<n2;k++)
+               {
+                   s=((res[i][k]%m*mat[k][j]%m)%m+s)%m;
+                   if(n1!=n3)
+                   {
+                    debug(res[i][k],mat[k][j],i,j,k);
+                   }
+               }
+              
+               v[i][j]=s;
+           }
+       }
+
+       for(auto it:v)
+       {
+          for(auto i:it)
+          cout<<i<<" ";
+          cout<<endl;
+       }
+       cout<<"OK"<<endl;
+       return v;
+    }
+    long long genFibNum(long long a, long long b, long long c, long long n, long long m) {
+        // code here
+        
+        vector<vector<long long>>mat={{a,b,1},{1,0,0},{0,0,1}};
+        vector<vector<long long>>res={{1,0,0},{0,1,0},{0,0,1}};
+        vector<vector<long long>>res1;
+        vector<long long>x;
+        x.push_back(1);
+        res1.push_back(x);
+        res1.push_back(x);
+
+        x.pop_back();
+        x.push_back(c);
+
+        res1.push_back(x);
+        
+        
+        if(n<=2)
+        {
+            return 1LL;
+        }
+        
+        n-=2;
+        
+        while(n>0)
+        {
+            if(n&1)
+            {
+                res=mul(res,mat,m);
+            }
+            mat=mul(mat,mat,m);
+            n>>=1LL;
+        }
+        res=mul(res,res1,m);
+        return res[0][0];
+    }
 void solve()
 {
-    int a,b;
-    cin>>a>>b;
-    cout<<modmul(a,b)<<" "<<(a*b)%mod;
+  long long a,b,c,n,m;
+  cin>>a>>b>>c>>n>>m;
+
+  cout<<genFibNum(a,b,c,n,m);
 }

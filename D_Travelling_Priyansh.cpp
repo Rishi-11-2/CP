@@ -19,33 +19,58 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    
+    long long t;
+    cin >> t;
+    while (t--)
+    {
         solve();
-    
+    }
 }
-inline void solve()
+void solve()
 {
-   long long n;
-   cin>>n;
-   long long arr[n];
-   vector<long long>count((long long)(1e7));
-   for(long long i=0;i<n;i++)
-   {
-      cin>>arr[i];
-      count[arr[i]]++;
-   }
-   long long ans=0;
-   for(long long i=0;i<(long long)(1e7)-1;i++)
-   {
-      long long w=count[i]-count[i]%2;
+    long long n,d;
+    cin>>n>>d;
+    long long arr[n];
 
-      count[i]=count[i]%2;
+    for(long long i=0;i<n;i++)
+    cin>>arr[i];
 
-      ans+=count[i];
 
-      w=w/2;
+    sort(arr,arr+n);
 
-      count[i+1]+=w;
-   }
-   cout<<ans<<endl;
+
+    long long low=1;
+
+    long long high=(long long)(1e18);
+
+    long long res=low;
+    function<long long(long long)>f=[&](long long mid)->long long{
+
+        long long res=0;
+        for(long long i=0;i<n-1;i++)
+        {
+            long long x=min(arr[i+1],arr[i]+mid);
+            res+=(x-arr[i]);
+        }
+        res+=mid;
+        // debug(res,mid);
+        return (res>=d);
+        
+    };
+    while(low<=high)
+    {
+        long long mid=(low+high)/2;
+
+        if(f(mid))
+        {
+            res=mid;
+            high=mid-1;
+        }
+        else
+        {
+            low=mid+1;
+        }
+    }
+
+    cout<<res<<endl;
 }

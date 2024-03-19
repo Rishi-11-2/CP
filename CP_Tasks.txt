@@ -1,10 +1,11 @@
 
+
+Todo :
 https://atcoder.jp/contests/abc308/tasks/abc308_e(Pending)
 https://codeforces.com/contest/339/problem/D
 https://codeforces.com/contest/356/problem/A
 https://codeforces.com/contest/61/problem/E
 https://atcoder.jp/contests/abc312/editorial/6864(Yet to be asked)
-https://cses.fi/problemset/task/1085/
-
-Todo :
 https://codeforces.com/edu/course/2/lesson/6/3/practice/contest/285083/problem/D
+https://cses.fi/problemset/task/2181
+https://codeforces.com/problemset/problem/895/C (Done)

@@ -19,80 +19,67 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    long long t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    long long n;
-    cin>>n;
+    long long n,q;
+    cin>>n>>q;
     long long arr[n];
     for(long long i=0;i<n;i++)
     cin>>arr[i];
     
-    // cout<<endl;
-    long long ans=0;
-    long long count=0;
-    vector<long long>v;
-    for(long long j=0;j<n;j++)
+    vector<long long>ones(n,0);
+    vector<long long>notOnes(n,0);
+    ones[0]=(arr[0]==1)?1:0;
+    notOnes[0]=(arr[0]!=1)?arr[0]-1:0;
+    for(long long i=1;i<n;i++)
     {
-        if(arr[j]==0)
+        if(arr[i]==1)
         {
-           count++;
-            // continue;
+            ones[i]=1+ones[i-1];
+            notOnes[i]=notOnes[i-1];
+        }
+        else if(arr[i]!=1)
+        {
+            notOnes[i]=notOnes[i-1]+arr[i]-1;
+            ones[i]=ones[i-1];
+        }
+    }
+
+
+    for(long long i=1;i<=q;i++)
+    {
+        long long l,r;
+        cin>>l>>r;
+        r--;
+        l--;
+        if(l==r)
+        {
+            cout << "NO" << endl;
+            continue;
+        }
+        long long x=notOnes[r];
+        if(l>0)
+        x-=notOnes[l-1];
+        long long y=ones[r];
+        if(l>0)
+        {
+            y-=ones[l-1];
+        }
+
+        if(x>=y)
+        {
+            cout << "YES" << endl;
         }
         else
         {
-            v.push_back(arr[j]);
+            cout << "NO" << endl;
         }
     }
-    // debug(count);
-    ans+=(count*(count-1))/2LL;
-    ans+=(count*(n-count));
-    // debug(ans);
-    long long mm=(long long)(v.size());
-    // debug(mm);
-    for(long long j=0;j<mm;j++)
-    {
-        long long x=v[j];
-        long long f=0;
-        while(x%2==0)
-        {
-            f++;
-            x=x/2;
-        }
-        for(long long i=3;i*i<=x;i+=2)
-        {
-            long long f1=0;
-            while(x%i==0)
-            {
-                f1++;
-                x/=i;
-            }
-            if(f1%2)
-            {
-                x=x*i;
-            }
-        }
-        if(f%2)
-        x=x*2;
-        v[j]=x;
-        // mp[x]++;
-    }
-    // debug(ans);
-    map<long long,long long>mp;
-    for(long long i=0;i<mm;i++)
-    {
-        mp[v[i]]++;
-    }
-
-    for(auto it:mp)
-    {
-        long long count=it.second;
-        long long x=(count)*(count-1);
-        // debug(x);
-        x=x/2LL;
-        // debug(x);
-        ans+=x;
-    }
-    cout<<ans<<endl;
 }

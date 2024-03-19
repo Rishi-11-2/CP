@@ -19,80 +19,84 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+
         solve();
+    
 }
 void solve()
 {
-    long long n;
-    cin>>n;
+    long long n,m;
+    cin>>n>>m;
     long long arr[n];
+
     for(long long i=0;i<n;i++)
     cin>>arr[i];
+
     
-    // cout<<endl;
-    long long ans=0;
-    long long count=0;
-    vector<long long>v;
-    for(long long j=0;j<n;j++)
-    {
-        if(arr[j]==0)
-        {
-           count++;
-            // continue;
-        }
-        else
-        {
-            v.push_back(arr[j]);
-        }
-    }
-    // debug(count);
-    ans+=(count*(count-1))/2LL;
-    ans+=(count*(n-count));
-    // debug(ans);
-    long long mm=(long long)(v.size());
-    // debug(mm);
-    for(long long j=0;j<mm;j++)
-    {
-        long long x=v[j];
-        long long f=0;
-        while(x%2==0)
-        {
-            f++;
-            x=x/2;
-        }
-        for(long long i=3;i*i<=x;i+=2)
-        {
-            long long f1=0;
-            while(x%i==0)
-            {
-                f1++;
-                x/=i;
-            }
-            if(f1%2)
-            {
-                x=x*i;
-            }
-        }
-        if(f%2)
-        x=x*2;
-        v[j]=x;
-        // mp[x]++;
-    }
-    // debug(ans);
     map<long long,long long>mp;
-    for(long long i=0;i<mm;i++)
+    map<long long,long long>f;
+    for(long long i=1;i<=m;i++)
     {
-        mp[v[i]]++;
+        long long x;
+        cin>>x;
+        f[i]=x;
     }
 
-    for(auto it:mp)
+
+    long long i=0;
+    long long j=0;
+    long long res=(long long)(1e12);
+    long long extra=0;
+    set<long long>s;
+
+    while(j<n)
     {
-        long long count=it.second;
-        long long x=(count)*(count-1);
-        // debug(x);
-        x=x/2LL;
-        // debug(x);
-        ans+=x;
+        mp[arr[j]]++;
+        // debug(mp[arr[j]],arr[j]);
+        if(mp[arr[j]]==f[arr[j]])
+        {
+            // debug(arr[j]);d
+            s.insert(arr[j]);
+            
+        }
+        
+        if(mp[arr[j]]>f[arr[j]])
+        {
+            extra++;
+        }
+
+
+        while(i<=j )
+        {
+            // debug(i,j);
+
+            if((long long)(s.size())==m)
+            res=min(res,extra);
+        
+            mp[arr[i]]--;
+            extra--;
+            if(mp[arr[i]]<f[arr[i]])
+            {
+                extra++;
+                mp[arr[i]]++;
+                break;
+            }
+            i++;
+        }
+
+        j++;
     }
-    cout<<ans<<endl;
+
+    // if((long long)(s.size())==m)
+    // {
+    //     res=0;
+    // 
+
+    if(res==(long long)(1e12))
+    {
+        res=-1;
+    }
+
+    cout<<res<<endl;
+
 }

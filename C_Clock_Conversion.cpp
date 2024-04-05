@@ -28,62 +28,37 @@ signed main()
 }
 void solve()
 {
-    int n;
-    cin>>n;
-    int a[n];
-    int b[n];
-    for(int i=0;i<n;i++)
-    {
-        cin>>a[i];
-    }
-    for(int i=0;i<n;i++)
-    {
-        cin>>b[i];
-    }
+    string s;
+    cin>>s;
 
-    int i=n-1;
-    while(i>=0)
+    string hr=s.substr(0,2);
+    string mm=s.substr(3);
+    int a=stoi(hr);
+    int b=stoi(mm);
+    int flag=0;
+    if(a==12)
     {
-
-        int req=b[i];
-        // debug(req);
-        int j=i;
-        int flag=0;
-        while(j>=0)
-        {
-            if(a[j]==req)
-            {
-                flag=1;
-            }
-            if(b[j]!=b[i] && flag)
-            break;
-            j--;
-        }
-        // debug(j);
-        if(!flag)
-        {
-            // debug(j);
-            cout<<"NO"<<endl;
-            return;
-        }
-        
-        for(int k=j+1;k<=i;k++)
-        {
-            a[k]=req;
-        }
-
-
-        i--;
-        
+        flag=1;
     }
-    // debug("h");
-    for(int i=0;i<n;i++)
+    if(a==0)
     {
-        if(a[i]!=b[i])
-        {
-            cout<<"NO"<<endl;
-            return;
-        }
+        a=12;
     }
-    cout<<"YES"<<endl;
+    else if(a>12)
+    {
+        flag=1;
+        a=a-12;
+    }
+    string ss="AM";
+    if(flag)
+    {
+        ss="PM";
+    }
+    string x=to_string(a);
+    if(x.length()==1)
+    {
+        char c='0';
+        x=c+x;
+    }
+    cout<<x<<":"<<mm<<" "<<ss<<endl;
 }

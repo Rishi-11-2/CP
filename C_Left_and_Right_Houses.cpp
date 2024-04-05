@@ -30,60 +30,38 @@ void solve()
 {
     int n;
     cin>>n;
-    int a[n];
-    int b[n];
-    for(int i=0;i<n;i++)
+    string s;
+    cin>>s;
+
+    vector<int>one(n+1,0);
+    vector<int>zero(n+1,0);
+    for(int i=1;i<=n;i++)
     {
-        cin>>a[i];
+        one[i]=one[i-1];
+        zero[i]=zero[i-1];
+
+        if(s[i-1]=='1')
+        one[i]++;
+        if(s[i-1]=='0')
+        zero[i]++;
     }
-    for(int i=0;i<n;i++)
+    // debug(one[n]);
+    vector<pair<double,int>>v;
+    for(int i=0;i<=n;i++)
     {
-        cin>>b[i];
-    }
-
-    int i=n-1;
-    while(i>=0)
-    {
-
-        int req=b[i];
-        // debug(req);
-        int j=i;
-        int flag=0;
-        while(j>=0)
+        int y=i;
+        int z=(n-i);
+        int y1=(y+2-1)/2;
+        int z1=(z+2-1)/2;
+        // debug(zero[i],y1,one[i],one[n],z1);
+        if(zero[i]>=y1 && (one[n]-one[i])>=z1)
         {
-            if(a[j]==req)
-            {
-                flag=1;
-            }
-            if(b[j]!=b[i] && flag)
-            break;
-            j--;
-        }
-        // debug(j);
-        if(!flag)
-        {
-            // debug(j);
-            cout<<"NO"<<endl;
-            return;
-        }
-        
-        for(int k=j+1;k<=i;k++)
-        {
-            a[k]=req;
-        }
-
-
-        i--;
-        
-    }
-    // debug("h");
-    for(int i=0;i<n;i++)
-    {
-        if(a[i]!=b[i])
-        {
-            cout<<"NO"<<endl;
-            return;
+            double c=(n/(2.0));
+            c=abs(c-i);
+            // debug(c,i);
+            v.push_back({c,i});
         }
     }
-    cout<<"YES"<<endl;
+    sort(all(v));
+    cout<<v[0].second<<endl;
 }

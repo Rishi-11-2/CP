@@ -31,6 +31,7 @@ void solve()
     int n,q;
     cin>>n>>q;
     vector<int>arr;
+    arr.push_back(0);
     vector<int>op(n+1,0);
     int k=-1;
     for(int i=1;i<=n;i++)
@@ -61,22 +62,27 @@ void solve()
         cin>>x;
         queries.push_back(x);
     }
-
+    sort(all(queries));
     int len=0;
-    int idx=i;
-    for(int i=0;i<(int)(arr.size());i++)
+    for(int i=1;i<(int)(arr.size());i++)
     {
         if(op[i]>0)
         {
-            idx=i;
+            len=i;
             break;
         }
     }
+    int l=0;
+    vector<int>res;
     for(int i=0;i<q;i++)
     {
-        if(queries[i]>len)
+        if((queries[i]-l)>len)
         {
-            
+            l+=len;
+        }
+        else
+        {
+            res.push_back(arr[queries[i]-l]);
         }
     }
 }

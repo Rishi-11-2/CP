@@ -23,58 +23,63 @@ signed main()
 }
 void solve()
 {
-    long long n,m,k;
-    cin>>n>>m>>k;
-
-    long long a[n];
-    set<long long>s;
+    long long n,a,b;
+    cin>>n>>a>>b;
+    long long d[n];
     for(long long i=0;i<n;i++)
+    cin>>d[i];
+
+    if(a<=b)
     {
-        cin>>a[i];
-    }
-    sort(a,a+n);
-
-    long long count=0;
-
-    
-    for(long long i=0;i<n;i++)
-    {
-        long long sz=(long long)(s.size());
-
-        if(sz<k)
+        for(long long i=1;i<n;i++)
         {
-            s.insert(a[i]);
-        }
-        else
-        {
-            long long last=*s.rbegin();
-            long long first=*s.begin();
-            // debug(last,first);
-            if(last-first<m)
+            long long diff=d[i]-d[i-1];
+            if(diff>=a)
             {
-                count++;
-                s.erase(*s.rbegin());
+                if(diff<=(b+1))
+                {
+                    cout<<"No"<<endl;
+                    return;
+                }
+
+                long long x=diff/(b+1);
+                diff=diff-x*(b+1);
+                // debug(x,diff);
+                if(diff>=a)
+            {
+                cout<<"No"<<endl;
+                return;
+            }
+            }
+        }
+        cout<<"Yes"<<endl;
+    }
+    else
+    {
+        long long minm=1;
+        long long maxm=a;
+
+        long long sum=a+b;
+        for(long long i=0;i<n;i++)
+        {
+            if(d[i]>=minm && d[i]<=maxm)
+            continue;
+            
+            long long x=(d[i]-minm)/sum;
+            // debug(d[i]-minm);
+            minm=minm+sum*x;
+            maxm=maxm+sum*x;
+            if(d[i]>=minm && d[i]<=maxm)
+            {
+                continue;
             }
             else
             {
-                s.erase(*s.begin());
+                cout<<"No"<<endl;
+                return;
             }
-            s.insert(a[i]);
         }
-        // for(auto it:s)
-        // {
-        //     cout<<it<<" ";
-        // }
-        // cout<<endl;
+        cout<<"Yes"<<endl;
     }
-    long long last=*s.rbegin();
-    long long first=*s.begin();
-    // debug(last,first);
-    if(last-first<m)
-    {
-        count++;
-        s.erase(*s.rbegin());
-    }
-    cout<<count<<endl;
-
+    
 }

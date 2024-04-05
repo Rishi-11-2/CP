@@ -30,60 +30,68 @@ void solve()
 {
     int n;
     cin>>n;
-    int a[n];
-    int b[n];
-    for(int i=0;i<n;i++)
-    {
-        cin>>a[i];
-    }
-    for(int i=0;i<n;i++)
-    {
-        cin>>b[i];
-    }
 
-    int i=n-1;
-    while(i>=0)
-    {
-
-        int req=b[i];
-        // debug(req);
-        int j=i;
-        int flag=0;
-        while(j>=0)
+    vector<int>v;
+    function<void(int,string)>f=[&](int i, string s)->void{
+        if(i==5)
         {
-            if(a[j]==req)
+            int x=stoi(s);
+            if(x>1)
             {
-                flag=1;
+                // cout<<x<<endl;
+                v.push_back(x);
             }
-            if(b[j]!=b[i] && flag)
-            break;
-            j--;
+            return ;
         }
-        // debug(j);
-        if(!flag)
-        {
-            // debug(j);
-            cout<<"NO"<<endl;
-            return;
-        }
-        
-        for(int k=j+1;k<=i;k++)
-        {
-            a[k]=req;
-        }
-
-
-        i--;
-        
-    }
-    // debug("h");
-    for(int i=0;i<n;i++)
+        s[i]='0';
+        f(i+1,s);
+        s[i]='1';
+        f(i+1,s);
+    };
+    char c='0';
+    string s;
+    for(int i=0;i<5;i++)
     {
-        if(a[i]!=b[i])
+        s+=c;
+    }
+    f(0,s);
+    int k=n;
+    int flag=1;
+    while(k>0)
+    {
+        int r=k%10;
+        if(r>1)
         {
-            cout<<"NO"<<endl;
-            return;
+            flag=0;
+        }
+        k=k/10;
+    }
+    if(flag)
+    {
+        cout<<"YES"<<endl;
+        return;
+    }
+    sort(all(v));
+    // debug("Hi");
+    for(auto it:v)
+    {
+        if(n<it)
+        {
+            break;
+        }
+        while(n%it==0)
+        {
+            // debug(it);
+            n=n/it;
         }
     }
-    cout<<"YES"<<endl;
+    if(n==1)
+    {
+        cout<<"YES"<<endl;
+    }
+    else
+    {
+        cout<<"NO"<<endl;
+    }
+
 }

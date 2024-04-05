@@ -4,6 +4,7 @@
 using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -18,49 +19,49 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
         solve();
 }
 void solve()
 {
-    string s;
-    cin>>s;
-    long long n=s.length();
+    long long n;
+    cin>>n;
+    map<long long,long long>mp1;
+    long long ss=0;
+    long long arr[n];
+    for(long long i=0;i<n;i++)
+    {
+        cin>>arr[i];
+        ss+=arr[i];
+        mp1[ss]++;
+    }
+    
 
-    const long long mod=998244353;
-    vector<vector<long long>>dp(n+1,vector<long long>(n+1,-1));
-    function<long long(long long,long long)>f=[&](long long i,long long len)->long long{
-        if(len<0)
-        return 0;
-        if(i==n)
+    if(ss==0)
+    {
+        long long x=mp1[0];
+        long long res=(x-1)*(x-2);
+        res=res/(2LL);
+        cout<<res<<endl;
+        return;
+    }
+
+    if(ss%3)
+    {
+        cout<<0<<endl;
+        return;
+    }
+    long long res=0;
+    long long s=0;
+    map<long long,long long>mp;
+    for(long long i=0;i<n;i++)
+    {
+        s+=arr[i];
+        mp[s]++;
+        if(s==2*(ss/3))
         {
-            if(len==0)
-            return 1;
-             
-             return 0;
+            // debug(ss/3);
+            res+=mp[ss/3];
         }
-
-        if(dp[i][len]!=-1)
-        return dp[i][len];
-        long long res=0;
-        if(s[i]=='(')
-        {
-            res=(res%mod+f(i+1,len+1)%mod)%mod;
-        }
-        else if(s[i]==')')
-        {
-            res=(res%mod+f(i+1,len-1)%mod)%mod;
-        }
-        else
-        {
-            res=(res%mod+f(i+1,len-1)%mod)%mod;
-            res=(res%mod+f(i+1,len+1)%mod)%mod;
-        }
-
-        return dp[i][len]= res;
-    };
-
-    long long x=f(0,0);
-
-    cout<<x<<endl;
+    }
+    cout<<res<<endl;
 }

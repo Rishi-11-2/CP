@@ -19,71 +19,25 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t;
-    cin >> t;
-    while (t--)
-    {
         solve();
-    }
 }
 void solve()
 {
-    int n;
-    cin>>n;
+    int n,k;
+    cin>>n>>k;
     int a[n];
-    int b[n];
+    for(int i=0;i<n;i++)
+    cin>>a[i];
+    
+    vector<int>v;
     for(int i=0;i<n;i++)
     {
-        cin>>a[i];
-    }
-    for(int i=0;i<n;i++)
-    {
-        cin>>b[i];
-    }
-
-    int i=n-1;
-    while(i>=0)
-    {
-
-        int req=b[i];
-        // debug(req);
-        int j=i;
-        int flag=0;
-        while(j>=0)
+        if(a[i]%k==0)
         {
-            if(a[j]==req)
-            {
-                flag=1;
-            }
-            if(b[j]!=b[i] && flag)
-            break;
-            j--;
-        }
-        // debug(j);
-        if(!flag)
-        {
-            // debug(j);
-            cout<<"NO"<<endl;
-            return;
-        }
-        
-        for(int k=j+1;k<=i;k++)
-        {
-            a[k]=req;
-        }
-
-
-        i--;
-        
-    }
-    // debug("h");
-    for(int i=0;i<n;i++)
-    {
-        if(a[i]!=b[i])
-        {
-            cout<<"NO"<<endl;
-            return;
+            v.push_back(a[i]/k);
         }
     }
-    cout<<"YES"<<endl;
+    for(auto it:v)
+    cout<<it<<" ";
+    cout<<endl;
 }

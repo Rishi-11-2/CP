@@ -19,12 +19,7 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t;
-    cin >> t;
-    while (t--)
-    {
         solve();
-    }
 }
 void solve()
 {
@@ -33,57 +28,41 @@ void solve()
     int a[n];
     int b[n];
     for(int i=0;i<n;i++)
-    {
-        cin>>a[i];
-    }
+    cin>>a[i];
+    
+    for(int i=0;i<n;i++)
+    cin>>b[i];
+     
+    map<int,int>mp;
     for(int i=0;i<n;i++)
     {
-        cin>>b[i];
+        mp[a[i]]=i;
     }
 
-    int i=n-1;
-    while(i>=0)
+    int i=0;
+    int j=0;
+    int count=0;
+    while(i<n)
     {
-
-        int req=b[i];
-        // debug(req);
-        int j=i;
-        int flag=0;
-        while(j>=0)
+        if(a[i]==0)
         {
-            if(a[j]==req)
-            {
-                flag=1;
-            }
-            if(b[j]!=b[i] && flag)
-            break;
-            j--;
+            i++;
+            continue;
         }
-        // debug(j);
-        if(!flag)
+        if(a[i]==b[j])
         {
-            // debug(j);
-            cout<<"NO"<<endl;
-            return;
+            i++;
+            j++;
         }
-        
-        for(int k=j+1;k<=i;k++)
+        else
         {
-            a[k]=req;
-        }
-
-
-        i--;
-        
-    }
-    // debug("h");
-    for(int i=0;i<n;i++)
-    {
-        if(a[i]!=b[i])
-        {
-            cout<<"NO"<<endl;
-            return;
+            count++;
+            a[mp[b[j]]]=0;
+            j++;
         }
     }
-    cout<<"YES"<<endl;
+
+    cout<<count<<endl;
+     
+    
 }

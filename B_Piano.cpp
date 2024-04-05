@@ -4,6 +4,7 @@
 using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -18,49 +19,59 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
         solve();
 }
 void solve()
 {
-    string s;
-    cin>>s;
-    long long n=s.length();
+    string s="wbwbwwbwbwbw";
+    string res="";
+    for(long long i=1;i<=(long long)(1e5);i++)
+    {
+        res+=s;
+    }
+    long long w,b;
+    cin>>w>>b;
+    long long i=0;
+    long long j=0;
+    long long n=res.length();
+    long long x=0;
+    long long y=0;
 
-    const long long mod=998244353;
-    vector<vector<long long>>dp(n+1,vector<long long>(n+1,-1));
-    function<long long(long long,long long)>f=[&](long long i,long long len)->long long{
-        if(len<0)
+    function<long long(void)>check=[&](void)->long long{
+
+        if(x==w && y==b)
+        return 1;
+
         return 0;
-        if(i==n)
-        {
-            if(len==0)
-            return 1;
-             
-             return 0;
-        }
-
-        if(dp[i][len]!=-1)
-        return dp[i][len];
-        long long res=0;
-        if(s[i]=='(')
-        {
-            res=(res%mod+f(i+1,len+1)%mod)%mod;
-        }
-        else if(s[i]==')')
-        {
-            res=(res%mod+f(i+1,len-1)%mod)%mod;
-        }
-        else
-        {
-            res=(res%mod+f(i+1,len-1)%mod)%mod;
-            res=(res%mod+f(i+1,len+1)%mod)%mod;
-        }
-
-        return dp[i][len]= res;
     };
+    function<long long(void)>f=[&](void)->long long{
 
-    long long x=f(0,0);
+        if(x<=w && y<=b)
+        return 1;
 
-    cout<<x<<endl;
+        return 0;
+    };
+    while(j<n)
+    {
+        if(res[j]=='w')
+        x++;
+        if(res[j]=='b')
+        y++;
+        while(i<=j && !f())
+        {
+            if(res[i]=='w')
+            x--;
+            if(res[i]=='b')
+            y--;
+            i++;
+        }
+        if(check())
+        {
+            // debug(i,j,res.substr(i,j-i+1));
+            cout<<"Yes"<<endl;
+            return;
+        }
+        j++;
+    }
+    cout<<"No"<<endl;
 }

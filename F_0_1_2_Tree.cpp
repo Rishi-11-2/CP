@@ -28,62 +28,51 @@ signed main()
 }
 void solve()
 {
-    int n;
-    cin>>n;
-    int a[n];
-    int b[n];
-    for(int i=0;i<n;i++)
+    int a,b,c;
+    cin>>a>>b>>c;
+    
+    int x=1;
+    int counta=0;
+    int countb=0;
+    int countc=0;
+    int xx=0;
+    int ans=0;
+    while(a>0)
     {
-        cin>>a[i];
-    }
-    for(int i=0;i<n;i++)
-    {
-        cin>>b[i];
-    }
-
-    int i=n-1;
-    while(i>=0)
-    {
-
-        int req=b[i];
-        // debug(req);
-        int j=i;
-        int flag=0;
-        while(j>=0)
+        if(x>a)
         {
-            if(a[j]==req)
-            {
-                flag=1;
-            }
-            if(b[j]!=b[i] && flag)
+            // flag=1;
+            xx=x-a;
+            countc+=a;
+            counta+=a;
             break;
-            j--;
         }
-        // debug(j);
-        if(!flag)
-        {
-            // debug(j);
-            cout<<"NO"<<endl;
-            return;
-        }
-        
-        for(int k=j+1;k<=i;k++)
-        {
-            a[k]=req;
-        }
-
-
-        i--;
-        
+        ans++;
+        a-=x;
+        counta+=x;
+        x=x*2;
     }
-    // debug("h");
-    for(int i=0;i<n;i++)
+    ans++;
+    countc+=x;
+
+    b-=min(b,x);
+    countb=min(b,x);
+    if(counta==a && countb==b && countc==c)
     {
-        if(a[i]!=b[i])
-        {
-            cout<<"NO"<<endl;
-            return;
-        }
+        cout<<ans-1<<endl;
+        return;
     }
-    cout<<"YES"<<endl;
+    while(countb<b)
+    {
+        if(countc>b)
+        {
+            ans++;
+            break;
+        }
+        countb+=countc;
+        ans++;
+    }
+
+    // debug(counta,countb);
+    cout<<ans-1<<endl;
 }

@@ -30,60 +30,41 @@ void solve()
 {
     int n;
     cin>>n;
-    int a[n];
-    int b[n];
-    for(int i=0;i<n;i++)
-    {
-        cin>>a[i];
-    }
-    for(int i=0;i<n;i++)
-    {
-        cin>>b[i];
-    }
+    int c=1;
+    int r=1;
 
-    int i=n-1;
-    while(i>=0)
+    for(int i=1;i<=2*n;i++)
     {
-
-        int req=b[i];
-        // debug(req);
-        int j=i;
-        int flag=0;
-        while(j>=0)
+        char ch1='/';
+        char ch2='/';
+        if(r<=2)
         {
-            if(a[j]==req)
+            ch1='#';
+            ch2='.';
+        }
+        else
+        {
+            ch1='.';
+            ch2='#';
+        }
+        c=1;
+        for(int j=1;j<=2*n;j++)
+        {
+            if(c<=2)
             {
-                flag=1;
+                cout<<ch1;
             }
-            if(b[j]!=b[i] && flag)
-            break;
-            j--;
+            else
+            {
+                cout<<ch2;
+            }
+            c=(c+1)%5;
+            if(c==0)
+            c=1;
         }
-        // debug(j);
-        if(!flag)
-        {
-            // debug(j);
-            cout<<"NO"<<endl;
-            return;
-        }
-        
-        for(int k=j+1;k<=i;k++)
-        {
-            a[k]=req;
-        }
-
-
-        i--;
-        
+        cout<<endl;
+        r=(r+1)%5;
+        if(r==0)
+        r=1;
     }
-    // debug("h");
-    for(int i=0;i<n;i++)
-    {
-        if(a[i]!=b[i])
-        {
-            cout<<"NO"<<endl;
-            return;
-        }
-    }
-    cout<<"YES"<<endl;
 }

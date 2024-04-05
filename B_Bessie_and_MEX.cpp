@@ -30,60 +30,32 @@ void solve()
 {
     int n;
     cin>>n;
-    int a[n];
-    int b[n];
+    int arr[n];
+    for(int i=0;i<n;i++)
+    cin>>arr[i];
+    
+    int mex=0;
+    vector<int>res(n,0);
+    set<int>s;
+    for(int i=0;i<=n;i++)
+    s.insert(i);
     for(int i=0;i<n;i++)
     {
-        cin>>a[i];
-    }
-    for(int i=0;i<n;i++)
-    {
-        cin>>b[i];
-    }
-
-    int i=n-1;
-    while(i>=0)
-    {
-
-        int req=b[i];
-        // debug(req);
-        int j=i;
-        int flag=0;
-        while(j>=0)
+        if(arr[i]>=0)
         {
-            if(a[j]==req)
-            {
-                flag=1;
-            }
-            if(b[j]!=b[i] && flag)
-            break;
-            j--;
+            
+            res[i]=mex;
+            s.erase(mex);
+            mex=*s.begin();
         }
-        // debug(j);
-        if(!flag)
+        else
         {
-            // debug(j);
-            cout<<"NO"<<endl;
-            return;
-        }
-        
-        for(int k=j+1;k<=i;k++)
-        {
-            a[k]=req;
-        }
-
-
-        i--;
-        
-    }
-    // debug("h");
-    for(int i=0;i<n;i++)
-    {
-        if(a[i]!=b[i])
-        {
-            cout<<"NO"<<endl;
-            return;
+            res[i]=(mex-arr[i]);
+            s.erase(res[i]);
         }
     }
-    cout<<"YES"<<endl;
+
+    for(auto it:res)
+    cout<<it<<" ";
+    cout<<endl;
 }

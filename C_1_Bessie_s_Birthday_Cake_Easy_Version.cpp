@@ -4,6 +4,7 @@
 using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -18,49 +19,45 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
+    long long t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    string s;
-    cin>>s;
-    long long n=s.length();
+    long long n,x,y;
+    cin>>n>>x>>y;
+    long long a[x];
+    for(long long i=0;i<x;i++)
+    cin>>a[i];
+    
+    sort(a,a+x);
 
-    const long long mod=998244353;
-    vector<vector<long long>>dp(n+1,vector<long long>(n+1,-1));
-    function<long long(long long,long long)>f=[&](long long i,long long len)->long long{
-        if(len<0)
-        return 0;
-        if(i==n)
+    set<long long>s;
+    for(long long i=0;i<x;i++)
+    s.insert(a[i]);
+     
+    long long res=x-2;
+    for(long long i=0;i<x;i++)
+    {
+        long long next2=a[i]+2;
+        if(next2>n)
         {
-            if(len==0)
-            return 1;
-             
-             return 0;
+            next2=next2-n;
         }
-
-        if(dp[i][len]!=-1)
-        return dp[i][len];
-        long long res=0;
-        if(s[i]=='(')
+        long long next1=a[i]+1;
+        if(next1>n)
         {
-            res=(res%mod+f(i+1,len+1)%mod)%mod;
+            next1=next1-n;
         }
-        else if(s[i]==')')
-        {
-            res=(res%mod+f(i+1,len-1)%mod)%mod;
-        }
-        else
-        {
-            res=(res%mod+f(i+1,len-1)%mod)%mod;
-            res=(res%mod+f(i+1,len+1)%mod)%mod;
-        }
+        // debug(next1,next2);
 
-        return dp[i][len]= res;
-    };
+        if(s.find(next2)!=s.end() && s.find(next1)==s.end())
+        res++;
+    }
+    cout<<res<<endl;
 
-    long long x=f(0,0);
-
-    cout<<x<<endl;
 }

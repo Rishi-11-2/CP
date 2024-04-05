@@ -28,62 +28,55 @@ signed main()
 }
 void solve()
 {
-    int n;
-    cin>>n;
-    int a[n];
-    int b[n];
-    for(int i=0;i<n;i++)
-    {
-        cin>>a[i];
-    }
-    for(int i=0;i<n;i++)
-    {
-        cin>>b[i];
-    }
+    int n,k;
+    cin>>n>>k;
+    // vector<vector<int>>v;
+    priority_queue<vector<int>>pq;
 
-    int i=n-1;
-    while(i>=0)
+    vector<vector<int>>a;
+    for(int i=1;i<=n;i++)
     {
-
-        int req=b[i];
-        // debug(req);
-        int j=i;
-        int flag=0;
-        while(j>=0)
+        vector<int>x;
+        for(int j=1;j<=n-i+1;j++)
         {
-            if(a[j]==req)
-            {
-                flag=1;
-            }
-            if(b[j]!=b[i] && flag)
-            break;
-            j--;
+            int y;
+            cin>>y;
+            x.push_back(y);
         }
-        // debug(j);
-        if(!flag)
+        a.push_back(x);
+    }
+    vector<vector<pair<int,int>>>v;
+    for(int i=1;i<=n;i++)
+    {
+        vector<pair<int,int>>y;
+        for(int j=1;j<=n-i+1;j++)
         {
-            // debug(j);
-            cout<<"NO"<<endl;
-            return;
+            int x=a[j-1][i-1];
+            y.push_back({x,j-1});
+            
         }
+        sort(all(y));
+        reverse(all(y));
+        if((int)(y.size())==1)
+        {
+            pq.push({y[0].first,i-1,y[0].second});
+            continue;
+        }
+        if(y[0].second!=y[1].second)
+        {
+            pq.push({y[0].first+y[1].first,i-1,y[0].second});
+        }
+        else
+        {
+            pq.push({y[0].first+y[2].first,i-1,y[0].second});
+        }
+        v.push_back(y);
+    }
+    vector<int>res;
+    while(k--)
+    {
+        auto it=pq.top();
+        pq.pop();
         
-        for(int k=j+1;k<=i;k++)
-        {
-            a[k]=req;
-        }
-
-
-        i--;
-        
     }
-    // debug("h");
-    for(int i=0;i<n;i++)
-    {
-        if(a[i]!=b[i])
-        {
-            cout<<"NO"<<endl;
-            return;
-        }
-    }
-    cout<<"YES"<<endl;
 }

@@ -30,42 +30,61 @@ void solve()
 {
     long long n,k;
     cin>>n>>k;
-
-    long long arr[n];
-
-    long long s=0;
-    for(long long i=0;i<n;i++)
+    vector<long long>adj[n+1];
+    for(long long i=1;i<=n-1;i++)
     {
-        cin>>arr[i];
-        s+=arr[i];
+        long long x,y;
+        cin>>x>>y;
+        adj[x].push_back(y);
+        adj[y].push_back(x);
     }
 
-     
+    long long low=1;
+    long long high=n;
+
     long long res=0;
-    long long maxm=0;
-    for(long long i=0;i<n;i++)
-    {
-        maxm=maxm+arr[i];
 
-        if(maxm>res)
+    long long ans=0;
+    function<long long(long long,long long,long long)>dfs=[&](long long u,long long par,long long mid)->long long{
+
+        long long count=0;
+        for(long long v:adj[u])
         {
-            res=maxm;
+            if(v!=par)
+            {
+                count+=dfs(v,u,mid);
+            }
         }
-        if(maxm<0)
+        count++;
+        if(count>=mid)
         {
-            maxm=0;
+            count=0;
+            ans++;
+        }
+        // debug(u,count);
+        return count;
+    };
+    function<long long(long long)>f=[&](long long mid)->long long{
+        ans=0;
+        long long s=dfs(1,0,mid);
+
+        if(ans-1>=k)
+        return 1;
+
+        return 0;
+    };
+    while(low<=high)
+    {
+        long long mid=(low+high)/2;
+        if(f(mid))
+        {
+            res=mid;
+            low=mid+1;
+        }
+        else
+        {
+            high=mid-1;
         }
     }
-
-    const long long mod=(long long)(1e9+7);
-    s=(s%mod+mod)%mod;
-    // debug(s,res);
-    for(long long i=1;i<=k;i++)
-    {
-        s=(s%mod+res%mod)%mod;
-        res=(res%mod+res%mod)%mod;
-    }
-
-    cout<<s<<endl;
-
+    cout<<res<<endl;
 }

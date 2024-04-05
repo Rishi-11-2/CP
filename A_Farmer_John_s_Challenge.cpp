@@ -28,62 +28,28 @@ signed main()
 }
 void solve()
 {
-    int n;
-    cin>>n;
-    int a[n];
-    int b[n];
-    for(int i=0;i<n;i++)
+    int n,k;
+    cin>>n>>k;
+    if(k==1)
     {
-        cin>>a[i];
+        for(int i=1;i<=n;i++)
+        {
+            cout<<i<<" ";
+            
+        }
+        cout<<endl;
+        return;
     }
-    for(int i=0;i<n;i++)
+    else if(k==n)
     {
-        cin>>b[i];
+        for(int i=1;i<=n;i++)
+        {
+            cout<<1<<" ";
+        }
+        cout<<endl;
+        return;
     }
-
-    int i=n-1;
-    while(i>=0)
-    {
-
-        int req=b[i];
-        // debug(req);
-        int j=i;
-        int flag=0;
-        while(j>=0)
-        {
-            if(a[j]==req)
-            {
-                flag=1;
-            }
-            if(b[j]!=b[i] && flag)
-            break;
-            j--;
-        }
-        // debug(j);
-        if(!flag)
-        {
-            // debug(j);
-            cout<<"NO"<<endl;
-            return;
-        }
-        
-        for(int k=j+1;k<=i;k++)
-        {
-            a[k]=req;
-        }
-
-
-        i--;
-        
+    else{
+        cout<<-1<<endl;
     }
-    // debug("h");
-    for(int i=0;i<n;i++)
-    {
-        if(a[i]!=b[i])
-        {
-            cout<<"NO"<<endl;
-            return;
-        }
-    }
-    cout<<"YES"<<endl;
 }

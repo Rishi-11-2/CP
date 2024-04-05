@@ -18,72 +18,31 @@ signed main()
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.setf(ios::fixed);
-    cout.precision(10);
-    int t;
-    cin >> t;
-    while (t--)
-    {
+    cout.precision(20);
         solve();
-    }
 }
 void solve()
 {
-    int n;
-    cin>>n;
-    int a[n];
-    int b[n];
-    for(int i=0;i<n;i++)
-    {
-        cin>>a[i];
-    }
-    for(int i=0;i<n;i++)
-    {
-        cin>>b[i];
-    }
+    int n,m;
+    cin>>m>>n;
 
-    int i=n-1;
-    while(i>=0)
+    double res=0.0;
+    double r=m*1.0;
+    for(int i=1;i<=m;i++)
     {
+        double a=(i)*1.0;
+        double b=(i-1)*1.0;
 
-        int req=b[i];
-        // debug(req);
-        int j=i;
-        int flag=0;
-        while(j>=0)
-        {
-            if(a[j]==req)
-            {
-                flag=1;
-            }
-            if(b[j]!=b[i] && flag)
-            break;
-            j--;
-        }
-        // debug(j);
-        if(!flag)
-        {
-            // debug(j);
-            cout<<"NO"<<endl;
-            return;
-        }
-        
-        for(int k=j+1;k<=i;k++)
-        {
-            a[k]=req;
-        }
+        double c=a/r;
+        double d=b/r;
 
+        double e=i*1.0;
 
-        i--;
-        
+        double res1=pow(c,n);
+        double res2=pow(d,n);
+        double ans=(res1-res2)*e;
+
+        res+=ans;
     }
-    // debug("h");
-    for(int i=0;i<n;i++)
-    {
-        if(a[i]!=b[i])
-        {
-            cout<<"NO"<<endl;
-            return;
-        }
-    }
-    cout<<"YES"<<endl;
+    cout<<res<<endl;
 }

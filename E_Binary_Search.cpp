@@ -28,62 +28,41 @@ signed main()
 }
 void solve()
 {
-    int n;
-    cin>>n;
-    int a[n];
-    int b[n];
-    for(int i=0;i<n;i++)
+    int n,x;
+    cin>>n>>x;
+    int a[n+1];
+    int p=-1;
+    for(int i=1;i<=n;i++)
     {
         cin>>a[i];
+        if(a[i]==x)
+        {
+            p=i;
+        }
     }
-    for(int i=0;i<n;i++)
+    
+    int l=1;
+    int r=n+1;
+
+    while(r-l>1)
     {
-        cin>>b[i];
+        int m=(r+l)/2;
+        if(a[m]<=x)
+        {
+            l=m;
+        }
+        else
+        {
+            r=m;
+        }
     }
-
-    int i=n-1;
-    while(i>=0)
+    if(a[l]==x)
     {
-
-        int req=b[i];
-        // debug(req);
-        int j=i;
-        int flag=0;
-        while(j>=0)
-        {
-            if(a[j]==req)
-            {
-                flag=1;
-            }
-            if(b[j]!=b[i] && flag)
-            break;
-            j--;
-        }
-        // debug(j);
-        if(!flag)
-        {
-            // debug(j);
-            cout<<"NO"<<endl;
-            return;
-        }
-        
-        for(int k=j+1;k<=i;k++)
-        {
-            a[k]=req;
-        }
-
-
-        i--;
-        
+        cout<<0<<endl;
     }
-    // debug("h");
-    for(int i=0;i<n;i++)
+    else
     {
-        if(a[i]!=b[i])
-        {
-            cout<<"NO"<<endl;
-            return;
-        }
+        cout<<1<<endl;
+        cout<<l<<" "<<p<<endl;
     }
-    cout<<"YES"<<endl;
 }

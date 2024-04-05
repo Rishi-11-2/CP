@@ -28,44 +28,59 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n;
+    cin>>n;
+    string ss;
+    cin>>ss;
 
-    long long arr[n];
-
-    long long s=0;
-    for(long long i=0;i<n;i++)
+    vector<long long>v;
+    for(long long i=1;i<n;i++)
     {
-        cin>>arr[i];
-        s+=arr[i];
-    }
-
-     
-    long long res=0;
-    long long maxm=0;
-    for(long long i=0;i<n;i++)
-    {
-        maxm=maxm+arr[i];
-
-        if(maxm>res)
+        if(n%i==0)
         {
-            res=maxm;
-        }
-        if(maxm<0)
-        {
-            maxm=0;
+            v.push_back(i);
         }
     }
-
-    const long long mod=(long long)(1e9+7);
-    s=(s%mod+mod)%mod;
-    // debug(s,res);
-    for(long long i=1;i<=k;i++)
+    sort(all(v));
+    for(auto mid:v)
     {
-        s=(s%mod+res%mod)%mod;
-        res=(res%mod+res%mod)%mod;
+        long long flag2=1;
+        long long count=0;
+        for(long long i=0;i<mid;i++)
+        {
+            map<char,long long>mp;
+            for(long long j=i;j<n;j+=mid)
+            {
+                mp[ss[j]]++;
+            }
+            if((long long)(mp.size())>2)
+            {
+                flag2=0;
+                break;
+            }
+            if((long long)(mp.size())==1)
+            continue;
+            long long m=n/mid;
+            set<long long>s;
+            // debug(mid,(long long)(mp.size()));
+            for(auto it:mp)
+            s.insert(it.second);
+            if(!(*s.rbegin()==m-1 && *s.begin()==1))
+            {
+                flag2=0;
+                break;
+            }
+            if((long long)(mp.size())==2)
+            count++;
+            // debug(count,mid);
+        }
+        // debug(mid,count);
+        if(flag2 && count<=1)
+        {
+            cout<<mid<<endl;
+            return;
+        }
     }
-
-    cout<<s<<endl;
+    cout<<n<<endl;
 
 }

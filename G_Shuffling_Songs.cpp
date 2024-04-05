@@ -30,60 +30,56 @@ void solve()
 {
     int n;
     cin>>n;
-    int a[n];
-    int b[n];
+    vector<pair<string ,string>>v;
+    for(int i=1;i<=n;i++)
+    {
+        string a,b;
+        cin>>a>>b;
+        v.push_back({a,b});
+    }
+    vector<vector<int>>dp((1<<n),vector<int>(n,-1));
+    vector<vector<int>>ok(n+1,vector<int>(n+1,0));
     for(int i=0;i<n;i++)
     {
-        cin>>a[i];
-    }
-    for(int i=0;i<n;i++)
-    {
-        cin>>b[i];
-    }
-
-    int i=n-1;
-    while(i>=0)
-    {
-
-        int req=b[i];
-        // debug(req);
-        int j=i;
-        int flag=0;
-        while(j>=0)
+        for(int j=0;j<n;j++)
         {
-            if(a[j]==req)
+            if(i==j)
             {
-                flag=1;
+                ok[i][j]=1;
+                continue;
             }
-            if(b[j]!=b[i] && flag)
-            break;
-            j--;
+            if(v[i].first==v[j].first||v[i].second==v[j].second)
+            {
+                ok[i][j]=1;
+            }
         }
-        // debug(j);
-        if(!flag)
-        {
-            // debug(j);
-            cout<<"NO"<<endl;
-            return;
-        }
-        
-        for(int k=j+1;k<=i;k++)
-        {
-            a[k]=req;
-        }
-
-
-        i--;
-        
     }
-    // debug("h");
+    sort(all(v));
+
+    function<int(int ,int)>f=[&](int i,int mask)->int{
+
+        if(dp[mask][i]!=-1)
+        return dp[mask][i];
+        int res=__builtin_popcount(mask);
+
+        for(int j=0;j<n;j++)
+        {
+            if((mask&(1<<j))!=0)
+            continue;
+            if(ok[i][j])
+            {
+                int newMask=mask|(1<<j);
+                res=max(res,f(j,newMask));
+            }
+        }
+        return dp[mask][i]= res;
+    };
+    int res=0;
     for(int i=0;i<n;i++)
     {
-        if(a[i]!=b[i])
-        {
-            cout<<"NO"<<endl;
-            return;
-        }
+        int mask=1<<i;
+        res=max(res,f(i,mask));
     }
-    cout<<"YES"<<endl;
+
+    cout<<n-res<<endl;
 }

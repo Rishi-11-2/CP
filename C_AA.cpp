@@ -4,6 +4,7 @@
 using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -18,49 +19,38 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
         solve();
 }
 void solve()
 {
-    string s;
-    cin>>s;
-    long long n=s.length();
+    long long n,k;
+    cin>>n>>k;
 
-    const long long mod=998244353;
-    vector<vector<long long>>dp(n+1,vector<long long>(n+1,-1));
-    function<long long(long long,long long)>f=[&](long long i,long long len)->long long{
-        if(len<0)
-        return 0;
-        if(i==n)
-        {
-            if(len==0)
-            return 1;
-             
-             return 0;
-        }
+    long long arr[n];
+    set<long long>s;
+    for(long long i=0;i<n;i++)
+    {
+        cin>>arr[i];
+        if(arr[i]<=k)
+        s.insert(arr[i]);
+    }
+    
+    long long sum1=k;
+    long long sum2=k+1;
+    if(sum1%2==0)
+    {
+        sum1=sum1/2;
+    }
+    else if(sum2%2==0)
+    {
+        sum2=sum2/2;
+    }
 
-        if(dp[i][len]!=-1)
-        return dp[i][len];
-        long long res=0;
-        if(s[i]=='(')
-        {
-            res=(res%mod+f(i+1,len+1)%mod)%mod;
-        }
-        else if(s[i]==')')
-        {
-            res=(res%mod+f(i+1,len-1)%mod)%mod;
-        }
-        else
-        {
-            res=(res%mod+f(i+1,len-1)%mod)%mod;
-            res=(res%mod+f(i+1,len+1)%mod)%mod;
-        }
-
-        return dp[i][len]= res;
-    };
-
-    long long x=f(0,0);
-
-    cout<<x<<endl;
+    long long sum=sum1*sum2;
+    // debug(sum);
+    for(auto it:s)
+    {
+        sum-=it;
+    }
+    cout<<sum<<endl;
 }

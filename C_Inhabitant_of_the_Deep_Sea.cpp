@@ -28,58 +28,50 @@ signed main()
 }
 void solve()
 {
-    long long n;
-    cin>>n;
-    vector<pair<string ,string>>v;
-    for(long long i=1;i<=n;i++)
-    {
-        string a,b;
-        cin>>a>>b;
-        v.push_back({a,b});
-    }
-    vector<vector<long long>>ok(n+1,vector<long long>(n+1,0));
+    long long n,k;
+    cin>>n>>k;
+
+    long long arr[n];
+    vector<long long>count(n,0);
     for(long long i=0;i<n;i++)
     {
-        for(long long j=0;j<n;j++)
-        {
-            if(i==j)
-            {
-                ok[i][j]=1;
-                continue;
-            }
-            if(v[i].first==v[j].first||v[i].second==v[j].second)
-            {
-                ok[i][j]=1;
-            }
-        }
+        cin>>arr[i];
+        count[i]=arr[i];
     }
-    sort(all(v));
-
-    vector<vector<long long>>dp(n,vector<long long>((1<<n),-1));
-    function<long long(long long ,long long)>f=[&](long long i,long long mask)->long long{
-
-        if(dp[i][mask]!=-1)
-        return dp[i][mask];
-        long long res=__builtin_popcountll(mask);
-
-        for(long long j=0;j<n;j++)
-        {
-            if((mask&(1<<j))!=0)
-            continue;
-            if(ok[i][j])
-            {
-                long long newMask=mask|(1<<j);
-                res=max(res,f(j,newMask));
-            }
-        }
-        return dp[i][mask]= res;
-    };
+    long long first=k/2;
+    long long last=k/2;
+    if(k%2)
+    first++;
+     
+    long long s=0;
+    long long fc=0;
+    for(long long i=0;i<n;i++)
+    {
+        long long d=min(count[i],first);
+        count[i]-=d;
+        first-=d;
+        // debug(first,i);
+        if(first==0)
+        break;
+    }
+    s=0;
+    long long lc=0;
+    for(long long i=n-1;i>=0;i--)
+    {
+        long long d=min(count[i],last);
+        count[i]-=d;
+        last-=d;
+        if(last==0)
+        break;
+    }
+    // for(long long i=0;i<n;i++)
+    // cout<<count[i]<<" ";
+    // cout<<endl;
     long long res=0;
     for(long long i=0;i<n;i++)
     {
-        long long mask=1<<i;
-        res=max(res,f(i,mask));
+        if(count[i]==0)
+        res++;
     }
-
-    cout<<n-res<<endl;
+    cout<<res<<endl;
 }

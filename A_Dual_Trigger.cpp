@@ -5,6 +5,7 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -30,41 +31,43 @@ void solve()
 {
     int n;
     cin>>n;
-
-    int arr[n];
-    for(int i=0;i<n;i++)
-    cin>>arr[i];
-     
-    vector<int>dp(n+1,1);
-    map<int,int>minm;
+    string s;
+    cin>>s;
+    if(n==1)
+    {
+        if(s[0]=='1')
+        {
+            cout<<"NO"<<endl;
+        }
+        else
+        {
+            cout<<"YES"<<endl;
+        }
+        return;
+    }
+    vector<int>v;
     for(int i=0;i<n;i++)
     {
-        minm[arr[i]]=INT_MAX;
+        if(s[i]=='1')
+        v.push_back(i+1);
     }
-    dp[0]=0;
-    dp[1]=1;
-    minm[arr[0]]=dp[0];
-    /* dp[i]= min(dp[i-1]+1,dp[j1],dp[j2],dp[j3], ..dp[jk])*/
-    /* here j1 , j2 , j3 are the previous matching indices */
-    /* dp[ j2 ]=min(dp[j1], dp[j2-1]+1)
-       dp[j3]=min(dp[j2],dp[j1],dp[j3-1]+1)
 
-       dp[j4]=min(dp[j3],dp[j2],dp[j1],dp[j4-1]+1)
-
-       ...
-
-       dp[jk]=min(dp[j1],dp[j2],dp[j3],...,dp[j(k-1)-1],dp[jk-1]+1)
-
-
-       so we can store the minimum of dp[j1], dp[j2], dp[j3 ],.. dp[jz] for dp[j(z+1)] 
-
-
-
-    */
-    for(int i=2;i<=n;i++)
+    int sz=(int)(v.size());
+    if(sz%2)
     {
-        dp[i]=min(dp[i-1]+1,minm[arr[i-1]]);
-        minm[arr[i-1]]=min(minm[arr[i-1]],dp[i-1]);
+        cout<<"NO"<<endl;
+        return;
     }
-    cout<<n-dp[n]<<endl;
+    int m=sz/2;
+    
+    for(int i=0;i<m;i++)
+    {
+        int d=v[i+m]-v[i];
+        if(d<=1)
+        {
+            cout<<"NO"<<endl;
+            return;
+        }
+    }
+    cout<<"YES"<<endl;
 }

@@ -30,60 +30,78 @@ void solve()
 {
     int n;
     cin>>n;
+    
     int a[n];
+    for(int i=0;i<n;i++)
+    cin>>a[i];
+    
     int b[n];
     for(int i=0;i<n;i++)
-    {
-        cin>>a[i];
-    }
+    cin>>b[i];
+    
+    vector<vector<int>>v;
     for(int i=0;i<n;i++)
     {
-        cin>>b[i];
+        v.push_back({b[i],a[i],i});
     }
-
-    int i=n-1;
-    while(i>=0)
+    vector<int>mp(n,0);
+    sort(all(v));
+    /*we are sorting according to b's because we need to equalize a to b . thats why we are sorting according to b not according to a
+    as we need to make a's equal to b. once a[i] is increased , it can never decrease 
+    therefore we are going from the minimum to maximum as we intend to increase a[i] to b[i] if they are not alreay equal*/
+    for(auto it:v)
     {
-
-        int req=b[i];
-        // debug(req);
-        int j=i;
+        int idx=it[2];
         int flag=0;
-        while(j>=0)
+        if(a[idx]==b[idx])
         {
-            if(a[j]==req)
-            {
-                flag=1;
-            }
-            if(b[j]!=b[i] && flag)
-            break;
-            j--;
+            mp[idx]=1;
+            continue;
         }
-        // debug(j);
+        for(int j=idx;j<n;j++)
+        {
+            if(a[j]>b[idx])
+            break;
+            
+            if(mp[j]==1)
+            {
+                if(b[j]!=b[idx])
+                break;
+            }
+            if(a[j]==b[idx])
+            {
+                mp[idx]=1;
+                flag=1;
+                break;
+            }
+        }
+        if(flag==1)
+        continue;
+        for(int j=idx;j>=0;j--)
+        {
+            if(a[j]>b[idx])
+            break;
+            
+            if(mp[j]==1)
+            {
+                if(b[j]!=b[idx])
+                break;
+            }
+            if(a[j]==b[idx])
+            {
+                mp[idx]=1;
+                flag=1;
+                break;
+            }
+        }
+
         if(!flag)
         {
-            // debug(j);
-            cout<<"NO"<<endl;
-            return;
-        }
-        
-        for(int k=j+1;k<=i;k++)
-        {
-            a[k]=req;
-        }
-
-
-        i--;
-        
-    }
-    // debug("h");
-    for(int i=0;i<n;i++)
-    {
-        if(a[i]!=b[i])
-        {
             cout<<"NO"<<endl;
             return;
         }
     }
+
     cout<<"YES"<<endl;
+    
 }

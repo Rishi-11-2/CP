@@ -30,56 +30,38 @@ void solve()
 {
     long long n;
     cin>>n;
-    vector<pair<string ,string>>v;
+    long long arr[n+2];
+
     for(long long i=1;i<=n;i++)
-    {
-        string a,b;
-        cin>>a>>b;
-        v.push_back({a,b});
-    }
-    vector<vector<long long>>ok(n+1,vector<long long>(n+1,0));
-    for(long long i=0;i<n;i++)
-    {
-        for(long long j=0;j<n;j++)
+    cin>>arr[i];
+
+    vector<long long>dp(n+2,-1);
+    function<long long(long long)>f=[&](long long i)->long long{
+
+        if(i>n)
+        return 0;
+
+       if(dp[i]!=-1)
+       {
+        return dp[i];
+       }
+        
+        long long res=1;
+        // debug(i);
+        // res=max(res,f(i+1));
+        for(long long j=i+i;j<=n;j+=i)
         {
-            if(i==j)
+            if(arr[j]>arr[i])
             {
-                ok[i][j]=1;
-                continue;
-            }
-            if(v[i].first==v[j].first||v[i].second==v[j].second)
-            {
-                ok[i][j]=1;
+                res=max(res,1+f(j));
             }
         }
-    }
-    sort(all(v));
-
-    vector<vector<long long>>dp(n,vector<long long>((1<<n),-1));
-    function<long long(long long ,long long)>f=[&](long long i,long long mask)->long long{
-
-        if(dp[i][mask]!=-1)
-        return dp[i][mask];
-        long long res=__builtin_popcountll(mask);
-
-        for(long long j=0;j<n;j++)
-        {
-            if((mask&(1<<j))!=0)
-            continue;
-            if(ok[i][j])
-            {
-                long long newMask=mask|(1<<j);
-                res=max(res,f(j,newMask));
-            }
-        }
-        return dp[i][mask]= res;
+        return dp[i]= res;
     };
-    long long res=0;
-    for(long long i=0;i<n;i++)
+    long long x=0;
+    for(int i=1;i<=n;i++)
     {
-        long long mask=1<<i;
-        res=max(res,f(i,mask));
+        x=max(x,f(i));
     }
-
-    cout<<n-res<<endl;
+    cout<<x<<endl;
 }

@@ -35,11 +35,15 @@ void solve()
     
     map<long long,long long>mp;
     map<long long,long long>f;
+
+    long long sz=m;
     for(long long i=1;i<=m;i++)
     {
         long long x;
         cin>>x;
         f[i]=x;
+        if(f[i]==0)
+        sz--;
     }
 
 
@@ -70,7 +74,7 @@ void solve()
         {
             // debug(i,j);
 
-            if((long long)(s.size())==m)
+            if((long long)(s.size())==sz)
             res=min(res,extra);
         
             mp[arr[i]]--;

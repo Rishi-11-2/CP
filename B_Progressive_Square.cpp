@@ -28,43 +28,54 @@ signed main()
 }
 void solve()
 {
-    int n;
-    cin>>n;
+    int n,c,d;
+    cin>>n>>c>>d;
 
-    int arr[n];
-    for(int i=0;i<n;i++)
-    cin>>arr[i];
-     
-    vector<int>dp(n+1,1);
-    map<int,int>minm;
-    for(int i=0;i<n;i++)
+    vector<int>v;
+
+    multiset<int>s;
+    for(int i=1;i<=(n*n);i++)
     {
-        minm[arr[i]]=INT_MAX;
+        int x;
+        cin>>x;
+        s.insert(x);
+        v.push_back(x);
     }
-    dp[0]=0;
-    dp[1]=1;
-    minm[arr[0]]=dp[0];
-    /* dp[i]= min(dp[i-1]+1,dp[j1],dp[j2],dp[j3], ..dp[jk])*/
-    /* here j1 , j2 , j3 are the previous matching indices */
-    /* dp[ j2 ]=min(dp[j1], dp[j2-1]+1)
-       dp[j3]=min(dp[j2],dp[j1],dp[j3-1]+1)
 
-       dp[j4]=min(dp[j3],dp[j2],dp[j1],dp[j4-1]+1)
+    sort(all(v));
 
-       ...
+    vector<vector<int>>matrix(n,vector<int>(n,1));
 
-       dp[jk]=min(dp[j1],dp[j2],dp[j3],...,dp[j(k-1)-1],dp[jk-1]+1)
+    matrix[0][0]=v[0];
 
-
-       so we can store the minimum of dp[j1], dp[j2], dp[j3 ],.. dp[jz] for dp[j(z+1)] 
-
-
-
-    */
-    for(int i=2;i<=n;i++)
+    for(int i=1;i<n;i++)
     {
-        dp[i]=min(dp[i-1]+1,minm[arr[i-1]]);
-        minm[arr[i-1]]=min(minm[arr[i-1]],dp[i-1]);
+        int f=matrix[0][i-1]+d;
+        auto it=s.find(f);
+        if(it==s.end())
+        {
+            cout<<"NO"<<endl;
+            return;
+        }
+        matrix[0][i]=*it;
+        s.erase(it);
     }
-    cout<<n-dp[n]<<endl;
+
+    for(int i=1;i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            int f=matrix[i-1][j]+c;
+            auto it=s.find(f);
+            if(it==s.end())
+            {
+                cout<<"NO"<<endl;
+                return;
+            }
+            matrix[i][j]=*it;
+            s.erase(it);
+        }
+    }
+    cout<<"YES"<<endl;
+
 }

@@ -30,56 +30,44 @@ void solve()
 {
     long long n;
     cin>>n;
-    vector<pair<string ,string>>v;
-    for(long long i=1;i<=n;i++)
-    {
-        string a,b;
-        cin>>a>>b;
-        v.push_back({a,b});
-    }
-    vector<vector<long long>>ok(n+1,vector<long long>(n+1,0));
+    string s;
+    cin>>s;
+    long long res=1;
+    vector<long long>nums(n,0);
     for(long long i=0;i<n;i++)
     {
-        for(long long j=0;j<n;j++)
-        {
-            if(i==j)
-            {
-                ok[i][j]=1;
-                continue;
-            }
-            if(v[i].first==v[j].first||v[i].second==v[j].second)
-            {
-                ok[i][j]=1;
-            }
-        }
+        nums[i]=(s[i]-'0');
     }
-    sort(all(v));
-
-    vector<vector<long long>>dp(n,vector<long long>((1<<n),-1));
-    function<long long(long long ,long long)>f=[&](long long i,long long mask)->long long{
-
-        if(dp[i][mask]!=-1)
-        return dp[i][mask];
-        long long res=__builtin_popcountll(mask);
-
-        for(long long j=0;j<n;j++)
-        {
-            if((mask&(1<<j))!=0)
-            continue;
-            if(ok[i][j])
-            {
-                long long newMask=mask|(1<<j);
-                res=max(res,f(j,newMask));
-            }
-        }
-        return dp[i][mask]= res;
-    };
-    long long res=0;
-    for(long long i=0;i<n;i++)
+    for(long long k=2;k<=n;k++)
     {
-        long long mask=1<<i;
-        res=max(res,f(i,mask));
-    }
+        long long flag=1;
+        vector<long long> flips(n, 0);
+        for(long long i = 0; i < n; i++){
+            long long currBit = nums[i];
+            if(i > 0){
+                long long prev = flips[i - 1];
+                long long beforeK = (i - k >= 0 ? flips[i - k] : 0);
+                long long totalOps = prev - beforeK;
+                if(totalOps % 2 != 0){
+                    currBit = currBit ^ 1;
+                    // flipped current bit due to previous operations
+                }
+            }
+            if(currBit == 0){
+                if(i + k > n){
+                    flag=0;
+                    break;
+                }
+                flips[i] = 1;
+            }
+            if(i > 0){
+                flips[i] += flips[i - 1]; // prefix sum
+            }
+            // nums[i] = 1;
+        }
 
-    cout<<n-res<<endl;
+        if(flag)
+        res=k;
+    }
+    cout<<res<<endl;
 }

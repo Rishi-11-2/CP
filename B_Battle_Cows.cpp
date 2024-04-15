@@ -28,43 +28,59 @@ signed main()
 }
 void solve()
 {
-    int n;
-    cin>>n;
-
-    int arr[n];
-    for(int i=0;i<n;i++)
-    cin>>arr[i];
-     
-    vector<int>dp(n+1,1);
-    map<int,int>minm;
+    int n,idx;
+    cin>>n>>idx;
+    int a[n];
+    idx--;
+    int target;
     for(int i=0;i<n;i++)
     {
-        minm[arr[i]]=INT_MAX;
+        cin>>a[i];
+        if(i==idx)
+        {
+            target=a[i];
+        }
     }
-    dp[0]=0;
-    dp[1]=1;
-    minm[arr[0]]=dp[0];
-    /* dp[i]= min(dp[i-1]+1,dp[j1],dp[j2],dp[j3], ..dp[jk])*/
-    /* here j1 , j2 , j3 are the previous matching indices */
-    /* dp[ j2 ]=min(dp[j1], dp[j2-1]+1)
-       dp[j3]=min(dp[j2],dp[j1],dp[j3-1]+1)
 
-       dp[j4]=min(dp[j3],dp[j2],dp[j1],dp[j4-1]+1)
-
-       ...
-
-       dp[jk]=min(dp[j1],dp[j2],dp[j3],...,dp[j(k-1)-1],dp[jk-1]+1)
-
-
-       so we can store the minimum of dp[j1], dp[j2], dp[j3 ],.. dp[jz] for dp[j(z+1)] 
-
-
-
-    */
-    for(int i=2;i<=n;i++)
+    int maxm=*max_element(a,a+n);
+    if(maxm==target)
     {
-        dp[i]=min(dp[i-1]+1,minm[arr[i-1]]);
-        minm[arr[i-1]]=min(minm[arr[i-1]],dp[i-1]);
+        cout<<n-1<<endl;
+        return;
     }
-    cout<<n-dp[n]<<endl;
+    int x=0;
+    int res=0;
+    int flag=0;
+    int flag1=0;
+    for(int i=0;i<n;i++)
+    {
+        if(a[i]<target)
+        {
+            x++;
+        }
+        if(a[i]==target)
+        {
+            if(flag1==1)
+            {
+                res=max(res,x);
+                break;
+            }
+            flag=1;
+        }
+        if(a[i]>target)
+        {
+            if(flag||flag1)
+            {
+                res=max(res,x);
+                break;
+            }
+            else
+            {
+                res=max(res,x-1);
+                x=min(x,1);
+                flag1=1;
+            }
+        }
+    }
+    cout<<res<<endl;
 }

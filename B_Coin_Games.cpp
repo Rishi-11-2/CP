@@ -20,35 +20,27 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    
+    int t;
+    cin >> t;
+    while (t--)
+    {
         solve();
-    
+    }
 }
 void solve()
 {
-    int d;
-    cin>>d;
-        vector<vector<int>>dp(7*d,vector<int>(7*d,-1));
-        function<int(int,int)>f=[&](int n,int i )->int{
-            if(n==d)
-            {
-                return 0;
-            }
-            // debug(n,i);
-            if(dp[n+3*d][i+3*d]!=-1)
-            return dp[n+3*d][i+3*d];
-            i++;
-            int res=(int)(1e9);
-            if(n+i<=d)
-            {
-                res=min(res,1+f(n+i,i));
-            }
-            if((n-i)>=-d)
-            res=min(res,1+f(n-i,i));
-            
-            return dp[n+3*d][i+3*d]= res;
-        };
-        
-        int x=f(0,0);
-        cout<<x<<endl;
+    int n;
+    cin>>n;
+    string s;
+    cin>>s;
+    int count=0;
+    for(int i=0;i<n;i++)
+    {
+        if(s[i]=='U')
+        count++;
+    }
+    if(count%2)
+    cout<<"YES"<<endl;
+    else
+    cout<<"NO"<<endl;
 }

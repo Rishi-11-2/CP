@@ -19,52 +19,55 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
+    long long t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
-    long long a[n+1];
-    for(long long i=1;i<=n;i++)
-    cin>>a[i];
-     
-    vector<long long>adj[n+1];
-    for(long long i=1;i<=n-1;i++)
-    {
-        long long x,y;
-        cin>>x>>y;
-        adj[x].push_back(y);
-        adj[y].push_back(x);
-    }
-    long long count=0;
-    function<void(long long,long long,long long)>f=[&](long long u,long long c,long long par)->void{
+    long long n;
+    cin>>n;
+    long long arr[n];
+    for(long long i=0;i<n;i++)
+    cin>>arr[i];
 
-        if(a[u]==1)
-        c++;
-        else
-        c=0;
-        if(c>m)
+    
+   // flag 0  (1)
+    // flag 1 (-1)
+
+    vector<vector<long long>>dp(n+1,vector<long long>(3,-1));
+    function<long long(long long,long long)>f=[&](long long i,long long flag)->long long{
+        if(i==n)
         {
-            return;
+            return 0;
+        }
+
+        if(dp[i][flag]!=-1)
+        return dp[i][flag];
+        long long sign=1;
+        if(flag==1)
+        sign =-1;
+        long long x=0;
+        long long res=0;
+
+        /* 1 10 100 1000  1000 ...  1000..00(30 zeroes)   0     1 10  100 1000 ..... 1000.0000(30 zeroes)   */
+
+        /* at max size of the window will be 61. because  we have 30 bits . we need to divide it into 3 segments(suppose) 
+        */
+        for(long long j=i;j<min(100+i,n);j++)
+        {
+            x=x|arr[j];
+            long long y=sign*x;
+            res=max(res,y+f(j+1,1-flag));
         }
 
 
-        
-        long long flag=0;
-        for(long long v:adj[u])
-        {
-            if(v==par)
-            continue;
-
-            flag=1;
-            f(v,c,u);
-        }
-
-        if(!flag)
-        count++;
+        return dp[i][flag]= res;
     };
-    f(1,0,-1);
-    cout<<count<<endl;
+
+    long long x=f(0,0);
+    cout<<x<<endl;
 }

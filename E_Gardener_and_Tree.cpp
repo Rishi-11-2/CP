@@ -19,52 +19,71 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
+    long long t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
-    long long a[n+1];
-    for(long long i=1;i<=n;i++)
-    cin>>a[i];
-     
+    long long n,k;
+    cin>>n>>k;
+
+
+    vector<long long>count(n+1,0);
     vector<long long>adj[n+1];
     for(long long i=1;i<=n-1;i++)
     {
         long long x,y;
         cin>>x>>y;
+        count[x]++;
+        count[y]++;
         adj[x].push_back(y);
         adj[y].push_back(x);
     }
-    long long count=0;
-    function<void(long long,long long,long long)>f=[&](long long u,long long c,long long par)->void{
-
-        if(a[u]==1)
-        c++;
-        else
-        c=0;
-        if(c>m)
+    if(n==1)
+    {
+        cout<<0<<endl;
+        return;
+    }
+    queue<long long>q;
+    vector<long long>dist(n+1,(long long)(1e9));
+    for(long long i=1;i<=n;i++)
+    {
+        if(count[i]==1)
         {
-            return;
+            dist[i]=1;
+            q.push(i);
         }
-
-
-        
-        long long flag=0;
+    }
+    while(!q.empty())
+    {
+        long long u=q.front();
+        q.pop();
         for(long long v:adj[u])
         {
-            if(v==par)
-            continue;
-
-            flag=1;
-            f(v,c,u);
+            count[v]--;
+            if(count[v]==1)
+            {
+                dist[v]=dist[u]+1;
+                q.push(v);
+            }
         }
-
-        if(!flag)
-        count++;
-    };
-    f(1,0,-1);
-    cout<<count<<endl;
+    }
+    long long res=0;
+    // for(long long i=1;i<=n;i++)
+    // {
+    //     if(dist[i]==INT_MAX)
+    //     dist[i]=0;
+    // }
+    for(long long i=1;i<=n;i++)
+    {
+        if(dist[i]>k)
+        {
+            res++;
+        }
+    }
+    cout<<res<<endl;
 }

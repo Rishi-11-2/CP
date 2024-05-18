@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -20,35 +19,49 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    
+    int t;
+    cin >> t;
+    while (t--)
+    {
         solve();
-    
+    }
 }
 void solve()
 {
-    int d;
-    cin>>d;
-        vector<vector<int>>dp(7*d,vector<int>(7*d,-1));
-        function<int(int,int)>f=[&](int n,int i )->int{
-            if(n==d)
-            {
-                return 0;
-            }
-            // debug(n,i);
-            if(dp[n+3*d][i+3*d]!=-1)
-            return dp[n+3*d][i+3*d];
-            i++;
-            int res=(int)(1e9);
-            if(n+i<=d)
-            {
-                res=min(res,1+f(n+i,i));
-            }
-            if((n-i)>=-d)
-            res=min(res,1+f(n-i,i));
-            
-            return dp[n+3*d][i+3*d]= res;
-        };
-        
-        int x=f(0,0);
-        cout<<x<<endl;
+    int n;
+    cin>>n;
+
+    vector<vector<int>>v;
+
+    v.push_back({1,1});
+    v.push_back({n,n});
+
+   int d=1;
+   for(int i=1;i<=n-2;i++)
+   {
+      if(i%2)
+      {
+         v.push_back({1+d,1});
+      }
+      else
+      {
+        v.push_back({n,n-d});
+      }
+      d++;
+   }
+
+   for(auto &it:v)
+   {
+    if(it[0]==n-1 && it[1]==1)
+    {
+        it[0]=1;
+        it[1]=n-1;
+    }
+   }
+
+   for(auto it:v)
+   {
+    cout<<it[0]<<" "<<it[1]<<endl;
+   }
+   cout<<endl;
 }

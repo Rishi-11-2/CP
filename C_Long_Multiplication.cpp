@@ -1,3 +1,8 @@
+/* 516 , 982 */
+
+/* 912 586*/
+
+
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
@@ -19,52 +24,47 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
+    long long t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
-    long long a[n+1];
-    for(long long i=1;i<=n;i++)
-    cin>>a[i];
-     
-    vector<long long>adj[n+1];
-    for(long long i=1;i<=n-1;i++)
+    string a;
+    cin>>a;
+
+    string b;
+    cin>>b;
+    long long idx=-1;
+    long long n=a.length();
+    for(long long i=0;i<n;i++)
     {
-        long long x,y;
-        cin>>x>>y;
-        adj[x].push_back(y);
-        adj[y].push_back(x);
+        if(a[i]!=b[i])
+        {
+            idx=i;
+            break;
+        }
     }
-    long long count=0;
-    function<void(long long,long long,long long)>f=[&](long long u,long long c,long long par)->void{
-
-        if(a[u]==1)
-        c++;
-        else
-        c=0;
-        if(c>m)
-        {
-            return;
-        }
-
-
-        
-        long long flag=0;
-        for(long long v:adj[u])
-        {
-            if(v==par)
-            continue;
-
-            flag=1;
-            f(v,c,u);
-        }
-
-        if(!flag)
-        count++;
-    };
-    f(1,0,-1);
-    cout<<count<<endl;
+    if(idx==-1)
+    {
+        cout<<a<<endl;
+        cout<<b<<endl;
+        return;
+    }
+    // cout<<a<<" "<<b<<" "<<idx<<endl;
+    // swap(a[idx],b[idx]);
+    string c=a;
+    string d=b;
+    a[idx]=max(c[idx],d[idx]);
+    b[idx]=min(c[idx],d[idx]);
+    for(long long i=idx+1;i<n;i++)
+    {
+        a[i]=min(c[i],d[i]);
+        b[i]=max(c[i],d[i]);
+    }
+    cout<<a<<endl;
+    cout<<b<<endl;
 }

@@ -1,14 +1,11 @@
 
 
 Todo :
-https://atcoder.jp/contests/abc308/tasks/abc308_e(Pending)
 https://codeforces.com/contest/339/problem/D
 https://codeforces.com/contest/356/problem/A
 https://codeforces.com/contest/61/problem/E
 https://codeforces.com/edu/course/2/lesson/6/3/practice/contest/285083/problem/D
 https://cses.fi/problemset/task/2181
 https://www.geeksforgeeks.org/problems/possible-paths--141628/1
-https://codeforces.com/contest/1904/problem/D1
-https://www.geeksforgeeks.org/problems/additive-sequence/1
-https://www.geeksforgeeks.org/problems/sum-of-all-substrings-of-a-number-1587115621/1
 https://codeforces.com/gym/508693/problem/M
+https://www.geeksforgeeks.org/problems/count-pairs-in-an-array4145/1

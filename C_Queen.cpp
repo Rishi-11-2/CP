@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -20,35 +19,61 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    
+
         solve();
-    
 }
 void solve()
 {
-    int d;
-    cin>>d;
-        vector<vector<int>>dp(7*d,vector<int>(7*d,-1));
-        function<int(int,int)>f=[&](int n,int i )->int{
-            if(n==d)
-            {
-                return 0;
-            }
-            // debug(n,i);
-            if(dp[n+3*d][i+3*d]!=-1)
-            return dp[n+3*d][i+3*d];
-            i++;
-            int res=(int)(1e9);
-            if(n+i<=d)
-            {
-                res=min(res,1+f(n+i,i));
-            }
-            if((n-i)>=-d)
-            res=min(res,1+f(n-i,i));
+    int n;
+    cin>>n;
+
+    vector<int>adj[n+1];
+
+    map<int,int>mp;
+    int root=-1;
+    for(int i=1;i<=n;i++)
+    {
+        int x,y;
+        cin>>x>>y;
+        mp[i]=y;
+        if(x==-1)
+        {
+            root=i;
+            continue;
+        }
+        adj[i].push_back(x);
+        adj[x].push_back(i);
+    }
+
+    set<int>ans;
+    function<void(int,int)>f=[&](int u,int p)->void{
+        int res=mp[u];
+        for(int v:adj[u])
+        {
+            if(v==p)
+            continue;
             
-            return dp[n+3*d][i+3*d]= res;
-        };
-        
-        int x=f(0,0);
-        cout<<x<<endl;
+            f(v,u);
+            if(mp[v]==0)
+            {
+                res=0;
+            }
+        }
+        if(res==1)
+        {
+            ans.insert(u);
+        }
+    };
+
+   f(root,0);
+    if((int)(ans.size())==0)
+    {
+        cout<<-1<<endl;
+        return;
+    }
+    for(auto it:ans)
+    {
+        cout<<it<<" ";
+    }
+    cout<<endl;
 }

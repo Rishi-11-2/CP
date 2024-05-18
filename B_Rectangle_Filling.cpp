@@ -20,35 +20,56 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    
+    int t;
+    cin >> t;
+    while (t--)
+    {
         solve();
-    
+    }
 }
 void solve()
 {
-    int d;
-    cin>>d;
-        vector<vector<int>>dp(7*d,vector<int>(7*d,-1));
-        function<int(int,int)>f=[&](int n,int i )->int{
-            if(n==d)
-            {
-                return 0;
-            }
-            // debug(n,i);
-            if(dp[n+3*d][i+3*d]!=-1)
-            return dp[n+3*d][i+3*d];
-            i++;
-            int res=(int)(1e9);
-            if(n+i<=d)
-            {
-                res=min(res,1+f(n+i,i));
-            }
-            if((n-i)>=-d)
-            res=min(res,1+f(n-i,i));
-            
-            return dp[n+3*d][i+3*d]= res;
-        };
-        
-        int x=f(0,0);
-        cout<<x<<endl;
+    int n,m;
+    cin>>n>>m;
+
+    char grid[n][m];
+
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<m;j++)
+        {
+            cin>>grid[i][j];
+        }
+    }
+    set<char>s1;
+    set<char>s2;
+    for(int i=0;i<m;i++)
+    {
+        s1.insert(grid[0][i]);
+        s2.insert(grid[n-1][i]);
+    }
+    set<char>s3;
+    set<char>s4;
+    for(int i=0;i<n;i++)
+    {
+        s3.insert(grid[i][0]);
+        s4.insert(grid[i][m-1]);
+    }
+    if((int)(s3.size())==1 && (int)(s4.size())==1)
+    {
+        if(*s3.begin()!=*s4.begin())
+        {
+            cout<<"NO"<<endl;
+            return;
+        }
+    }
+    if((int)(s1.size())==1 && (int)(s2.size())==1)
+    {
+        if(*s1.begin()!=*s2.begin())
+        {
+            cout<<"NO"<<endl;
+            return;
+        }
+    }
+    cout<<"YES"<<endl;
 }

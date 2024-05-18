@@ -19,18 +19,20 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
         solve();
 }
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
+    long long n;
+    cin>>n;
+
     long long a[n+1];
+
     for(long long i=1;i<=n;i++)
     cin>>a[i];
-     
+
     vector<long long>adj[n+1];
+
     for(long long i=1;i<=n-1;i++)
     {
         long long x,y;
@@ -38,33 +40,65 @@ void solve()
         adj[x].push_back(y);
         adj[y].push_back(x);
     }
-    long long count=0;
-    function<void(long long,long long,long long)>f=[&](long long u,long long c,long long par)->void{
 
-        if(a[u]==1)
-        c++;
-        else
-        c=0;
-        if(c>m)
-        {
-            return;
-        }
+    vector<long long>sum(n+1,0);
+    vector<long long>dp(n+1,0);
+    function<void(long long,long long)>dfs=[&](long long u,long long p)->void{
 
+        dp[u]=0;
 
-        
-        long long flag=0;
+        sum[u]=a[u];
+
         for(long long v:adj[u])
         {
-            if(v==par)
+            if(v==p)
             continue;
+            
+            dfs(v,u);
+            dp[u]+=dp[v]+sum[v];
+            sum[u]+=sum[v];
+        }
+    };
+    dfs(1,-1);
+    // cout<<sum[2]<<endl;
 
-            flag=1;
-            f(v,c,u);
+    vector<long long>ans(n+1,0);
+
+    function<void(long long,long long)>dfs1=[&](long long u,long long p)->void{
+
+        if(p!=-1)
+        {
+            dp[p]-=dp[u]+sum[u];
+            sum[p]-=sum[u];
+
+            dp[u]+=dp[p]+sum[p];
+
+            sum[u]+=sum[p];
+        }
+        ans[u]=dp[u];
+
+        for(long long v:adj[u])
+        {
+            if(v==p)
+            continue;
+            
+            dfs1(v,u);
         }
 
-        if(!flag)
-        count++;
+        if(p!=-1)
+        {
+            dp[u]-=dp[p]+sum[p];
+            sum[u]-=sum[p];
+
+            dp[p]+=dp[u]+sum[u];
+
+            sum[p]+=sum[u];
+        }
     };
-    f(1,0,-1);
-    cout<<count<<endl;
+
+    dfs1(1,-1);
+
+    long long maxm=*max_element(all(ans));
+
+    cout<<maxm<<endl;
 }

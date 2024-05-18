@@ -19,52 +19,36 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
+    long long t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
-    long long a[n+1];
-    for(long long i=1;i<=n;i++)
-    cin>>a[i];
-     
-    vector<long long>adj[n+1];
-    for(long long i=1;i<=n-1;i++)
-    {
-        long long x,y;
-        cin>>x>>y;
-        adj[x].push_back(y);
-        adj[y].push_back(x);
-    }
-    long long count=0;
-    function<void(long long,long long,long long)>f=[&](long long u,long long c,long long par)->void{
+    long long n,x;
+    cin>>n>>x;
 
-        if(a[u]==1)
-        c++;
-        else
-        c=0;
-        if(c>m)
+    if(n==x)
+    {
+        cout<<n<<endl;
+        return;
+    }
+
+    long long ans=n;
+    while(ans>0)
+    {
+        n+=(n&(-n));
+
+        ans=ans&n;
+        if(ans==x)
         {
+            cout<<n<<endl;
             return;
         }
-
-
-        
-        long long flag=0;
-        for(long long v:adj[u])
-        {
-            if(v==par)
-            continue;
-
-            flag=1;
-            f(v,c,u);
-        }
-
-        if(!flag)
-        count++;
-    };
-    f(1,0,-1);
-    cout<<count<<endl;
+        n=ans;
+    }
+    cout<<-1<<endl;
 }

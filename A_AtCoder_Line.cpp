@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -20,35 +19,22 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    
         solve();
-    
 }
 void solve()
 {
-    int d;
-    cin>>d;
-        vector<vector<int>>dp(7*d,vector<int>(7*d,-1));
-        function<int(int,int)>f=[&](int n,int i )->int{
-            if(n==d)
-            {
-                return 0;
-            }
-            // debug(n,i);
-            if(dp[n+3*d][i+3*d]!=-1)
-            return dp[n+3*d][i+3*d];
-            i++;
-            int res=(int)(1e9);
-            if(n+i<=d)
-            {
-                res=min(res,1+f(n+i,i));
-            }
-            if((n-i)>=-d)
-            res=min(res,1+f(n-i,i));
-            
-            return dp[n+3*d][i+3*d]= res;
-        };
-        
-        int x=f(0,0);
-        cout<<x<<endl;
+    int n,x,y,z;
+    cin>>n>>x>>y>>z;
+    if(z>=x && z<=y)
+    {
+        cout<<"Yes"<<endl;
+    }
+    else if(z>=y && z<=x)
+    {
+        cout<<"Yes"<<endl;
+    }
+    else
+    {
+        cout<<"No"<<endl;
+    }
 }

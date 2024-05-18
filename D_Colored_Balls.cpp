@@ -25,38 +25,48 @@ void solve()
 {
     long long n;
     cin>>n;
-    vector<vector<long long>>a(n,vector<long long>(n,0));
+    long long arr[n];
+
     for(long long i=0;i<n;i++)
-    {
-        for(long long j=0;j<n;j++)
-        cin>>a[i][j];
-    }
-    const long long mod=(long long)(1e9)+7;
-    vector<vector<long long>>dp(n+1,vector<long long>(1<<(n+1),-1));
-    function<long long(long long,long long)>f=[&](long long i,long long mask)->long long{
+    cin>>arr[i];
+
+    sort(arr,arr+n);
+    // reverse(arr,arr+n);
+    const long long mod=(long long)(998244353);
+    vector<vector<long long>>dp(n+1,vector<long long>(6001,-1));
+    function<long long(long long,long long)>f=[&](long long i,long long s)->long long{
 
         if(i==n)
         {
-            return 1;
+            return 0;
         }
-        if(dp[i][mask]!=-1)
-        {
-            return dp[i][mask];
-        }
-        long long res=0;
-        for(long long j=0;j<n;j++)
-        {
-            if(mask&(1<<j))
-            continue;
 
-            long long newMask=mask|(1<<j);
+        if(dp[i][s]!=-1)
+        return dp[i][s];
 
-            if(a[i][j]==1)
-            {
-                res=(res%mod+f(i+1,newMask)%mod)%mod;
-            }
+        // simply take or not take. if we take then we add the sum and also
+        // consider the subset which will end at that index
+        // if we dont take we simply move forward
+        long long res=f(i+1,s);
+        long long x=0;
+        if(arr[i]>=s)
+        {
+            x=arr[i];
         }
-        return dp[i][mask]= res;
+        else
+        {
+            long long newS=s+arr[i];
+            x=(newS+1)/2;
+        }
+        
+        long long y=(x+f(i+1,s+arr[i]))%mod;
+        // we are adding x . this is because it will not be included in this subset
+        // but rather there will be subset which will end in ith index and in that subset
+        // we will have the x . therefore x is getting added for that subset
+
+
+        res=(res%mod+y%mod)%mod;
+        return dp[i][s]= res;
     };
 
     long long x=f(0,0);

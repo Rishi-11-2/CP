@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -20,35 +19,61 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    
+    int t;
+    cin >> t;
+    while (t--)
+    {
         solve();
-    
+    }
 }
 void solve()
 {
-    int d;
-    cin>>d;
-        vector<vector<int>>dp(7*d,vector<int>(7*d,-1));
-        function<int(int,int)>f=[&](int n,int i )->int{
-            if(n==d)
-            {
-                return 0;
-            }
-            // debug(n,i);
-            if(dp[n+3*d][i+3*d]!=-1)
-            return dp[n+3*d][i+3*d];
-            i++;
-            int res=(int)(1e9);
-            if(n+i<=d)
-            {
-                res=min(res,1+f(n+i,i));
-            }
-            if((n-i)>=-d)
-            res=min(res,1+f(n-i,i));
-            
-            return dp[n+3*d][i+3*d]= res;
-        };
+    int n,k;
+    cin>>n>>k;
+    int arr[n];
+    vector<int>v;
+    for(int i=0;i<n;i++)
+    {
+        cin>>arr[i];
+        v.push_back(arr[i]);
+    }
+    
+
+    vector<vector<int>>dp(n+1,vector<int>(k+1,-1));
+    function<int(int,vector<int>)>f=[&](int k,vector<int>v)->int{
         
-        int x=f(0,0);
-        cout<<x<<endl;
+
+        if(k==0)
+        {
+            int s=0;
+            for(int i=0;i<n;i++)
+            {
+                s+=v[i];
+
+            }
+            return s;
+        }
+        int res=f(k,v);
+         for(int i=0;i<n;i++)
+         {
+            if(i+1<n && v[i]>v[i+1])
+            {
+                v[i]=v[i+1];
+                res=min(res,f(k-1,v));
+            }
+            if(i-1>=0 && v[i]>v[i-1])
+            {
+                v[i]=v[i-1];
+                res=min(res,f(k-1,v));
+            }
+         }
+
+         return res;
+    };
+
+    int x=f(k,v);
+
+
+    cout<<x<<endl;
+
 }

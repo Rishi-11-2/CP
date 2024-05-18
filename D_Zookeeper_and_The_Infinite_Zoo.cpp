@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -20,35 +19,47 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    
         solve();
-    
 }
 void solve()
 {
-    int d;
-    cin>>d;
-        vector<vector<int>>dp(7*d,vector<int>(7*d,-1));
-        function<int(int,int)>f=[&](int n,int i )->int{
-            if(n==d)
-            {
-                return 0;
-            }
-            // debug(n,i);
-            if(dp[n+3*d][i+3*d]!=-1)
-            return dp[n+3*d][i+3*d];
-            i++;
-            int res=(int)(1e9);
-            if(n+i<=d)
-            {
-                res=min(res,1+f(n+i,i));
-            }
-            if((n-i)>=-d)
-            res=min(res,1+f(n-i,i));
-            
-            return dp[n+3*d][i+3*d]= res;
-        };
+    int q;
+    cin>>q;
+
+    for(int j=1;j<=q;j++)
+    {
+        int a,b;
+        cin>>a>>b;
+
+       int flag=1;
+       if(a>b)
+       flag=0;
         
-        int x=f(0,0);
-        cout<<x<<endl;
+        int z=0;
+        for(int i=0;i<30;i++)
+        {
+            if(a&(1<<i))
+            z++;
+
+            if(b&(1<<i))
+            z--;
+
+           if(z<0)
+           {
+              flag=0;
+           }
+        }
+        /*Observe 0011 => 0101 => 1001, 0011 => 0100.
+        There is no way that we can increase the number of 1s. And we can always promote a single 1 to higher bits or
+         squish arbitrary 1s to a single 1.
+Counting prefix sum of 1s (from lower bits to higher bits) in U and V, and we can not transform U to V if any prefix of U has fewer 1s compared to the prefix of V.*/
+
+/* we cannot shift 1 to left. we can only shift to right as we are adding*/
+        if(!flag)
+        {
+            cout<<"NO"<<endl;
+        }
+        else
+        cout<<"YES"<<endl;
+    }
 }

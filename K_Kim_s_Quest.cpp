@@ -19,52 +19,50 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
         solve();
+}
+vector<long long>arr;
+long long dp[(long long)(2e5)+5][3][2][4];
+const long long mod=998244353;
+long long f(long long i,long long prev1,long long prev2,long long flag,long long n)
+{
+        if(i==n)
+        {
+            // debug(flag);
+            if(flag==3)
+            return 1;
+            else
+            return 0;
+        }
+        if(dp[i][prev1][prev2][flag]!=-1)
+        return dp[i][prev1][prev2][flag];
+        long long res=0;
+        res=f(i+1,prev1,prev2,flag,n);
+        long long x=arr[i];
+        long long y=x+prev1+prev2;
+        if(y%2==0|| flag<2)
+        {
+            int newFlag=min(3LL,flag+1);
+            res=(res+f(i+1,x,prev1,newFlag,n))%mod;
+        }
+
+        return dp[i][prev1][prev2][flag]= res;
 }
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
-    long long a[n+1];
-    for(long long i=1;i<=n;i++)
-    cin>>a[i];
-     
-    vector<long long>adj[n+1];
-    for(long long i=1;i<=n-1;i++)
+    long long n;
+    cin>>n;
+    arr.assign(n+1,-1);
+    memset(dp,-1,sizeof(dp));
+    long long x=0;
+    for(long long i=0;i<n;i++)
     {
-        long long x,y;
-        cin>>x>>y;
-        adj[x].push_back(y);
-        adj[y].push_back(x);
+        cin>>arr[i];
+        arr[i]=arr[i]%2;
     }
-    long long count=0;
-    function<void(long long,long long,long long)>f=[&](long long u,long long c,long long par)->void{
+        x=(x%mod+f(0,0,0,0,n)%mod)%mod;
 
-        if(a[u]==1)
-        c++;
-        else
-        c=0;
-        if(c>m)
-        {
-            return;
-        }
-
-
-        
-        long long flag=0;
-        for(long long v:adj[u])
-        {
-            if(v==par)
-            continue;
-
-            flag=1;
-            f(v,c,u);
-        }
-
-        if(!flag)
-        count++;
-    };
-    f(1,0,-1);
-    cout<<count<<endl;
+    
+    // long long flag=0;
+    cout<<x<<endl;
 }

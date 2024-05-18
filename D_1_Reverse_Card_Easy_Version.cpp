@@ -19,52 +19,53 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
+    long long t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
+    /*
+    a+b = k * gcd(a,b) * b
+
+a+b = m1 * b
+
+a = (m1-1) * b
+
+a = b , 2b , 3b, 4b,...
+
+gcd(a,b) = b
+
+a + b = k* b^2
+
+0<a<=n
+1+b<=k*b^2<=n+b
+(1+b)/b2 <= k <= (n+b)/b2
+
+
+loop(b,2,m)
+{
+    
+}
+    */
     long long n,m;
     cin>>n>>m;
-    long long a[n+1];
-    for(long long i=1;i<=n;i++)
-    cin>>a[i];
-     
-    vector<long long>adj[n+1];
-    for(long long i=1;i<=n-1;i++)
-    {
-        long long x,y;
-        cin>>x>>y;
-        adj[x].push_back(y);
-        adj[y].push_back(x);
-    }
     long long count=0;
-    function<void(long long,long long,long long)>f=[&](long long u,long long c,long long par)->void{
-
-        if(a[u]==1)
-        c++;
-        else
-        c=0;
-        if(c>m)
+    for(long long i=1;i<=m;i++)
+    {
+        long long j=i;
+        while(j<=n)
         {
-            return;
+            long long x=j/i;
+            x=x+1;
+            long long g=__gcd(i,j);
+            if(x%g==0)
+            count++;
+            j+=i;
         }
-
-
-        
-        long long flag=0;
-        for(long long v:adj[u])
-        {
-            if(v==par)
-            continue;
-
-            flag=1;
-            f(v,c,u);
-        }
-
-        if(!flag)
-        count++;
-    };
-    f(1,0,-1);
+    }
     cout<<count<<endl;
 }

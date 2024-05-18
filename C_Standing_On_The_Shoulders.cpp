@@ -19,52 +19,27 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
         solve();
 }
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
-    long long a[n+1];
-    for(long long i=1;i<=n;i++)
-    cin>>a[i];
-     
-    vector<long long>adj[n+1];
-    for(long long i=1;i<=n-1;i++)
+    long long n;
+    cin>>n;
+    vector<pair<long long,long long>>v;
+    long long sh=0;
+    for(long long i=0;i<n;i++)
     {
         long long x,y;
         cin>>x>>y;
-        adj[x].push_back(y);
-        adj[y].push_back(x);
+        v.push_back({x,y});
+        sh+=x;
     }
-    long long count=0;
-    function<void(long long,long long,long long)>f=[&](long long u,long long c,long long par)->void{
-
-        if(a[u]==1)
-        c++;
-        else
-        c=0;
-        if(c>m)
-        {
-            return;
-        }
-
-
-        
-        long long flag=0;
-        for(long long v:adj[u])
-        {
-            if(v==par)
-            continue;
-
-            flag=1;
-            f(v,c,u);
-        }
-
-        if(!flag)
-        count++;
-    };
-    f(1,0,-1);
-    cout<<count<<endl;
+    long long res=0;
+    for(long long i=0;i<n;i++)
+    {
+        sh-=v[i].first;
+        res=max(res,sh+v[i].second);
+        sh+=v[i].first;
+    }
+    cout<<res<<endl;
 }

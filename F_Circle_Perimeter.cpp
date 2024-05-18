@@ -19,52 +19,57 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
+    long long t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
-    long long a[n+1];
-    for(long long i=1;i<=n;i++)
-    cin>>a[i];
-     
-    vector<long long>adj[n+1];
-    for(long long i=1;i<=n-1;i++)
+    long long r;
+    cin>>r;
+
+    long long ans=0;
+    for(long long x=0;x<=r;x++)
     {
-        long long x,y;
-        cin>>x>>y;
-        adj[x].push_back(y);
-        adj[y].push_back(x);
-    }
-    long long count=0;
-    function<void(long long,long long,long long)>f=[&](long long u,long long c,long long par)->void{
 
-        if(a[u]==1)
-        c++;
-        else
-        c=0;
-        if(c>m)
+        long long y1=r*r-(x*x);
+
+        long double y2=sqrt(y1);
+
+        y2=ceil(y2);
+
+
+        long long y3=(r+1)*(r+1)-(x*x);
+
+        long double y4=sqrt(y3);
+
+        y4=floor(y4);
+
+        long long y5=y2;
+        long long y6=y4;
+        long long xx=sqrt(y3);
+        if(xx*xx==y3)
         {
-            return;
+            y6--;
         }
-
-
-        
-        long long flag=0;
-        for(long long v:adj[u])
+        // debug(x,y5,y6);
+        long long res=abs(y5-y6)+1;
+        res=res*2;
+        if(x==0)
         {
-            if(v==par)
+            ans+=res;
             continue;
-
-            flag=1;
-            f(v,c,u);
         }
+        res=res*2;
+        if(y5==0)
+        res--;
 
-        if(!flag)
-        count++;
-    };
-    f(1,0,-1);
-    cout<<count<<endl;
+        ans+=res;
+        
+    }
+    cout<<ans-1<<endl;
+
 }

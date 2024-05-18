@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -20,35 +19,67 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    
         solve();
-    
 }
 void solve()
 {
-    int d;
-    cin>>d;
-        vector<vector<int>>dp(7*d,vector<int>(7*d,-1));
-        function<int(int,int)>f=[&](int n,int i )->int{
-            if(n==d)
-            {
-                return 0;
-            }
-            // debug(n,i);
-            if(dp[n+3*d][i+3*d]!=-1)
-            return dp[n+3*d][i+3*d];
-            i++;
-            int res=(int)(1e9);
-            if(n+i<=d)
-            {
-                res=min(res,1+f(n+i,i));
-            }
-            if((n-i)>=-d)
-            res=min(res,1+f(n-i,i));
-            
-            return dp[n+3*d][i+3*d]= res;
-        };
-        
-        int x=f(0,0);
-        cout<<x<<endl;
+    int n;
+    cin>>n;
+
+    vector<int>adj[n+1];
+
+    for(int i=1;i<n;i++)
+    {
+        int x,y;
+        cin>>x>>y;
+        adj[x].push_back(y);
+        adj[y].push_back(x);
+    }
+    int c=0;
+    int r=-1;
+    for(int i=1;i<=n;i++)
+    {
+        int sz=(int)(adj[i].size());
+        // debug(i,sz);
+        if(sz>=3)
+        {
+            r=i;
+            c++;
+        }
+    }
+    if(c>1)
+    {
+        cout<<"No"<<endl;
+        return;
+    }
+    vector<vector<int>>res;
+    function<void(int,int,int)>f=[&](int u,int p,int s)->void{
+
+        int flag=0;
+
+        for(int v:adj[u])
+        {
+            if(v==p)
+            continue;
+            flag=1;
+            f(v,u,s);
+        }
+
+        if(!flag)
+        {
+            res.push_back({s,u});
+        }
+    };
+    if(r==-1)
+    r=1;
+    f(r,0,r);
+
+    cout<<"Yes"<<endl;
+    cout<<(int)(res.size())<<endl;
+
+    for(auto it:res)
+    {
+        cout<<it[0]<<" "<<it[1];
+        cout<<endl;
+    }
 }

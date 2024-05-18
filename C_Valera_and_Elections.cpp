@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -20,35 +19,49 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    
         solve();
-    
 }
 void solve()
 {
-    int d;
-    cin>>d;
-        vector<vector<int>>dp(7*d,vector<int>(7*d,-1));
-        function<int(int,int)>f=[&](int n,int i )->int{
-            if(n==d)
+    int n;
+    cin>>n;
+    vector<pair<int,int>>adj[n+1];
+
+    for(int i=1;i<=n-1;i++)
+    {
+        int x,y,t;
+        cin>>x>>y>>t;
+
+        adj[x].push_back({y,t});
+        adj[y].push_back({x,t});
+    }
+
+    vector<int>nodes;
+    function<int(int,int)>f=[&](int u,int par)->int{
+
+        int res=0;
+        for(auto v:adj[u])
+        {
+            if(v.first==par)
+            continue;
+            int x=f(v.first,u);
+            if(x==0 && v.second==2)
             {
-                return 0;
+                nodes.push_back(v.first);
+                res++;
             }
-            // debug(n,i);
-            if(dp[n+3*d][i+3*d]!=-1)
-            return dp[n+3*d][i+3*d];
-            i++;
-            int res=(int)(1e9);
-            if(n+i<=d)
+            else
             {
-                res=min(res,1+f(n+i,i));
+                res+=x;
             }
-            if((n-i)>=-d)
-            res=min(res,1+f(n-i,i));
-            
-            return dp[n+3*d][i+3*d]= res;
-        };
-        
-        int x=f(0,0);
-        cout<<x<<endl;
+        }
+        return res;
+    };
+
+    int x=f(1,0);
+    cout<<x<<endl;
+
+    for(auto it:nodes)
+    cout<<it<<" ";
+    cout<<endl;
 }

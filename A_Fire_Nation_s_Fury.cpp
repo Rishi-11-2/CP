@@ -19,52 +19,69 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
+    long long t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
+}
+typedef tree< long long, null_type , less<long long> , rb_tree_tag, tree_order_statistics_node_update> pbdss;
+
+
+vector<long long>adj[(long long)(1e5)+10];
+long long res=0;
+
+const long long mod=(long long)(1e9)+7;
+void f( long long u,long long p,pbdss &s)
+{
+    
+    long long sz=(long long)(s.size());
+    long long x=s.order_of_key(u);
+    res=(res%mod+x%mod)%mod;
+
+    s.insert(u);
+    for(long long v:adj[u])
+    {
+        if(v==p)
+        continue;
+        f(v,u,s);
+    }
+
+    s.erase(u);
+    
 }
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
+    long long n;
+    cin>>n;
+
     long long a[n+1];
-    for(long long i=1;i<=n;i++)
-    cin>>a[i];
-     
-    vector<long long>adj[n+1];
-    for(long long i=1;i<=n-1;i++)
+    long long b[n+1];
+    res=0;
+    for(long long i=0;i<=n;i++)
     {
-        long long x,y;
-        cin>>x>>y;
-        adj[x].push_back(y);
-        adj[y].push_back(x);
+        adj[i].clear();
     }
-    long long count=0;
-    function<void(long long,long long,long long)>f=[&](long long u,long long c,long long par)->void{
+    for(long long i=1;i<n;i++)
+    {
+        cin>>a[i];
+    }
+    for(long long i=1;i<n;i++)
+    {
+        cin>>b[i];
+    }
+    for(long long i=1;i<n;i++)
+    {
+        adj[a[i]].push_back(b[i]);
+        adj[b[i]].push_back(a[i]);
+    }
 
-        if(a[u]==1)
-        c++;
-        else
-        c=0;
-        if(c>m)
-        {
-            return;
-        }
+    pbdss s;
 
+    f(1,0,s);
 
-        
-        long long flag=0;
-        for(long long v:adj[u])
-        {
-            if(v==par)
-            continue;
+    cout<<res<<endl;
 
-            flag=1;
-            f(v,c,u);
-        }
-
-        if(!flag)
-        count++;
-    };
-    f(1,0,-1);
-    cout<<count<<endl;
+    
 }

@@ -19,45 +19,46 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    long long t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    long long n;
-    cin>>n;
+    long long a,b,k;
+    cin>>a>>b>>k;
 
-    long long arr[n];
-
-    for(long long i=0;i<n;i++)
+    vector<long long>x;
+    vector<long long>y;
+    for(long long i=0;i<k;i++)
     {
-        cin>>arr[i];
+        long long xx;
+        cin>>xx;
+        x.push_back(xx);
     }
 
-    vector<long long>suffix(n+1,0);
-    for(long long i=n-1;i>=0;i--)
+    for(long long i=0;i<k;i++)
     {
-        suffix[i]=arr[i]+suffix[i+1];
+        long long xx;
+        cin>>xx;
+        y.push_back(xx);
     }
 
-    long long s=0;
-    long long count=0;
+    map<long long,long long>boys;
 
-    map<long long,long long>mp;
-    for(long long i=0;i<n-1;i++)
+    map<long long,long long>girls;
+
+    long long res=0;
+    for(long long i=0;i<k;i++)
     {
-        s+=arr[i];
+        res+=(i-boys[x[i]]-girls[y[i]]);
 
-        if(s%2==0)
-        {
-            // debug(i,s);
-
-            if((s/2)==suffix[i+1])
-            {
-                count+=mp[s/2];
-            }
-        }
-        mp[s]++;
+        boys[x[i]]++;
+        girls[y[i]]++;
     }
 
-    cout<<count<<endl;
+    cout<<res<<endl;
 }

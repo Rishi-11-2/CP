@@ -19,45 +19,46 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    long long t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    long long n;
-    cin>>n;
+    long long a,b,k;
+    cin>>a>>b>>k;
 
-    long long arr[n];
+    
 
-    for(long long i=0;i<n;i++)
+    long long count3=0;
+
+    long long z1=b/k;
+
+    // if(b%k)
+    // z1++;
+    z1=z1*k;
+    count3+=b-z1;
+    while((z1/k)>=a)
     {
-        cin>>arr[i];
-    }
-
-    vector<long long>suffix(n+1,0);
-    for(long long i=n-1;i>=0;i--)
-    {
-        suffix[i]=arr[i]+suffix[i+1];
-    }
-
-    long long s=0;
-    long long count=0;
-
-    map<long long,long long>mp;
-    for(long long i=0;i<n-1;i++)
-    {
-        s+=arr[i];
-
-        if(s%2==0)
+        z1=z1/k;
+        count3++;
+        if(z1%k)
         {
-            // debug(i,s);
+            long long z2=(z1/k);
 
-            if((s/2)==suffix[i+1])
-            {
-                count+=mp[s/2];
-            }
+            long long z3=z2*k;
+
+            count3+=(z1-z3);
+            z1=z3;
         }
-        mp[s]++;
     }
 
-    cout<<count<<endl;
+    count3+=(z1-a);
+
+    cout<<count3<<endl;
+
+    
 }

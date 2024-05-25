@@ -26,38 +26,53 @@ void solve()
     long long n;
     cin>>n;
 
-    long long arr[n];
+    vector<pair<long long,long long>>v;
 
-    for(long long i=0;i<n;i++)
+    map<long long,long long>mp1;
+    map<long long,long long>mp2;
+
+    vector<long long>st;
+    set<long long>cost;
+
+    set<long long>s;
+    for(long long i=1;i<=n;i++)
     {
-        cin>>arr[i];
+        long long x,y;
+        cin>>x>>y;
+
+        v.push_back({x,y});
+
+        st.push_back(x);
+        mp1[x]=i;
+        mp2[i]=x;
+        s.insert(i);
+        cost.insert(y);
     }
 
-    vector<long long>suffix(n+1,0);
-    for(long long i=n-1;i>=0;i--)
-    {
-        suffix[i]=arr[i]+suffix[i+1];
-    }
+    sort(all(v));
+    // sort(all(cost));
+    // for(auto it:v)
+    // {
+    //     cout<<it.first<<" "<<it.second<<endl;
+    // }
 
-    long long s=0;
-    long long count=0;
-
-    map<long long,long long>mp;
     for(long long i=0;i<n-1;i++)
     {
-        s+=arr[i];
-
-        if(s%2==0)
+        cost.erase(v[i].second);
+        long long minm=*cost.begin();
+        // debug(maxm,v[i].second);
+        if(minm<v[i].second)
         {
-            // debug(i,s);
-
-            if((s/2)==suffix[i+1])
-            {
-                count+=mp[s/2];
-            }
+            // debug(mp1[v[i].first],v[i].first);
+            s.erase(mp1[v[i].first]);
         }
-        mp[s]++;
     }
 
-    cout<<count<<endl;
+    cout<<(long long)(s.size())<<endl;
+
+    for(auto i:s)
+    cout<<i<<" ";
+    
+    cout<<endl;
+
 }

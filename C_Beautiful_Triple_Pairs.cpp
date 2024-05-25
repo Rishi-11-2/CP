@@ -19,7 +19,12 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    long long t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
@@ -29,35 +34,58 @@ void solve()
     long long arr[n];
 
     for(long long i=0;i<n;i++)
-    {
-        cin>>arr[i];
-    }
+    cin>>arr[i];
 
-    vector<long long>suffix(n+1,0);
-    for(long long i=n-1;i>=0;i--)
-    {
-        suffix[i]=arr[i]+suffix[i+1];
-    }
-
-    long long s=0;
     long long count=0;
 
-    map<long long,long long>mp;
-    for(long long i=0;i<n-1;i++)
+    vector<vector<long long>>v;
+
+    for(long long i=0;i<n-2;i++)
     {
-        s+=arr[i];
+        vector<long long>x;
+        x.push_back(arr[i]);
+        x.push_back(arr[i+1]);
+        x.push_back(arr[i+2]);
+        v.push_back(x);
+    }
+    long long m=(long long)(v.size());
 
-        if(s%2==0)
+    map<string ,set<long long>>mp;
+    map<string,map<long long,long long>>mp2;
+    for(long long i=0;i<3;i++)
+    {
+        set<long long>x;
+        
+        for(long long j=i+1;j<3;j++)
         {
-            // debug(i,s);
+            for(long long k=0;k<3;k++)
+               x.insert(k);
 
-            if((s/2)==suffix[i+1])
+            x.erase(i);
+            x.erase(j);
+            for(auto it:v)
             {
-                count+=mp[s/2];
+                string sss=to_string(it[i])+to_string(it[j])+to_string(i)+to_string(j);
+                mp[sss].insert(it[*x.begin()]);
+                mp2[sss][it[*x.begin()]]++;
             }
         }
-        mp[s]++;
     }
 
+    for(auto it:mp)
+    {
+        auto s=it.second;
+        auto vv=mp2[it.first];
+        long long sum=0;
+        for(auto i:s)
+        {
+            sum+=vv[i];
+        }
+        for(auto it:s)
+        {
+            sum-=vv[it];
+            count+=(sum*vv[it]);
+        }
+    }
     cout<<count<<endl;
 }

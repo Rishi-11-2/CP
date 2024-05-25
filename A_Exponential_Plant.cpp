@@ -26,38 +26,17 @@ void solve()
     long long n;
     cin>>n;
 
-    long long arr[n];
+    long long y=log2(n);
 
-    for(long long i=0;i<n;i++)
+    long long x=y;
+    // debug(x);
+    long long z=(1LL<<x)-1;
+
+    while(z<=n)
     {
-        cin>>arr[i];
+        x++;
+        z=(1LL<<x)-1;
     }
+    cout<<x<<endl;
 
-    vector<long long>suffix(n+1,0);
-    for(long long i=n-1;i>=0;i--)
-    {
-        suffix[i]=arr[i]+suffix[i+1];
-    }
-
-    long long s=0;
-    long long count=0;
-
-    map<long long,long long>mp;
-    for(long long i=0;i<n-1;i++)
-    {
-        s+=arr[i];
-
-        if(s%2==0)
-        {
-            // debug(i,s);
-
-            if((s/2)==suffix[i+1])
-            {
-                count+=mp[s/2];
-            }
-        }
-        mp[s]++;
-    }
-
-    cout<<count<<endl;
 }

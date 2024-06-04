@@ -1,3 +1,4 @@
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
@@ -28,8 +29,8 @@ signed main()
 }
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
+    long long n;
+    cin>>n;
 
     long long a[n];
     for(long long i=0;i<n;i++)
@@ -37,80 +38,60 @@ void solve()
 
     long long b[n];
 
-    vector<long long>one;
-    vector<long long>two;
+    for(long long i=0;i<n;i++)
+    cin>>b[i];
+    
+    long long m;
+    cin>>m;
+
+    long long d[m];
+    for(long long i=0;i<m;i++)
+    cin>>d[i];
+
+    
+    long long ud=0;
+    multiset<long long>desired;
+    multiset<long long>extra;
+
     for(long long i=0;i<n;i++)
     {
-        cin>>b[i];
-
-        if(b[i]==1)
+        if(a[i]!=b[i])
+        desired.insert(b[i]);
+        else
+        extra.insert(b[i]);
+    }
+    for(long long i=m-1;i>=0;i--)
+    {
+        if(desired.find(d[i])==desired.end())
         {
-            one.push_back(a[i]);
+            if(extra.find(d[i])==extra.end())
+            {
+                if(ud==0)
+                {
+                    cout<<"NO"<<endl;
+                    return;
+                }
+            }
+            else
+            {
+                ud=1;
+            }
         }
         else
         {
-            two.push_back(a[i]);
+            ud=1;
+            desired.erase(desired.find(d[i]));
         }
     }
 
-    sort(all(one),greater<long long>());     
-    sort(all(two),greater<long long>());
-
-    long long os=(long long)(one.size());
-
-    long long ts=(long long)(two.size());
-
-
-    for(long long i=1;i<os;i++)
+    if((long long)(desired.size())>0)
     {
-        one[i]+=one[i-1];
-    }     
-
-    for(long long i=1;i<ts;i++)
-    {
-        two[i]+=two[i-1];
-    }
-
-    long long res=(long long)(1e18);
-
-    long long j=ts-1;
-    for(long long i=0;i<os;i++)
-    {
-        long long rem=m-one[i];
-
-        while(j-1>=0 && two[j-1] >=rem)
-        j--;
-
-
-        if(j>=0 && (one[i]+two[j])>=m)
-        {
-            res=min(res,(i+1)+(j+1)*2);
-        }
-        if(one[i]>=m)
-        {
-            res=min(res,(i+1));
-        }
-    }
-    j=os-1;
-    for(long long i=0;i<ts;i++)
-    {
-        long long rem=m-two[i];
-
-        while((j-1)>=0 && one[j-1]>=rem)
-        j--;
+        cout<<"NO"<<endl;
         
-        if(j>=0 && (one[j]+two[i])>=m)
-        {
-            res=min(res,(i+1)*2+(j+1));
-        }
-        if(two[i]>=m)
-        {
-            res=min(res,(i+1)*2);
-        }
     }
-
-    if(res==(long long)(1e18))
-    res=-1;
-    cout<<res<<endl;
+    else
+    {
+        cout<<"YES"<<endl;
+    }
 
 }

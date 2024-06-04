@@ -1,3 +1,4 @@
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
@@ -19,24 +20,24 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-   
+    
         solve();
-}
-
-bool cmp(pair<long long,long long>a,pair<long long,long long>b)
-{
-    if(a.first==b.first)
-    return a.second<b.second;
-
-   return a.first>b.first;
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n,m,k;
+    cin>>n>>m>>k;
 
+    set<long long>v;
+    for(long long i=1;i<=k;i++)
+    {
+        long long x;
+        cin>>x;
+        v.insert(x);
+    }
+    // sort(all(v));
     vector<long long>adj[n+1];
-    for(long long i=1;i<n;i++)
+    for(long long i=1;i<=m;i++)
     {
         long long x,y;
         cin>>x>>y;
@@ -44,61 +45,55 @@ void solve()
         adj[y].push_back(x);
     }
 
-    vector<long long>levels(n+1,0);
-    vector<long long>size(n+1,0);
-
-    function<void(long long ,long long,long long)>f=[&](long long u,long long p,long long level)->void{
-
-        size[u]=1;
-        for(long long v:adj[u])
-        {
-            if(v==p)
-            continue;
-            
-            f(v,u,level+1);
-            size[u]+=size[v];
-        }
-        levels[u]=(level-size[u]);
-    };
-
-    f(1,-1,0);
-
-    vector<pair<long long,long long>>v;
-    for(long long i=1;i<=n;i++)
-    {
-        v.push_back({levels[i],i});
-    }
-
-    sort(all(v),cmp);
-    // for(auto it:v)
-    // debug(it.first,it.second);
+    vector<long long>components;
     vector<long long>vis(n+1,0);
 
-    for(long long i=0;i<k;i++)
-    {
-        // debug(v[i].second);
-        vis[v[i].second]=1;
-    }
+    function<void(long long)>f=[&](long long u)->void{
 
-    long long res=0;
-    function<void(long long,long long,long long)>f1=[&](long long u,long long p,long long level)->void{
-
-        long long newLevel=level+1;
-        if(vis[u]==1)
-        {
-            newLevel--;
-            res+=level;
-        }
+        components.push_back(u);
+        vis[u]=1;
         for(long long v:adj[u])
         {
-            if(v==p)
-            continue;
-            
-            f1(v,u,newLevel);
+            if(!vis[v])
+            {
+                f(v);
+            }
         }
     };
 
-    f1(1,-1,0);
+    long long maxm=0;
+    long long res=0;
+    for(auto i:v)
+    {
+        f(i);
+        long long sz=(long long)(components.size());
+        long long sum=0;
+        for(long long v:components)
+        {
+            sum+=(long long)(adj[v].size());
+        }
+        sum=sum/2;
+        maxm=max(maxm,sz);
+        long long y=(sz*(sz-1))/2;
+        // debug(i,sum,y);
+        res+=(y-sum);
+        components.clear();
+    }
 
+    long long sum=0;
+    long long count=0;
+    for(long long i=1;i<=n;i++)
+    {
+        if(!vis[i])
+        {
+            sum+=(long long)(adj[i].size());
+            count++;
+        }
+    }
+    sum=sum/2;
+    long long x=(count*(count-1))/2;
+    x-=sum;
+    res+=x;
+    res+=(count*maxm);
     cout<<res<<endl;
 }

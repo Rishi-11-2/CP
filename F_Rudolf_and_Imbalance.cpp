@@ -1,3 +1,4 @@
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
@@ -30,98 +31,76 @@ void solve()
 {
     long long n,m,k;
     cin>>n>>m>>k;
+
     long long a[n];
-    for(long long i=0;i<n;i++)
-    cin>>a[i];
-    
-    long long d[m];
-    for(long long i=0;i<m;i++)
-    cin>>d[i];
-    
-    long long f[k];
-    for(long long i=0;i<k;i++)
-    cin>>f[i];
-
-
-    sort(d,d+m);
-    sort(f,f+k);
-
-    multiset<long long,greater<long long>>ss;
-    for(long long i=0;i<n-1;i++)
-    {
-        ss.insert(a[i+1]-a[i]);
-    }
-
-    long long maxm=*ss.begin();
-
-    ss.erase(ss.begin());
-    long long smaxm=*ss.begin();
-
-    if(smaxm==maxm)
-    {
-        cout<<smaxm<<endl;
-        return;
-    }
-
+    long long maxm=0;
     long long idx=-1;
-    set<long long>s;
+    multiset<long long,greater<long long>>s;
     for(long long i=0;i<n;i++)
     {
-        if(a[i+1]-a[i]==maxm)
+        cin>>a[i];
+        if(i>0)
         {
-            idx=i;
-            break;
-        }
-    }
-    for(long long i=0;i<k;i++)
-    {
-        s.insert(f[i]);
-    }
-    long long low=0;
-    long long high=maxm;
-    long long res=maxm;
-
-    function<long long(long long)>f1=[&](long long mid)->long long{
-
-        for(long long i=0;i<m;i++)
-        {
-            long long x=mid+a[idx]-d[i];
-            long long y=a[idx+1]-(d[i]+mid);
-
-            auto it=s.lower_bound(x);
-            if(it==s.end())
-            continue;
-
-            if(*it>x)
+            if((a[i]-a[i-1])>maxm)
             {
-                it--;
+                maxm=a[i]-a[i-1];
+                idx=i;
             }
-            int aa=*it;
-            debug(mid,x,y,aa);
-            if(aa>=y && aa<=x)
-            {
-                return 1;
-            }
-
-        }
-        return 0;
-    };
-    while(low<=high)
-    {
-        long long mid=(low+high)/2;
-        int x=f1(mid);
-        if(x)
-        {
-            debug(x,mid);
-            res=mid;
-            high=mid-1;
-        }
-        else
-        {
-            low=mid+1;
+            s.insert(a[i]-a[i-1]);
         }
     }
 
-    cout<<max(res,smaxm)<<endl;
-    
+    // long long maxm=*s.begin();
+
+    s.erase(s.begin());
+
+    long long smax=-(long long)(1e18);
+    if(!s.empty())
+    smax=*s.begin();
+
+    long long d[m];
+   for(long long i=0;i<m;i++)
+   cin>>d[i];
+
+   long long f[k];
+
+   for(long long i=0;i<k;i++)
+   cin>>f[i];
+
+   
+   multiset<long long>ss;
+   for(auto it:d)
+   {
+    ss.insert(it);
+   }
+
+   long long mid=(a[idx]+a[idx-1])/2;
+   long long res=maxm;
+//    debug(idx,mid);
+   for(long long i=0;i<k;i++)
+   {
+    //   if(mid-f[i]<0)
+    //   continue;
+      auto it=ss.lower_bound(mid-f[i]);
+      if(it!=ss.end())
+      {
+        // debug()
+        long long x=f[i]+*it;
+        if(x<=a[idx] && x>=a[idx-1])
+        res=min(res,max(abs(a[idx]-(f[i]+*it)),abs((*it+f[i])-a[idx-1])));
+      }
+
+      auto it1=ss.upper_bound(mid-f[i]);
+
+      if(it1!=ss.begin())
+      {
+        it1--;
+        long long x=f[i]+*it1;
+        if(x<=a[idx] && x>=a[idx-1])
+        res=min(res,max(abs(a[idx]-(f[i]+*it1)),abs((*it1+f[i])-a[idx-1])));
+      }
+
+   }
+
+   cout<<max(res,smax)<<endl;
 }

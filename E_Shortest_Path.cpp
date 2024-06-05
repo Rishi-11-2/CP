@@ -1,4 +1,3 @@
-#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
@@ -11,8 +10,8 @@ template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
 void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 #define all(v) (v).begin(), (v).end()
-//(data type to be stored (pair,int,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaraints)
-typedef tree < pair<int,int>, null_type,less<pair<int,int>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
+//(data type to be stored (pair,long long,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaralong longs)
+typedef tree < pair<long long,long long>, null_type,less<pair<long long,long long>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
 void solve();
 signed main()
 {
@@ -25,26 +24,26 @@ signed main()
 }
 void solve()
 {
-    int n,m,k;
+    long long n,m,k;
     cin>>n>>m>>k;
 
-    vector<int>adj[n+1];
+    vector<long long>adj[n+1];
 
-    for(int i=1;i<=m;i++)
+    for(long long i=1;i<=m;i++)
     {
-        int x,y;
+        long long x,y;
         cin>>x>>y;
 
         adj[x].push_back(y);
         adj[y].push_back(x);
     }
 
-    set<vector<int>>vx;
-    for(int i=1;i<=k;i++)
+    set<vector<long long>>vx;
+    for(long long i=1;i<=k;i++)
     {
-        int x,y,z;
+        long long x,y,z;
         cin>>x>>y>>z;
-        vector<int>v1;
+        vector<long long>v1;
         v1.push_back(x);
         v1.push_back(y);
         v1.push_back(z);
@@ -52,39 +51,39 @@ void solve()
         vx.insert(v1);
     }
 
-   set<vector<int>>s;
+   queue<pair<long long,pair<long long,long long>>>s;
 
-    vector<vector<int>>dis(n+1,vector<int>(n+1,(int)(1e9)));
+    vector<vector<long long>>dis(n+1,vector<long long>(n+1,(long long)(1e18)));
+    vector<vector<long long>>parent(n+1,vector<long long>(n+1,-1));
     dis[1][1]=0;
-    s.insert({0,1,-1,-1});
+    s.push({0,{1,-1}});
     while(!s.empty())
     {
-       auto it=*s.begin();
-       s.erase(s.begin());
+       auto it=s.front();
+    //    s.erase(s.begin());
+       s.pop();
+       long long d=it.first;
+       long long u=it.second.first;
+       long long p_u=it.second.second;
 
-       int d=it[0];
-       int u=it[1];
-       int p_u=it[2];
-
-       int p_p_u=it[3];
-        for(int v:adj[u])
+    //    long long p_p_u=it[3];
+        for(long long v:adj[u])
         {
             if(vx.find({p_u,u,v})==vx.end() && (dis[v][u])>(d+1))
             {
             //    debug(u,v);
-
-               s.erase({dis[v][u],v,u,p_u});
+               parent[v][u]=p_u;
                dis[v][u]=d+1;
-               s.insert({dis[v][u],v,u,p_u});
+               s.push({dis[v][u],{v,u}});
             }
         }
     }
-    int res=(int)(1e9);
-    for(int i=1;i<=n;i++)
+    long long res=(long long)(1e18);
+    for(long long i=1;i<=n;i++)
     {
         res=min(res,dis[n][i]);
     }
-    if(res==(int)(1e9))
+    if(res==(long long)(1e18))
     {
         cout<<-1<<endl;
         return;
@@ -92,22 +91,24 @@ void solve()
 
    cout<<res<<endl;
 
-   vector<int>path;
-   int node=n;
-   while(node!=-1)
+   vector<long long>path;
+   long long node=n;
+   long long nn=-1;
+   for(long long i=1;i<=n;i++)
    {
-     path.push_back(node);
-     int r=(int)(1e9);
-     int next_node=-1;
-     for(int i=1;i<=n;i++)
-     {
-        if(dis[node][i]<r)
-        {
-            r=dis[node][i];
-            next_node=i;
-        }
-     }
-     node=next_node;
+    if(dis[n][i]==res)
+    {
+        nn=i;
+    }
+   }
+   path.push_back(node);
+   while(nn!=-1)
+   {
+       path.push_back(nn);
+      long long g=parent[node][nn];
+      node=nn;
+      nn=g;
+
    }
    reverse(all(path));
 

@@ -13,73 +13,62 @@ void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 //(data type to be stored (pair,int,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaraints)
 typedef tree < pair<int,int>, null_type,less<pair<int,int>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
 void solve();
-vector<int>dist((int)(6e5),0);
 signed main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t;
-    cin >> t;
-    while (t--)
-    {
-        solve();
-    }
+
 }
 void solve()
 {
-    int n,m;
-    cin>>n>>m;
+    int n;
+    cin>>n;
 
-    dist.clear();
-    map<int,vector<int>>adj;
-    // set<int>vis;
-    for(int i=1;i<=m;i++)
+    vector<pair<int,int>>v;
+
+    for(int i=1;i<=n;i++)
     {
-        int x,y,c;
-        cin>>x>>y>>c;
+        int x,y;
+        cin>>x>>y;
 
-        int new_c=c+(int)(3e5);
-        dist[x]=(int)(1e9);
-        dist[y]=(int)(1e9);
-        dist[new_c]=(int)(1e9);
-        adj[new_c].push_back(x);
-        adj[new_c].push_back(y);
-
-        adj[x].push_back(new_c);
-        adj[y].push_back(new_c);
+        v.push_back({x,y});
     }
 
-    queue<pair<int,int>>q;
+    priority_queue< pair<int, pair<int,int>> , vector< pair<int, pair<int,int>> > , greater< pair<int, pair<int,int>> > >pq;
 
-  
-
-    int src,dest;
-    cin>>src>>dest;
-
-    dist[src]=0;
-    q.push({0,src});
-
-    while(!q.empty())
+    map<pair<int,int>,int>dp;
+    for(auto it:v)
     {
-        int u=q.front().second;
-        int d=q.front().first;
-        q.pop();
-        // debug(u);
-        if(d!=dist[u])
-        continue;
-        for(int v:adj[u])
+        pq.push({0,it});
+        dp[it]=0;
+    }
+
+    while(!pq.empty())
+    {
+        auto it=pq.top();
+
+        pq.pop();
+
+        int d=it.first;
+
+        int i=it.second.first;
+        int j=it.second.second;
+
+        int a[]={-1,1,0,0};
+        int b[]={0,0,-1,1};
+
+        for(int k=0;k<4;k++)
         {
-            if(dist[v]>d+1)
+            int x=a[k]+i;
+            int y=b[k]+j;
+            
+            if(dp.find({x,y})!=dp.end())
             {
-                dist[v]=d+1;
-                // vis[v]=1;
-                // vis.insert(v);
-                q.push({d+1,v});
+                
             }
+            
         }
     }
-
-    cout<<(dist[dest]/2)<<endl;
 }

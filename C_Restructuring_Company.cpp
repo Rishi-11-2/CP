@@ -20,26 +20,14 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    int t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    int n,s;
-    cin>>n>>s;
-    int a[n];
-    for(int i=0;i<n;i++)
-    cin>>a[i];
-    int i=0;
-    int j=0;
-    int sum=0;
-    map<int,int>dp;
-    while(j<n)
-    {
-        auto ndp=dp;
-        for(auto it:dp)
-        {
-            ndp
-        }
-        while(i<=j && sum>)
-    }
+
 }

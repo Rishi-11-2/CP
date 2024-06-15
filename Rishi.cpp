@@ -20,26 +20,26 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+       #ifndef ONLINEJUDGE
+       clock_t tStart = clock();
+       freopen("input.txt","r",stdin); 
+       freopen("output.txt","w",stdout);
+  #endif
+
+       //Your Code
+
+  #ifndef ONLINEJUDGE
+     fprintf(stderr, "\n>> Runtime: %.10fs\n", (double) (clock() - tStart) / CLOCKS_PER_SEC); 
+  #endif
+
+    int t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    int n,s;
-    cin>>n>>s;
-    int a[n];
-    for(int i=0;i<n;i++)
-    cin>>a[i];
-    int i=0;
-    int j=0;
-    int sum=0;
-    map<int,int>dp;
-    while(j<n)
-    {
-        auto ndp=dp;
-        for(auto it:dp)
-        {
-            ndp
-        }
-        while(i<=j && sum>)
-    }
+
 }

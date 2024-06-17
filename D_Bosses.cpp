@@ -17,7 +17,6 @@ class DSU{
     public:
     vector<long long>size;
     vector<long long>parent;
-    vector<long long>d;
 
     DSU(long long n)
     {
@@ -27,7 +26,6 @@ class DSU{
         for(long long i=0;i<=n+1;i++)
         {
             parent[i]=i;
-            d[i]=0;
             size[i]=1;
         }
     }
@@ -37,16 +35,9 @@ class DSU{
         if(parent[node]==node)
         return node;
         
-        return findUlp(parent[node]);
+        return parent[node]= findUlp(parent[node]);
     }
 
-    long long depth(long long node)
-    {
-        if(parent[node]==node)
-        return 0;
-
-       return d[node]= 1+depth(parent[node]);
-    }
   
 };
 signed main()
@@ -65,6 +56,8 @@ void solve()
 
     DSU d(n+1);
     vector<long long>res;
+    vector<long long>adj[n+1];
+    vector<pair<long long,long long>>v;
     for(long long i=1;i<=m;i++)
     {
         long long q;
@@ -75,14 +68,44 @@ void solve()
             cin>>u>>v;
 
             d.parent[u]=v;
+            adj[v].push_back(u);
         }
         else
         {
-            long long node;
-            cin>>node;
-            res.push_back(d.depth(node));
+            long long u;
+            cin>>u;
+            v.push_back({u,d.findUlp(u)});
         }
     }
+    set<long long>s;
+    for(long long i=1;i<=n;i++)
+    s.insert(d.findUlp(i));
+
+    vector<long long>depth(n+1,0);
+    vector<long long>vis(n+1,0);
+
+    function<void(long long,long long)>f=[&](long long u,long long d)->void{
+
+        vis[u]=1;
+        depth[u]=d;
+        for(long long v:adj[u])
+        {
+            if(!vis[v])
+            f(v,d+1);
+        }
+    };
+
+    for(auto node:s)
+    {
+        if(!vis[node])
+        f(node,0);
+    }
+
+    for(auto it:v)
+    {
+        res.push_back(depth[it.first]-depth[it.second]);
+    }
+
     for(auto it:res)
     cout<<it<<endl;
 }

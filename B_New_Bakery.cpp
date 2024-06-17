@@ -5,14 +5,13 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
 void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 #define all(v) (v).begin(), (v).end()
-//(data type to be stored (pair,int,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaraints)
-typedef tree < pair<int,int>, null_type,less<pair<int,int>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
+//(data type to be stored (pair,long long,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaralong longs)
+typedef tree < pair<long long,long long>, null_type,less<pair<long long,long long>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
 void solve();
 signed main()
 {
@@ -20,7 +19,7 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t;
+    long long t;
     cin >> t;
     while (t--)
     {
@@ -29,7 +28,16 @@ signed main()
 }
 void solve()
 {
-    int n;
-    cin>>n;
-    
+    long long n,a,b;
+    cin>>n>>a>>b;
+
+    long long k1=max(0LL,(2*(b-a)+1)/2);
+
+    k1=min(k1,min(n,b));
+    long long k2=max(0LL,k1+1);
+    k2=min(k2,min(n,b));
+    long long res1=k1*(b+1)-((k1*(k1+1)))/2+(n-k1)*a;
+    long long res2=k2*(b+1)-((k2*(k2+1)))/2+(n-k2)*a;
+
+    cout<<max(res1,res2)<<endl;
 }

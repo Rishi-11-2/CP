@@ -32,14 +32,35 @@ signed main()
      fprintf(stderr, "\n>> Runtime: %.10fs\n", (double) (clock() - tStart) / CLOCKS_PER_SEC); 
   #endif
 
-    int t;
-    cin >> t;
-    while (t--)
-    {
-        solve();
-    }
+            solve();
+    
 }
 void solve()
 {
+            int n, s;
+    cin >> n >> s;
+    vector<int> a(n);
+    for(int i = 0; i < n; i++) {
+        cin >> a[i];
+    }
 
+    int k = 0; // this is the second pointer
+    vector<int> C(s + 1, -1); // Initialize C array with -1
+    int ans = INT_MAX;
+
+    // Iterate the array with the first pointer
+    for (int i = 0; i < n; i++) {
+        // Update C array
+        for (int j = s; j >= a[i]; j--) {
+            C[j] = max(C[j], C[j - a[i]]);
+        }
+        C[a[i]] = i;
+
+        if (C[s] >= k) {
+            ans = min(ans, i - C[s] + 1);
+            k = C[s] + 1;
+        }
+    }
+
+    cout << (ans < INT_MAX ? ans : -1) << endl;
 }

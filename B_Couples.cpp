@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -20,14 +19,24 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t;
-    cin >> t;
-    while (t--)
-    {
         solve();
-    }
 }
 void solve()
 {
-    imt m;
+    int n;
+    cin>>n;
+
+    int arr[2*n];
+
+    for(int i=0;i<2*n;i++)
+    cin>>arr[i];
+
+    int count=0;
+    for(int i=1;i<2*n-1;i++)
+    {
+        // debug(i-1,i+1);
+        if(arr[i-1]==arr[i+1])
+        count++;
+    }
+    cout<<count<<endl;
 }

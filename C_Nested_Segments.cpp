@@ -19,110 +19,118 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    
+
         solve();
 }
 class SegmentTree{
     public:
     vector<long long>tree;
-    long long n;
     vector<long long>arr;
-    SegmentTree(long long nn,vector<long long>&v)
+    long long n;
+    SegmentTree(long long nn,vector<long long>&a)
     {
         n=nn;
-        arr=v;
         tree.resize(4*n);
-
-        build(0,n-1,0);
+        arr=a;
     }
-
+ 
     void build(long long ss,long long se,long long si)
     {
         if(ss==se)
         {
             tree[si]=arr[se];
-            return ;
+            return;
         }
-
+ 
         long long mid=(ss+se)/2;
-
+ 
         build(ss,mid,2*si+1);
         build(mid+1,se,2*si+2);
-
+ 
         tree[si]=tree[2*si+1]+tree[2*si+2];
     }
 
-
-    void update(long long ss,long long se,long long si,long long pos,long long val)
+    void update(long long ss,long long se,long long si,long long pos)
     {
         if(ss==se)
         {
-            tree[si]=val;
-            return ;
+            tree[si]=1;
+            return;
         }
 
         long long mid=(ss+se)/2;
-
         if(pos<=mid)
         {
-            update(ss,mid,2*si+1,pos,val);
+            update(ss,mid,2*si+1,pos);
         }
         else
-        {
-            update(mid+1,se,2*si+2,pos,val);
-        }
+        update(mid+1,se,2*si+2,pos);
 
-        tree[si]=(tree[2*si+1]+tree[2*si+2]);
+        tree[si]=tree[2*si+1]+tree[2*si+2];
     }
-
-    long long query(long long ss,long long se,long long si,long long l,long long r)
+ 
+    long long query(long long ss,long long se,long long si,long long l,long r)
     {
-        
-        if(l>se || r<ss)
+        if(ss>r || se<l )
         return 0;
-        
-        if(ss>=l && se<=r)
-        {
-            return tree[si];
-        }
+ 
+       if(ss>=l  && se<=r )
+       {
+          return tree[si];
+       }
+       long long mid=(ss+se)/2;
 
-        long long mid=(ss+se)/2;
-        return query(ss,mid,2*si+1,l,r)+query(mid+1,se,2*si+2,l,r);
+       return query(ss,mid,2*si+1,l,r)+  query(mid+1,se,2*si+2,l,r);
     }
-
-
-    void make_update(long long pos,long long val)
-    {
-        update(0,n-1,0,pos,val);
-    }
-
+ 
     long long make_query(long long l,long long r)
     {
         return query(0,n-1,0,l,r);
     }
-    
+    void make_update(long long pos)
+    {
+        update(0,n-1,0,pos);
+    }
 };
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n;
+    cin>>n;
+    vector<long long>arr(2*n);
 
-    vector<long long>a(n);
-    for(long long i=0;i<n;i++)
-    cin>>a[i];
-    vector<long long>v(n,0);
-   vector<SegmentTree>dp(k+2,SegmentTree(n,v));
-   for(long long i=0;i<n;i++)
+    for(long long i=0;i<2*n;i++)
+    cin>>arr[i];
+
+   vector<long long>v(2*n);
+
+   set<long long>s;
+   map<long long,long long>mp;
+   for(long long i=0;i<2*n;i++)
    {
-      dp[1].make_update(a[i]-1,1);
-      for(long long j=2;j<=k+1;j++)
-      {
-        long long val=dp[j-1].make_query(0,a[i]-2);
-
-        dp[j].make_update(a[i]-1,val);
-      }
+      v[i]=0;
    }
 
-   cout<<dp[k+1].make_query(0,n-1)<<endl;
-    
+   SegmentTree st(2*n,v);
+
+   st.build(0,2*n-1,0);
+   vector<long long>res(n+1,0);
+
+   for(long long i=0;i<2*n;i++)
+   {
+      if(s.find(arr[i])==s.end())
+      {
+        s.insert(arr[i]);
+        mp[arr[i]]=i;
+        continue;
+      }
+
+      res[arr[i]]=(st.make_query(mp[arr[i]],i));
+      st.make_update(mp[arr[i]]);
+   }
+
+   for(int i=1;i<=n;i++)
+   cout<<res[i]<<" ";
+   cout<<endl;
+
+   
 }

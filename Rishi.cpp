@@ -1,66 +1,54 @@
-#include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-using namespace std;
-using namespace __gnu_pbds;
-using namespace chrono;
-mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
-#define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
-template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
-template <typename T1, typename... T2>
-void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
-#define all(v) (v).begin(), (v).end()
-//(data type to be stored (pair,int,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaraints)
-typedef tree < pair<int,int>, null_type,less<pair<int,int>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
-void solve();
-signed main()
-{
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.setf(ios::fixed);
-    cout.precision(10);
-       #ifndef ONLINEJUDGE
-       clock_t tStart = clock();
-       freopen("input.txt","r",stdin); 
-       freopen("output.txt","w",stdout);
-  #endif
+struct pt {
+    double x, y;
+    bool operator == (pt const& t) const {
+        return x == t.x && y == t.y;
+    }
+};
 
-       //Your Code
-
-  #ifndef ONLINEJUDGE
-     fprintf(stderr, "\n>> Runtime: %.10fs\n", (double) (clock() - tStart) / CLOCKS_PER_SEC); 
-  #endif
-
-            solve();
-    
+int orientation(pt a, pt b, pt c) {
+    double v = a.x*(b.y-c.y)+b.x*(c.y-a.y)+c.x*(a.y-b.y);
+    if (v < 0) return -1; // clockwise
+    if (v > 0) return +1; // counter-clockwise
+    return 0;
 }
-void solve()
-{
-            int n, s;
-    cin >> n >> s;
-    vector<int> a(n);
-    for(int i = 0; i < n; i++) {
-        cin >> a[i];
+
+bool cw(pt a, pt b, pt c, bool include_collinear) {
+    int o = orientation(a, b, c);
+    return o < 0 || (include_collinear && o == 0);
+}
+bool collinear(pt a, pt b, pt c) { return orientation(a, b, c) == 0; }
+
+void convex_hull(vector<pt>& a, bool include_collinear = false) {
+    pt p0 = *min_element(a.begin(), a.end(), [](pt a, pt b) {
+        return make_pair(a.y, a.x) < make_pair(b.y, b.x);
+    });
+    sort(a.begin(), a.end(), [&p0](const pt& a, const pt& b) {
+        int o = orientation(p0, a, b); // sorting by angle
+
+        if (o == 0)
+            return (p0.x-a.x)*(p0.x-a.x) + (p0.y-a.y)*(p0.y-a.y)
+                < (p0.x-b.x)*(p0.x-b.x) + (p0.y-b.y)*(p0.y-b.y);
+        return o < 0;
+    });
+    if (include_collinear) {
+        int i = (int)a.size()-1;
+        while (i >= 0 && collinear(p0, a[i], a.back())) i--;
+        reverse(a.begin()+i+1, a.end());
+        // p0 a b c d e 
+        // p0 a b c e d // after reversing 
+        // we are reversing the last  collinear points, so that we can include all of them  
     }
 
-    int k = 0; // this is the second pointer
-    vector<int> C(s + 1, -1); // Initialize C array with -1
-    int ans = INT_MAX;
-
-    // Iterate the array with the first pointer
-    for (int i = 0; i < n; i++) {
-        // Update C array
-        for (int j = s; j >= a[i]; j--) {
-            C[j] = max(C[j], C[j - a[i]]);
-        }
-        C[a[i]] = i;
-
-        if (C[s] >= k) {
-            ans = min(ans, i - C[s] + 1);
-            k = C[s] + 1;
-        }
+    vector<pt> st;
+    for (int i = 0; i < (int)a.size(); i++) {
+        while (st.size() > 1 && !cw(st[st.size()-2], st.back(), a[i], include_collinear))
+            st.pop_back();
+        // if anticlockwise then we are popping from stack
+        st.push_back(a[i]);
     }
 
-    cout << (ans < INT_MAX ? ans : -1) << endl;
+    if (include_collinear == false && st.size() == 2 && st[0] == st[1])
+        st.pop_back();
+
+    a = st;
 }

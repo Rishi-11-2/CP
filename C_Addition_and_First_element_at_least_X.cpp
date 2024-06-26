@@ -19,7 +19,7 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-  
+   
         solve();
 }
 class LazySegmentTree{
@@ -28,14 +28,12 @@ class LazySegmentTree{
     vector<long long>lazy;
     long long n;
     vector<long long>arr;
-    LazySegmentTree(long long nn, vector<long long>&v)
+    LazySegmentTree(long long nn,vector<long long>&v)
     {
-        n=nn;
         arr=v;
+        n=nn;
         tree.resize(4*n);
-        lazy.resize(4*n);
         lazy.assign(4*n,0);
-
         build(0,n-1,0);
     }
 
@@ -44,22 +42,23 @@ class LazySegmentTree{
         if(ss==se)
         {
             tree[si]=arr[se];
-            return ;
+            return;
         }
 
         long long mid=(ss+se)/2;
-
         build(ss,mid,2*si+1);
         build(mid+1,se,2*si+2);
 
-        tree[si]=tree[2*si+1]+tree[2*si+2];
+        tree[si]=max(tree[2*si+1],tree[2*si+2]);
     }
+
     void push(long long ss,long long se,long long si)
     {
         if(lazy[si]==0)
         return ;
-        long long len=se-ss+1;
-        tree[si]+=(lazy[si])*len;
+
+        tree[si]+=lazy[si];
+
         if(ss!=se)
         {
             lazy[2*si+1]+=lazy[si];
@@ -67,86 +66,87 @@ class LazySegmentTree{
         }
         lazy[si]=0;
     }
+
     void update(long long ss,long long se,long long si,long long l,long long r,long long val)
     {
         push(ss,se,si);
 
-        if(l>se || r<ss)
-        {
-            return ;
-        }
+        if(ss>r || se<l)
+        return ;
 
-        if(ss>=l && se<=r)
-        {
-            lazy[si]+=val;
-            push(ss,se,si);
-            return;
-        }
+       if(ss>=l && se<=r)
+       {
+           lazy[si]+=val;
+           push(ss,se,si);
+           return;
+       }
 
-        long long mid=(ss+se)/2;
+       long long mid=(ss+se)/2;
 
-        update(ss,mid,2*si+1,l,r,val);
+       update(ss,mid,2*si+1,l,r,val);
+       update(mid+1,se,2*si+2,l,r,val);
 
-        update(mid+1,se,2*si+2,l,r,val);
-
-        tree[si]=tree[2*si+1]+tree[2*si+2];
+       tree[si]=max(tree[2*si+1],tree[2*si+2]);
     }
-    long long query(long long ss,long long se,long long si,long long l,long long r)
+
+
+    long long query(long long ss,long long se,long long si,long long l,long long k)
     {
         push(ss,se,si);
-        if(ss>r || se<l)
-        return 0;
-        
-        if(ss>=l && se<=r)
-        return tree[si];
-        
-       long long mid=(ss+se)/2;
-       return query(ss,mid,2*si+1,l,r)+query(mid+1,se,2*si+2,l,r);
+        if(tree[si]<k)
+        return -1;
+        if(ss==se)
+        {
+            return ss;
+        }
+        long long mid=(ss+se)/2;
+        push(ss,mid,2*si+1);
+        push(mid+1,se,2*si+2);
+        if(l<=mid && tree[2*si+1]>=k)
+        return query(ss,mid,2*si+1,l,k);
+         
+        return query(mid+1,se,2*si+2,l,k);
     }
+
+
     void make_update(long long l,long long r,long long val)
     {
         update(0,n-1,0,l,r,val);
     }
 
-    long long make_query(long long l,long long r)
+    long long make_query(long long l,long long k)
     {
-        return query(0,n-1,0,l,r);
+        return query(0,n-1,0,l,k);
     }
-
-
 };
 void solve()
 {
-    long long n,q;
-    cin>>n>>q;
-    long long arr[n];
-    for(long long i=0;i<n;i++)
-    cin>>arr[i];
+    long long n,m;
+
+    cin>>n>>m;
+
     vector<long long>v(n,0);
     LazySegmentTree lsgt(n,v);
-    for(long long i=1;i<=q;i++)
-    {
-        long long l,r;
-        cin>>l>>r;
-        lsgt.make_update(l-1,r-1,1);
-    }
-
     vector<long long>res;
-
-    for(long long i=0;i<n;i++)
+    for(long long i=1;i<=m;i++)
     {
-        res.push_back(lsgt.make_query(i,i));
+        long long type;
+        cin>>type;
+        if(type==1)
+        {
+            long long l,r,u;
+            cin>>l>>r>>u;
+            r--;
+            lsgt.make_update(l,r,u);
+        }
+        else
+        {
+            long long l,k;
+            cin>>k>>l;
+            res.push_back(lsgt.make_query(l,k));
+        }
     }
 
-    sort(all(res));
-    sort(arr,arr+n);
-    long long sum=0;
-    for(long long i=0;i<n;i++)
-    {
-        sum+=(res[i]*arr[i]);
-    }
-
-    cout<<sum<<endl;
-
-
+    for(auto it:res)
+    cout<<it<<endl;
 }

@@ -19,41 +19,40 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    
         solve();
 }
 void solve()
 {
-    long long n,s;
-    cin>>n>>s;
-    long long a[n];
+
+    long long n;
+    cin>>n;
+
+    long long arr[n];
+
     for(long long i=0;i<n;i++)
-    cin>>a[i];
+    cin>>arr[i];
 
+    vector<long long>v(n);
 
-    long long j=0; 
-    vector<long long>dp(s+1,-1);
-    long long res=(long long)(1e9);
-    for(long long i=0;i<n;i++)
+    tree< long long,null_type,less<long long>, rb_tree_tag,tree_order_statistics_node_update>s;
+
+    for(long long i=1;i<=n;i++)
+    s.insert(i);
+    
+    for(long long i=n-1;i>=0;i--)
     {
-        for(long long k=s;k>=a[i];k--)
-        {
-            dp[k]=max(dp[k],dp[k-a[i]]);
-        }
-        dp[a[i]]=i;
+        long long sz=(long long)s.size();
 
-        if(dp[s]>=j)
-        {
-            res=min(res,i-dp[s]+1);
-            j=dp[s]+1;
-        }
+        long long d=sz-arr[i];
+        d--;
+        // debug(sz);
+        auto it=s.find_by_order(d);
+        v[i]=*it;
+        s.erase(it);
     }
 
-    if(res==(long long)(1e9))
-    {
-        cout<<-1<<endl;
-    }
-    else
-    {
-        cout<<res<<endl;
-    }
+    for(auto it:v)
+    cout<<it<<" ";
+    cout<<endl;
 }

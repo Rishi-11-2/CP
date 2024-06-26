@@ -19,41 +19,31 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+   
         solve();
 }
 void solve()
 {
-    long long n,s;
-    cin>>n>>s;
-    long long a[n];
-    for(long long i=0;i<n;i++)
-    cin>>a[i];
+    string s;
+    cin>>s;
 
+    map<char,long long>mp;
+    long long n=s.length();
+    long long ans=(n*(n+1))/2;
 
-    long long j=0; 
-    vector<long long>dp(s+1,-1);
-    long long res=(long long)(1e9);
-    for(long long i=0;i<n;i++)
+    for(char c:s)
     {
-        for(long long k=s;k>=a[i];k--)
-        {
-            dp[k]=max(dp[k],dp[k-a[i]]);
-        }
-        dp[a[i]]=i;
+        mp[c]++;
+        // ans-=mp[c];
 
-        if(dp[s]>=j)
-        {
-            res=min(res,i-dp[s]+1);
-            j=dp[s]+1;
-        }
     }
 
-    if(res==(long long)(1e9))
+    for(auto it:mp)
     {
-        cout<<-1<<endl;
+        // debug(it.second*(it.s))
+        ans-=(it.second*(it.second+1))/2;
     }
-    else
-    {
-        cout<<res<<endl;
-    }
+
+    cout<<ans+1<<endl;
+
 }

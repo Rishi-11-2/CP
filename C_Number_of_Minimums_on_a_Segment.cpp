@@ -1,0 +1,133 @@
+#include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace std;
+using namespace __gnu_pbds;
+using namespace chrono;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+#define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
+template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
+template <typename T1, typename... T2>
+void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
+#define all(v) (v).begin(), (v).end()
+//(data type to be stored (pair,long long,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaralong longs)
+typedef tree < pair<long long,long long>, null_type,less<pair<long long,long long>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
+void solve();
+signed main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.setf(ios::fixed);
+    cout.precision(10);
+   
+        solve();
+}
+void solve()
+{
+    long long n,m;
+    cin>>n>>m;
+
+    long long arr[n];
+    for(long long i=0;i<n;i++)
+    cin>>arr[i];
+    
+    pair<long long,long long> tree[4*n];
+
+    function<void(long long,long long,long long)>build=[&](long long ss,long long se,long long si)->void{
+       
+       if(ss==se)
+       {
+          tree[si]={arr[se],1LL};
+          return;
+       }
+
+       long long mid=(ss+se)/2;
+
+       build(ss,mid,2*si+1);
+       build(mid+1,se,2*si+2);
+       auto left=tree[2*si+1];
+       auto right=tree[2*si+2];
+       if(left.first<right.first)
+       tree[si]=left;
+       else if(right.first<left.first)
+       tree[si]=right;
+       else
+       tree[si]={left.first,left.second+right.second};
+
+    };
+
+
+    build(0,n-1,0);
+
+    function<void(long long,long long ,long long,long long,long long)>update=[&](long long ss,long long se,long long si,long long index,long long val)->void{
+
+        if(ss==se)
+        {
+            tree[si]={val,1LL};
+            return ;
+        }
+
+        long long mid=(ss+se)/2;
+        if(index<=mid)
+        update(ss,mid,2*si+1,index,val);
+        else
+        update(mid+1,se,2*si+2,index,val);
+       auto left=tree[2*si+1];
+       auto right=tree[2*si+2];
+       if(left.first<right.first)
+       tree[si]=left;
+       else if(right.first<left.first)
+       tree[si]=right;
+       else
+       tree[si]={left.first,left.second+right.second};
+    };
+
+
+    function<pair<long long,long long>(long long,long long,long long,long long,long long)>query=[&](long long ss,long long se,long long l,long long r,long long si)->pair<long long,long long>{
+
+
+        if(se<l || ss>r )
+
+        return {(long long)(1e10),(long long)1e10};
+
+        if(ss>=l && se<=r)
+        {
+            return tree[si];
+        }
+
+        long long mid=(ss+se)/2;
+
+        auto left=query(ss,mid,l,r,2*si+1);
+        auto right=query(mid+1,se,l,r,2*si+2);
+        if(left.first<right.first)
+        return left;
+        else if(right.first<left.first)
+        return right;
+        else
+        return make_pair(left.first,left.second+right.second);
+    };
+
+
+    vector<pair<long long,long long>>res;
+    for(long long i=1;i<=m;i++)
+    {
+        long long x;
+        cin>>x;
+        if(x==1)
+        {
+            long long j,v;
+            cin>>j>>v;
+            arr[j]=v;
+            update(0,n-1,0,j,v);
+        }
+        else
+        {
+            long long l,r;
+            cin>>l>>r;
+            res.push_back(query(0,n-1,l,r-1,0));
+        }
+    }
+
+    for(auto it:res)
+    cout<<it.first<<" "<<it.second<<endl;
+}

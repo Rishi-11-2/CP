@@ -23,37 +23,28 @@ signed main()
 }
 void solve()
 {
-    long long n,s;
-    cin>>n>>s;
-    long long a[n];
-    for(long long i=0;i<n;i++)
-    cin>>a[i];
+    long long a,b;
+    cin>>a>>b;
 
+    long long c,d;
+    cin>>c>>d;
+    long long res=0;
+    res+=abs(d-b);
 
-    long long j=0; 
-    vector<long long>dp(s+1,-1);
-    long long res=(long long)(1e9);
-    for(long long i=0;i<n;i++)
+    long long y=res;
+    long long x=abs((a-c));
+    x-=y;
+
+    x=(x+1)/2LL;
+
+    // if()
+    // int z1=(d+c)%2;
+    // int z2=(a+b)%2;
+    if(b==d && (abs(a-c)+d)%2==0)
+    x--;
+    if(x>y)
     {
-        for(long long k=s;k>=a[i];k--)
-        {
-            dp[k]=max(dp[k],dp[k-a[i]]);
-        }
-        dp[a[i]]=i;
-
-        if(dp[s]>=j)
-        {
-            res=min(res,i-dp[s]+1);
-            j=dp[s]+1;
-        }
+        res+=abs(x-y);
     }
-
-    if(res==(long long)(1e9))
-    {
-        cout<<-1<<endl;
-    }
-    else
-    {
-        cout<<res<<endl;
-    }
+    cout<<res<<endl;
 }

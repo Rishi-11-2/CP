@@ -10,8 +10,8 @@ template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
 void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 #define all(v) (v).begin(), (v).end()
-//(data type to be stored (pair,int,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaraints)
-typedef tree < pair<int,int>, null_type,less<pair<int,int>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
+//(data type to be stored (pair,long long,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaralong longs)
+typedef tree < pair<long long,long long>, null_type,less<pair<long long,long long>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
 void solve();
 signed main()
 {
@@ -19,56 +19,79 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
+   
+        solve();
 }
 void solve()
 {
-    int n;
+    long long n;
     cin>>n;
 
-    vector<pair<int,int>>v;
-
-    for(int i=1;i<=n;i++)
+    queue<pair<long long,long long>>q;
+    long long a[]={1,-1,0,0};
+    long long b[]={0,0,1,-1};
+    set<pair<long long,long long>>s;
+    vector<pair<long long,long long>>v;
+    for(long long i=1;i<=n;i++)
     {
-        int x,y;
+        long long x,y;
         cin>>x>>y;
 
+        s.insert({x,y});
         v.push_back({x,y});
+
     }
-
-    priority_queue< pair<int, pair<int,int>> , vector< pair<int, pair<int,int>> > , greater< pair<int, pair<int,int>> > >pq;
-
-    map<pair<int,int>,int>dp;
-    for(auto it:v)
+    map<pair<long long,long long>,long long>dp;
+    long long low=-(1e6);
+    long long high=(1e6);
+    map<pair<long long,long long>,pair<long long,long long>>ans;
+    for(auto it:s)
     {
-        pq.push({0,it});
-        dp[it]=0;
-    }
-
-    while(!pq.empty())
-    {
-        auto it=pq.top();
-
-        pq.pop();
-
-        int d=it.first;
-
-        int i=it.second.first;
-        int j=it.second.second;
-
-        int a[]={-1,1,0,0};
-        int b[]={0,0,-1,1};
-
-        for(int k=0;k<4;k++)
+        long long i=it.first;
+        long long j=it.second;
+        // debug(i,j);
+        long long flag=0;
+        for(long long k=0;k<4;k++)
         {
-            int x=a[k]+i;
-            int y=b[k]+j;
-            
-            if(dp.find({x,y})!=dp.end())
+            long long x=a[k]+i;
+            long long y=b[k]+j;
+
+            if(x>=low && y>=low && x<=high && y<=high && s.find({x,y})==s.end())
             {
-                
+                flag=1;
+                q.push({i,j});
+                ans[{i,j}]={x,y};
+                // debug(i,j,x,y);
+                break;
             }
-            
+        }
+        
+    }
+
+    while(!q.empty())
+    {
+        auto it=q.front();
+        q.pop();
+        long long i=it.first;
+        long long j=it.second;
+        // debug(i,j);
+        for(long long k=0;k<4;k++)
+        {
+            long long x=a[k]+i;
+            long long y=b[k]+j;
+            if(s.count({x,y}) && !ans.count({x,y}))
+            {
+                // debug(i,j,x,y);
+                q.push({x,y});
+                ans[{x,y}]=ans[{i,j}];
+            }
         }
     }
+
+    for(auto it:v)
+    {
+        cout<<ans[it].first<<" "<<ans[it].second<<endl;
+    }
+
+
 }

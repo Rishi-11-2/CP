@@ -5,14 +5,13 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
 void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 #define all(v) (v).begin(), (v).end()
-//(data type to be stored (pair,int,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaraints)
-typedef tree < pair<int,int>, null_type,less<pair<int,int>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
+//(data type to be stored (pair,long long,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaralong longs)
+typedef tree < pair<long long,long long>, null_type,less<pair<long long,long long>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
 void solve();
 signed main()
 {
@@ -20,7 +19,7 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t;
+    long long t;
     cin >> t;
     while (t--)
     {
@@ -29,56 +28,59 @@ signed main()
 }
 void solve()
 {
-    int n;
+    long long n;
     cin>>n;
-    if(n==1)
+
+    string s;
+    cin>>s;
+
+    if(n==2)
     {
-        cout<<1<<endl;
+        cout<<stoi(s)<<endl;
         return;
     }
-    map<int,vector<string>>mp;
-    mp[3].push_back("169");
-    mp[3].push_back("961");
-    mp[3].push_back("196");
-
-    for(int i=5;i<=n;i+=2)
+    vector<vector<long long>>vv;
+    for(long long i=0;i+1<n;i++)
     {
-        for(auto it:mp[i-2])
+        string x=s.substr(i,2);
+        vector<long long>v;
+        v.push_back(stoi(x));
+        for(long long j=0;j<i;j++)
         {
-            mp[i].push_back(it+"00");
+            v.push_back(s[j]-'0');
         }
-        string s="1";
-        int x=i-3;
-        x=x/2;
-        for(int j=1;j<=x;j++)
+        for(long long j=i+2;j<n;j++)
         {
-            s+=(to_string(0));
+            v.push_back(s[j]-'0');
         }
-        s+="6";
-        for(int j=1;j<=x;j++)
-        {
-            s+=(to_string(0));
-        }
-        s+="9";
-        mp[i].push_back(s);
-
-        string s1="9";
-        for(int j=1;j<=x;j++)
-        {
-            s1+=(to_string(0));
-        }
-        s1+="6";
-        for(int j=1;j<=x;j++)
-        {
-            s1+=(to_string(0));
-        }
-        s1+="1";
-        mp[i].push_back(s1);
+        vv.push_back(v);
     }
 
+    long long idx=0;
+    vector<long long>dp(n+1,-1);
+    function<long long(long long)>f=[&](long long i)->long long{
 
-    for(auto it:mp[n])
+        if(i==n-2)
+        {
+            return vv[idx][i];
+        }  
+        if(dp[i]!=-1)
+        return dp[i];
+        long long res=vv[idx][i]+f(i+1);
+        res=min(res,vv[idx][i]*f(i+1));
+
+        return dp[i]= res;
+    };
+
+    long long res=(long long)(1e18);
+    for(long long i=0;i<(long long)(vv.size());i++)
     {
-        cout<<it<<endl;
+        idx=i;
+        dp.assign(n+1,-1);
+        res=min(res,f(0));
     }
+
+    cout<<res<<endl;
+
+
 }

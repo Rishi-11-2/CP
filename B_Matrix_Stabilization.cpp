@@ -19,41 +19,56 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    long long t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    long long n,s;
-    cin>>n>>s;
-    long long a[n];
-    for(long long i=0;i<n;i++)
-    cin>>a[i];
+    long long n,m;
+    cin>>n>>m;
 
+    long long arr[n][m];
 
-    long long j=0; 
-    vector<long long>dp(s+1,-1);
-    long long res=(long long)(1e9);
     for(long long i=0;i<n;i++)
     {
-        for(long long k=s;k>=a[i];k--)
-        {
-            dp[k]=max(dp[k],dp[k-a[i]]);
-        }
-        dp[a[i]]=i;
+        for(long long j=0;j<m;j++)
+        cin>>arr[i][j];
+    }
+    long long a[]={1,-1,0,0};
+    long long b[]={0,0,-1,1};
 
-        if(dp[s]>=j)
+    for(long long i=0;i<n;i++)
+    {
+        for(long long j=0;j<m;j++)
         {
-            res=min(res,i-dp[s]+1);
-            j=dp[s]+1;
+            long long maxm=0;
+            for(long long k=0;k<4;k++)
+            {
+                long long x=i+a[k];
+                long long y=j+b[k];
+                if(x>=0 && y>=0 && x<n && y<m)
+                {
+                    maxm=max(maxm,arr[x][y]);
+                }
+
+            }
+            if(maxm!=0 && maxm<=arr[i][j])
+            {
+                arr[i][j]=maxm;
+            }
+
         }
     }
 
-    if(res==(long long)(1e9))
+    for(long long i=0;i<n;i++)
     {
-        cout<<-1<<endl;
+        for(long long j=0;j<m;j++)
+        cout<<arr[i][j]<<" ";
+        cout<<endl;
     }
-    else
-    {
-        cout<<res<<endl;
-    }
+    
 }

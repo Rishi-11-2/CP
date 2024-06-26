@@ -19,20 +19,21 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    
+   
         solve();
 }
-class SegmentTree{
+class LazySegmentTree{
     public:
     vector<long long>tree;
+    vector<long long>lazy;
     long long n;
     vector<long long>arr;
-    SegmentTree(long long nn,vector<long long>&v)
+    LazySegmentTree(long long nn,vector<long long>&v)
     {
-        n=nn;
         arr=v;
+        n=nn;
         tree.resize(4*n);
-
+        lazy.assign(4*n,0);
         build(0,n-1,0);
     }
 
@@ -41,88 +42,110 @@ class SegmentTree{
         if(ss==se)
         {
             tree[si]=arr[se];
-            return ;
+            return;
         }
 
         long long mid=(ss+se)/2;
-
         build(ss,mid,2*si+1);
         build(mid+1,se,2*si+2);
 
-        tree[si]=tree[2*si+1]+tree[2*si+2];
+        tree[si]=min(tree[2*si+1],tree[2*si+2]);
     }
 
-
-    void update(long long ss,long long se,long long si,long long pos,long long val)
+    void push(long long ss,long long se,long long si)
     {
-        if(ss==se)
-        {
-            tree[si]=val;
-            return ;
-        }
+        if(lazy[si]==0)
+        return ;
 
-        long long mid=(ss+se)/2;
+        tree[si]+=lazy[si];
 
-        if(pos<=mid)
+        if(ss!=se)
         {
-            update(ss,mid,2*si+1,pos,val);
+            lazy[2*si+1]+=lazy[si];
+            lazy[2*si+2]+=lazy[si];
         }
-        else
-        {
-            update(mid+1,se,2*si+2,pos,val);
-        }
-
-        tree[si]=(tree[2*si+1]+tree[2*si+2]);
+        lazy[si]=0;
     }
+
+    void update(long long ss,long long se,long long si,long long l,long long r,long long val)
+    {
+        push(ss,se,si);
+
+        if(ss>r || se<l)
+        return ;
+
+       if(ss>=l && se<=r)
+       {
+           lazy[si]+=val;
+           push(ss,se,si);
+           return;
+       }
+
+       long long mid=(ss+se)/2;
+
+       update(ss,mid,2*si+1,l,r,val);
+       update(mid+1,se,2*si+2,l,r,val);
+
+       tree[si]=min(tree[2*si+1],tree[2*si+2]);
+    }
+
 
     long long query(long long ss,long long se,long long si,long long l,long long r)
     {
-        
-        if(l>se || r<ss)
-        return 0;
-        
+        push(ss,se,si);
+
+        if(ss>r || se<l)
+        return (long long)(1e18);
+
         if(ss>=l && se<=r)
         {
             return tree[si];
         }
 
         long long mid=(ss+se)/2;
-        return query(ss,mid,2*si+1,l,r)+query(mid+1,se,2*si+2,l,r);
+
+        return min(query(ss,mid,2*si+1,l,r),query(mid+1,se,2*si+2,l,r));
     }
 
 
-    void make_update(long long pos,long long val)
+    void make_update(long long l,long long r,long long val)
     {
-        update(0,n-1,0,pos,val);
+        update(0,n-1,0,l,r,val);
     }
 
     long long make_query(long long l,long long r)
     {
         return query(0,n-1,0,l,r);
     }
-    
 };
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n,m;
 
-    vector<long long>a(n);
-    for(long long i=0;i<n;i++)
-    cin>>a[i];
+    cin>>n>>m;
+
     vector<long long>v(n,0);
-   vector<SegmentTree>dp(k+2,SegmentTree(n,v));
-   for(long long i=0;i<n;i++)
-   {
-      dp[1].make_update(a[i]-1,1);
-      for(long long j=2;j<=k+1;j++)
-      {
-        long long val=dp[j-1].make_query(0,a[i]-2);
+    LazySegmentTree lsgt(n,v);
+    vector<long long>res;
+    for(long long i=1;i<=m;i++)
+    {
+        long long type;
+        cin>>type;
+        if(type==1)
+        {
+            long long l,r,u;
+            cin>>l>>r>>u;
+            r--;
+            lsgt.make_update(l,r,u);
+        }
+        else
+        {
+            long long l,r;
+            cin>>l>>r;
+            res.push_back(lsgt.make_query(l,r-1));
+        }
+    }
 
-        dp[j].make_update(a[i]-1,val);
-      }
-   }
-
-   cout<<dp[k+1].make_query(0,n-1)<<endl;
-    
+    for(auto it:res)
+    cout<<it<<endl;
 }

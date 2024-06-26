@@ -19,41 +19,55 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    long long t;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    long long n,s;
-    cin>>n>>s;
-    long long a[n];
-    for(long long i=0;i<n;i++)
-    cin>>a[i];
+    long long n;
+    uint64_t c;
+    cin>>n>>c;
 
-
-    long long j=0; 
-    vector<long long>dp(s+1,-1);
-    long long res=(long long)(1e9);
-    for(long long i=0;i<n;i++)
+    vector<pair<long long,long long>>v;
+    long long one=0;
+    //  c=min(c,(long long)(1e18));
+    for(long long i=1;i<=n;i++)
     {
-        for(long long k=s;k>=a[i];k--)
+        long long x;
+        cin>>x;
+        if(i==1)
         {
-            dp[k]=max(dp[k],dp[k-a[i]]);
+            one=x;
+            continue;
         }
-        dp[a[i]]=i;
+    
+        v.push_back({x,i});
+    }
+    sort(all(v));
+    long long count=0;
+    
 
-        if(dp[s]>=j)
+    for(long long i=1;i<n;i++)
+    {
+        long long cc=c;
+
+        for(long long j=0;j<i;j++)
         {
-            res=min(res,i-dp[s]+1);
-            j=dp[s]+1;
+            cc-=(one*v[j].first);
+            for(long long k=i;k<n-1;k++)
+            {
+                cc-=(v[j].first*v[k].first);
+
+            }
+        }
+        if(cc>=0)
+        {
+            count=max(count,i);
         }
     }
-
-    if(res==(long long)(1e9))
-    {
-        cout<<-1<<endl;
-    }
-    else
-    {
-        cout<<res<<endl;
-    }
+    cout<<(n-count)<<endl;
 }

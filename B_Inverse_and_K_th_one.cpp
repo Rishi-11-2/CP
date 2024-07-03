@@ -36,7 +36,11 @@ class LazySegmentTree{
         lazy.assign(4*n,0);
         build(0,n-1,0);
     }
-
+    long long combine(long long a,long long b)
+    {
+        long long res=(a+b);
+        return res;
+    }
     void build(long long ss,long long se,long long si)
     {
         if(ss==se)
@@ -49,25 +53,28 @@ class LazySegmentTree{
         build(ss,mid,2*si+1);
         build(mid+1,se,2*si+2);
 
-        tree[si]=max(tree[2*si+1],tree[2*si+2]);
+        tree[si]=combine(tree[2*si+1],tree[2*si+2]);
     }
-
+    long long combine1(long long x)
+    {
+        x=1-x;
+        return x;
+    }
     void push(long long ss,long long se,long long si)
     {
         if(lazy[si]==0)
-        return ;
-
-        tree[si]+=lazy[si];
+        return;
+        tree[si]=(se-ss+1)-tree[si];
 
         if(ss!=se)
         {
-            lazy[2*si+1]+=lazy[si];
-            lazy[2*si+2]+=lazy[si];
+            lazy[2*si+1]^=lazy[si]; // because there can be multiple overlapping ranges so we need to use xor
+            lazy[2*si+2]^=lazy[si];
         }
         lazy[si]=0;
     }
 
-    void update(long long ss,long long se,long long si,long long l,long long r,long long val)
+    void update(long long ss,long long se,long long si,long long l,long long r)
     {
         push(ss,se,si);
 
@@ -76,41 +83,40 @@ class LazySegmentTree{
 
        if(ss>=l && se<=r)
        {
-           lazy[si]+=val;
+           lazy[si]=1;
            push(ss,se,si);
            return;
        }
 
        long long mid=(ss+se)/2;
 
-       update(ss,mid,2*si+1,l,r,val);
-       update(mid+1,se,2*si+2,l,r,val);
+       update(ss,mid,2*si+1,l,r);
+       update(mid+1,se,2*si+2,l,r);
 
-       tree[si]=max(tree[2*si+1],tree[2*si+2]);
+       tree[si]=combine(tree[2*si+1],tree[2*si+2]);
     }
 
 
     long long query(long long ss,long long se,long long si,long long l,long long r)
     {
         push(ss,se,si);
-        if(ss>r || se<l)
-        {
-            return INT_MIN;
-        }
-        if(ss>=l && se<=r)
-       {
-           return tree[si];
-       }
-
-        long long mid=(ss+se)/2;
         
-        return max(query(ss,mid,2*si+1,l,r),query(mid+1,se,2*si+2,l,r));
+
+        if(ss>r || se<l)
+        return 0;
+        
+        if(ss>=l && se<=r)
+        return tree[si];
+       
+        long long mid=(ss+se)/2;
+
+        return combine(query(ss,mid,2*si+1,l,r),query(mid+1,se,2*si+2,l,r));
     }
 
 
-    void make_update(long long l,long long r,long long val)
+    void make_update(long long l,long long r)
     {
-        update(0,n-1,0,l,r,val);
+        update(0,n-1,0,l,r);
     }
 
     long long make_query(long long l,long long r)
@@ -121,37 +127,41 @@ class LazySegmentTree{
 void solve()
 {
     long long n,m;
-
     cin>>n>>m;
 
     vector<long long>v(n,0);
+
     LazySegmentTree lsgt(n,v);
+
     vector<long long>res;
     for(long long i=1;i<=m;i++)
     {
         long long type;
         cin>>type;
+
         if(type==1)
         {
-            long long l,r,u;
-            cin>>l>>r>>u;
-            r--;
-            lsgt.make_update(l,r,u);
+            long long l,r;
+            cin>>l>>r;
+
+            lsgt.make_update(l,r-1);
+            // debug(lsgt.make_query(l,l));
         }
         else
         {
-            long long l,k;
-            cin>>k>>l;
-            long long low=l;
+            long long k;
+            cin>>k;
+
+            long long low=0;
             long long high=n-1;
 
-            long long ans=-1;
+            long long ans=0;
+            k++;
             while(low<=high)
             {
                 long long mid=(low+high)/2;
-
-                long long count=lsgt.make_query(low,mid);
-
+                long long count=lsgt.make_query(0,mid);
+                // debug(count,mid);
                 if(count>=k)
                 {
                     ans=mid;
@@ -162,7 +172,7 @@ void solve()
                     low=mid+1;
                 }
             }
-
+            // debug(ans);
             res.push_back(ans);
         }
     }

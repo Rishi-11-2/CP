@@ -28,6 +28,7 @@ class LazySegmentTree{
     vector<long long>lazy;
     long long n;
     vector<long long>arr;
+    const long long mod=(long long)(1e9)+7;
     LazySegmentTree(long long nn,vector<long long>&v)
     {
         arr=v;
@@ -36,7 +37,11 @@ class LazySegmentTree{
         lazy.assign(4*n,0);
         build(0,n-1,0);
     }
-
+    long long combine(long long a,long long b)
+    {
+        long long res=(a%mod+b%mod)%mod;
+        return res;
+    }
     void build(long long ss,long long se,long long si)
     {
         if(ss==se)
@@ -49,20 +54,28 @@ class LazySegmentTree{
         build(ss,mid,2*si+1);
         build(mid+1,se,2*si+2);
 
-        tree[si]=max(tree[2*si+1],tree[2*si+2]);
+        tree[si]=combine(tree[2*si+1],tree[2*si+2]);
     }
+    long long  combine1(long long x,long long val)
+    {
+        if(x==0)
+        x=val;
+        else
+        x=(x%mod*val%mod)%mod;
 
+        return x;
+    }
     void push(long long ss,long long se,long long si)
     {
         if(lazy[si]==0)
         return ;
-
-        tree[si]+=lazy[si];
+        long long len=(se-ss+1);
+        tree[si]=(tree[si]%mod*lazy[si]%mod)%mod;
 
         if(ss!=se)
         {
-            lazy[2*si+1]+=lazy[si];
-            lazy[2*si+2]+=lazy[si];
+            lazy[2*si+1]=combine1(lazy[2*si+1],lazy[si]);
+            lazy[2*si+2]=combine1(lazy[2*si+2],lazy[si]);
         }
         lazy[si]=0;
     }
@@ -76,7 +89,8 @@ class LazySegmentTree{
 
        if(ss>=l && se<=r)
        {
-           lazy[si]+=val;
+           lazy[si]=combine1(lazy[si],val);
+
            push(ss,se,si);
            return;
        }
@@ -86,25 +100,24 @@ class LazySegmentTree{
        update(ss,mid,2*si+1,l,r,val);
        update(mid+1,se,2*si+2,l,r,val);
 
-       tree[si]=max(tree[2*si+1],tree[2*si+2]);
+       tree[si]=combine(tree[2*si+1],tree[2*si+2]);
     }
 
 
     long long query(long long ss,long long se,long long si,long long l,long long r)
     {
         push(ss,se,si);
-        if(ss>r || se<l)
-        {
-            return INT_MIN;
-        }
-        if(ss>=l && se<=r)
-       {
-           return tree[si];
-       }
-
-        long long mid=(ss+se)/2;
         
-        return max(query(ss,mid,2*si+1,l,r),query(mid+1,se,2*si+2,l,r));
+
+        if(ss>r || se<l)
+        return 0;
+        
+        if(ss>=l && se<=r)
+        return tree[si]%mod;
+       
+        long long mid=(ss+se)/2;
+
+        return combine(query(ss,mid,2*si+1,l,r),query(mid+1,se,2*si+2,l,r));
     }
 
 
@@ -120,53 +133,42 @@ class LazySegmentTree{
 };
 void solve()
 {
+
     long long n,m;
 
     cin>>n>>m;
-
-    vector<long long>v(n,0);
+    vector<long long>v(n,1);
     LazySegmentTree lsgt(n,v);
+
     vector<long long>res;
     for(long long i=1;i<=m;i++)
     {
         long long type;
+
         cin>>type;
+
         if(type==1)
         {
-            long long l,r,u;
-            cin>>l>>r>>u;
+            long long l,r,v;
+            cin>>l>>r>>v;
             r--;
-            lsgt.make_update(l,r,u);
+            lsgt.make_update(l,r,v);
         }
         else
         {
-            long long l,k;
-            cin>>k>>l;
-            long long low=l;
-            long long high=n-1;
-
-            long long ans=-1;
-            while(low<=high)
-            {
-                long long mid=(low+high)/2;
-
-                long long count=lsgt.make_query(low,mid);
-
-                if(count>=k)
-                {
-                    ans=mid;
-                    high=mid-1;
-                }
-                else
-                {
-                    low=mid+1;
-                }
-            }
-
-            res.push_back(ans);
+            long long l,r;
+            cin>>l>>r;
+            r--;
+            res.push_back(lsgt.make_query(l,r));
         }
     }
 
+    // for(long long i=0;i<n;i++)
+    // {
+    //     cout<<lsgt.make_query(i,i)<<endl;
+    // }
+
     for(auto it:res)
     cout<<it<<endl;
+
 }

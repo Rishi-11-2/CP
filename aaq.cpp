@@ -1,161 +1,154 @@
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 using namespace std;
-#define ll long long int
-#define fio ios_base::sync_with_stdio(false) , cin.tie(NULL);
-#define rep(i,a,b) for(int i = a ; i<=b;i++)
-#define rrep(i,a,b) for(int i = a ; i>=b;i--)
-#define vi vector<int> 
-#define vvi vector<vector<int>> 
-#define vll vector<ll> 
-#define all(v) v.begin(),v.end()
-#define allr(v) v.rbegin(),v.rend()
-#define pb push_back
-#define pi pair<int,int> 
-const ll mod = 1e9+7;
-void __print(int x)
-{
-    cerr << x;
-}
-void __print(long x) { cerr << x; }
-void __print(long long x) { cerr << x; }
-void __print(unsigned x) { cerr << x; }
-void __print(unsigned long x) { cerr << x; }
-void __print(unsigned long long x) { cerr << x; }
-void __print(float x) { cerr << x; }
-void __print(double x) { cerr << x; }
-void __print(long double x) { cerr << x; }
-void __print(char x) { cerr << '\'' << x << '\''; }
-void __print(const char *x) { cerr << '\"' << x << '\"'; }
-void __print(const string &x) { cerr << '\"' << x << '\"'; }
-void __print(bool x) { cerr << (x ? "true" : "false"); }
-template <typename T, typename V>
-void __print(const pair<T, V> &x)
-{
-    cerr << '{';
-    __print(x.first);
-    cerr << ',';
-    __print(x.second);
-    cerr << '}';
-}
-template <typename T>
-void __print(const T &x)
-{
-    int f = 0;
-    cerr << '{';
-    for (auto &i : x)
-        cerr << (f++ ? "," : ""), __print(i);
-    cerr << "}";
-}
-void _print() { cerr << "]\n"; }
-template <typename T, typename... V>
-void _print(T t, V... v)
-{
-    __print(t);
-    if (sizeof...(v))
-        cerr << ", ";
-    _print(v...);
-}
-#ifndef ONLINE_JUDGE
-#define debug(x...)               \
-    cerr << "[" << #x << "] = ["; \
-    _print(x)
-#else
-#define debug(x...)
-#endif
-
-/* ************ CODE STATRTS HERE  *************/
-int pows[100001];
-bool done = 0;
-
-long long power10(int n){
-    if(!done){
-        pows[0] = 1;
-        for(int i = 1; i <= 100000; i++)
-            pows[i] = (pows[i-1] * 10LL) % mod;
-        done = 1;
-    }
-    return pows[n];
-}
-long long cntdp[100001][2];
-long long cnt(string &r, int n, int tight)
-{
-    if(tight == 0) return power10(n);
-    if(n== 0) return 1;
-
-    if(cntdp[n][tight] != -1) return cntdp[n][tight];
-    long long ans= 0; 
-    int ub = r[r.length()-n] - '0';
-    for(int d = 0; d<= ub; d++){
-        ans += cnt(r, n-1, tight&(d == ub))%mod;
-    }
-    return cntdp[n][tight] =  ans%mod;
-}
-long long dp[100001][2][10];
-long long help(string &r, int n, int tight, int prev){
-    if(n == 0){
-        return 0;
-    }
-    if(dp[n][tight][prev] != -1) return dp[n][tight][prev];
-
-    long long ans = 0;
-    int ub = tight? r[r.length() - n] - '0': 9;
-    for(int dig = 0; dig <= ub; dig++){
-        if(dig != prev){
-            long long factor = power10(n-1);
-            ans += (1ll*dig*factor*cnt(r, n-1,tight&(dig == ub)))%mod;
-        }
-        ans +=( help(r, n-1, tight&(dig == ub), dig))%mod;
-    }
-    return dp[n][tight][prev] = ans%mod;
-}   
-
-// long long brute(string &l, int n){
-//     int prev = -1;
-//     long long ans = 0;
-//     for(int idx = 0; idx< l.length() ; idx++){
-//         if((l[idx] - '0') != prev){
-//             long long factor = power10(l.length() - idx - 1);
-//             ans += ((l[idx] - '0')*factor)%mod;
-//         }
-//         prev = l[idx] - '0';
-//     }
-//     return ans%mod;
-// }
-int brute(string& L, int nl){
-    int prev_dig = 10;
-    ll res = 0;
-    for(int i = 0; i < L.length(); i++){
-        if((L[i] - '0') != prev_dig){
-            res = (res + (L[i] - '0') * power10(L.length() - i - 1)) % mod;
-        }
-        prev_dig = (L[i] - '0');
-    }
-    return res % mod;
-}
-
-void solve()
-{
-    int nl, nr;
-    string l, r;
-    cin >> nl>> l;
-    cin >> nr >> r; 
-    memset(cntdp, -1,sizeof cntdp);
-    memset(dp, -1, sizeof(dp));
-    long long val = help(r, nr, 1, -1);
-    memset(dp, -1, sizeof dp);
-    memset(cntdp, -1,sizeof cntdp);
-    long long val2 = help(l, nl, 1, -1);
-    cout <<  (val  + (mod - val2) + brute(l, nl)) % mod<< endl; 
-}
+using namespace __gnu_pbds;
+using namespace chrono;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+#define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
+template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
+template <typename T1, typename... T2>
+void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
+#define all(v) (v).begin(), (v).end()
+//(data type to be stored (pair,int,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaraints)
+typedef tree < pair<int,int>, null_type,less<pair<int,int>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
+void solve();
 signed main()
 {
-    int t=1;
-    cin >> t;
-    while (t--)
-    {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.setf(ios::fixed);
+    cout.precision(10);
         solve();
-    }
-    return 0;
 }
-// 6005-5105
-// 900
+class Manacher{
+   public:
+   string t;
+   vector<int>p;
+   
+   Manacher(string &s)
+   {
+       for(char c:s)
+       {
+           t+=string("#",1)+c;
+       }
+       t+=string("#",1);
+       build(t);
+   }
+   void build(string &s)
+   {
+       int n=s.length();
+       
+       p.assign(n,0);
+       
+       int l=1;
+       int r=1;
+       
+       for(int i=0;i<n;i++)
+       {
+            if((l+r)>=i)
+            {
+                p[i]=max(1,min(p[i],p[l+r-i]));
+            }
+            
+            while((i+p[i])<n && (i-p[i])>=0 && s[i+p[i]]==s[i-p[i]])
+            {
+                p[i]++;
+            }
+            if(i+p[i]>r)
+            {
+                l=i-p[i];
+                r=i+p[i];
+            }
+       }
+   }
+   
+   int longest(int centre,int odd)
+   {
+       int pos=2*centre+1+!(odd==1);
+       
+       return p[pos];
+   }
+   bool isPalindrome(int l,int r)
+   {
+       int len=r-l+1;
+       int center=(l+r)/2;
+       int odd=((l%2)==(r%2));
+       
+       return (len<=longest(center,odd));
+   }
+   
+   
+   
+};
+void solve()
+{
+    int n;
+    cin>>n;
+
+    vector<vector<int>>arr(n,vector<int>(n,0));
+
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        cin>>arr[i][j];
+    }
+    vector<Manacher>p;
+        vector<Manacher>q;
+        // int n=arr.size();
+        for(int i=0;i<n;i++)
+        {
+            string s="";
+            for(int j=0;j<n;j++)
+            {
+                s+=(arr[i][j]+'0');
+            }
+            Manacher m(s);
+            p.push_back(m);
+        }
+        for(int j=0;j<n;j++)
+        {
+            string s="";
+            for(int i=0;i<n;i++)
+            {
+                s+=(arr[i][j]+'0');
+            }
+            Manacher m(s);
+            q.push_back(m);
+        }
+        
+        int res=-1;
+        int idx=0;
+        char ch='/';
+        for(auto &it:p)
+        {
+            if(it.isPalindrome(0,n-1))
+            {
+                res=idx;
+                ch='R';
+                debug(res);
+                break;
+            }
+            idx++;
+        }
+        idx=0;
+        for(auto &it:q)
+        {
+            if(it.isPalindrome(0,n-1) && res!=-1)
+            {
+                res=idx;
+                ch='C';
+                break;
+            }
+            idx++;
+        }
+        
+        if(res==-1)
+        cout<<to_string(res)<<endl;
+        
+        string s=to_string(res);
+        // debug(s);
+        s+=" ";
+        s+=ch;
+        cout<<s<<endl;
+}

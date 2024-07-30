@@ -19,58 +19,58 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    long long t;
-    cin >> t;
-    while (t--)
-    {
         solve();
-    }
-}
-bool cmp(pair<long long,long long>&a,pair<long long,long long>&b)
-{
-    if(a.first==b.first);
-    return a.second<b.second;
-
-    return a.first>b.first;
 }
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
-
+    long long n;
+    cin>>n;
     vector<pair<long long,long long>>v;
-    long long sum=0;
-    for(long long i=0;i<n;i++)
+    map<long long,long long>mpx;
+    map<long long,long long>mpy;
+    for(long long i=1;i<=n;i++)
     {
         long long x,y;
         cin>>x>>y;
-        sum+=y;
         v.push_back({x,y});
+        mpx[x]++;
+        mpy[y]++;
     }
-    sort(all(v),cmp);
-    vector<vector<long long>>dp(n+1,vector<long long>(n+1,-1));
-    function<long long(long long,long long)>f=[&](long long i,long long count)->long long{
-
-        if(count>=n)
+    long long count=0;
+    for(long long i=0;i<n;i++)
+    {
+        for(long long j=i+1;j<n;j++)
         {
-            return 0;
+            mpx[v[i].first]--;
+            mpx[v[j].first]--;
+            mpy[v[i].second]--;
+            mpy[v[j].second]--;
+
+            if(mpx[v[i].first] && mpy[v[j].second])
+            {
+                // debug("h");
+            }
+            else if(mpy[v[i].second] && mpx[v[j].first])
+            {
+                // debug("hi");
+            }
+            else if(v[i].second==v[j].second || v[i].first==v[j].first)
+            {
+                // debug("ho");
+            }
+            else
+            {
+                count++;
+                mpx[v[i].first]++;
+                mpx[v[j].second]++;
+            }
+            mpx[v[i].first]++;
+            mpx[v[j].first]++;
+            mpy[v[i].second]++;
+            mpy[v[j].second]++;
         }
-        if(i==n)
-        {
-            return (long long)(1e12);
-        }
-        if(dp[i][count]!=-1)
-        return dp[i][count];
+    }
 
-        long long res=f(i+1,count);
+    cout<<count<<endl;
 
-        res=min(res,v[i].second+f(i+1,min(n,count+v[i].first+1)));
-
-        return dp[i][count]= res;
-    };
-
-    long long res=f(0,0);
-    // debug(res);
-    res=min(res,sum);
-    cout<<(sum-res)<<endl;
 }

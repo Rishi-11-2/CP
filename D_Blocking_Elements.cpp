@@ -26,51 +26,59 @@ signed main()
         solve();
     }
 }
-bool cmp(pair<long long,long long>&a,pair<long long,long long>&b)
-{
-    if(a.first==b.first);
-    return a.second<b.second;
-
-    return a.first>b.first;
-}
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
-
-    vector<pair<long long,long long>>v;
-    long long sum=0;
-    for(long long i=0;i<n;i++)
+    long long n;
+    cin>>n;
+    vector<long long>arr(n+2,0);
+    vector<long long>prefix(n+2,0);
+    for(long long i=1;i<=n;i++)
     {
-        long long x,y;
-        cin>>x>>y;
-        sum+=y;
-        v.push_back({x,y});
+        cin>>arr[i];
+        prefix[i]=arr[i]+prefix[i-1];
     }
-    sort(all(v),cmp);
-    vector<vector<long long>>dp(n+1,vector<long long>(n+1,-1));
-    function<long long(long long,long long)>f=[&](long long i,long long count)->long long{
+    long long low=0;
+    long long high=(long long)(1e16);
+    long long res=0;
+    arr[n+1]=0;
+    arr[0]=0;
+    prefix[n+1]=prefix[n];
+    function<long long(long long)>f=[&](long long m)->long long{
+       vector<long long>dp(n+3,0);
 
-        if(count>=n)
-        {
-            return 0;
-        }
-        if(i==n)
-        {
-            return (long long)(1e12);
-        }
-        if(dp[i][count]!=-1)
-        return dp[i][count];
+       deque<long long>dq;
+       dq.push_back(0);
+       long long j=0;
+       for(long long i=1;i<=n+1;i++)
+       {
+          while(i>0 && !dq.empty() &&  ((prefix[i-1]-prefix[dq.front()])>m))
+          {
+            dq.pop_front();
+          }
+          dp[i]=arr[i]+dp[dq.front()];
 
-        long long res=f(i+1,count);
-
-        res=min(res,v[i].second+f(i+1,min(n,count+v[i].first+1)));
-
-        return dp[i][count]= res;
+          while(!dq.empty() && dp[dq.back()]>=dp[i]) // maintaining a monotonic deque
+          {
+            dq.pop_back();
+          }
+          dq.push_back(i);
+       }
+       return (dp[n+1]<=m);
     };
+    // bool a=f(5);
+    while(low<=high)
+    {
+        long long mid=(low+high)/2LL;
+        if(f(mid))
+        {
+            res=mid;
+            high=mid-1;
+        }
+        else
+        {
+            low=mid+1;
+        }
+    }
 
-    long long res=f(0,0);
-    // debug(res);
-    res=min(res,sum);
-    cout<<(sum-res)<<endl;
+    cout<<res<<endl;
 }

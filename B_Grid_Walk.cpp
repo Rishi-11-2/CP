@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -20,14 +19,47 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t;
-    cin >> t;
-    while (t--)
-    {
         solve();
-    }
 }
 void solve()
 {
+    int n,m;
+    cin>>n>>m;
+    int i,j;
+    cin>>i>>j;
+    vector<vector<char>>grid(n,vector<char>(m,'/'));
+
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<m;j++)
+        cin>>grid[i][j];
+    }
+    string s;
+    cin>>s;
+    i--;
+    j--;
+    int k=0;
+    map<char,int>mp;
+    mp['U']=0;
+    mp['D']=1;
+    mp['L']=2;
+    mp['R']=3;
+    int a[]={-1,1,0,0};
+    int b[]={0,0,-1,1};
+    while(k<s.length())
+    {
+        char c=s[k];
+        int idx=mp[c];
+        int x=i+a[idx];
+        int y=j+b[idx];
+        if(x>=0 && y>=0 && x<n && y<m && grid[x][y]=='.')
+        {
+            i=x;
+            j=y;
+        }
+        k++;
+    }
+
+    cout<<i+1<<" "<<j+1<<endl;
 
 }

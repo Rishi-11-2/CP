@@ -19,58 +19,37 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    long long t;
-    cin >> t;
-    while (t--)
-    {
         solve();
-    }
-}
-bool cmp(pair<long long,long long>&a,pair<long long,long long>&b)
-{
-    if(a.first==b.first);
-    return a.second<b.second;
-
-    return a.first>b.first;
 }
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
+    long long n,t,p;
+    cin>>n>>t>>p;
+    long long arr[n];
+    for(long long i=0;i<n;i++)
+    cin>>arr[i];
+    
+    long long count=0;
 
-    vector<pair<long long,long long>>v;
-    long long sum=0;
     for(long long i=0;i<n;i++)
     {
-        long long x,y;
-        cin>>x>>y;
-        sum+=y;
-        v.push_back({x,y});
+        if(arr[i]>=t)
+        count++;
     }
-    sort(all(v),cmp);
-    vector<vector<long long>>dp(n+1,vector<long long>(n+1,-1));
-    function<long long(long long,long long)>f=[&](long long i,long long count)->long long{
-
-        if(count>=n)
+    long long d=0;
+    while(count<p)
+    {
+        long long newC=0;
+        for(long long i=0;i<n;i++)
         {
-            return 0;
+            arr[i]++;
+            if(arr[i]>=t)
+            {
+                newC++;
+            }
         }
-        if(i==n)
-        {
-            return (long long)(1e12);
-        }
-        if(dp[i][count]!=-1)
-        return dp[i][count];
-
-        long long res=f(i+1,count);
-
-        res=min(res,v[i].second+f(i+1,min(n,count+v[i].first+1)));
-
-        return dp[i][count]= res;
-    };
-
-    long long res=f(0,0);
-    // debug(res);
-    res=min(res,sum);
-    cout<<(sum-res)<<endl;
+        count=newC;
+        d++;
+    }
+    cout<<d<<endl;
 }

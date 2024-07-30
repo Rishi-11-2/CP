@@ -19,58 +19,53 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    long long t;
-    cin >> t;
-    while (t--)
-    {
-        solve();
-    }
-}
-bool cmp(pair<long long,long long>&a,pair<long long,long long>&b)
-{
-    if(a.first==b.first);
-    return a.second<b.second;
-
-    return a.first>b.first;
+    solve();
 }
 void solve()
 {
     long long n,m;
     cin>>n>>m;
-
-    vector<pair<long long,long long>>v;
-    long long sum=0;
-    for(long long i=0;i<n;i++)
+    vector<pair<long long,long long>>adj[n+1];
+    vector<long long>arr(n+1,0);
+    for(long long i=1;i<=n;i++)
     {
-        long long x,y;
-        cin>>x>>y;
-        sum+=y;
-        v.push_back({x,y});
+        cin>>arr[i];
     }
-    sort(all(v),cmp);
-    vector<vector<long long>>dp(n+1,vector<long long>(n+1,-1));
-    function<long long(long long,long long)>f=[&](long long i,long long count)->long long{
-
-        if(count>=n)
+    for(long long i=1;i<=m;i++)
+    {
+        long long x,y,wt;
+        cin>>x>>y>>wt;
+        adj[x].push_back({y,wt});
+        adj[y].push_back({x,wt});
+    }
+    vector<long long>dist(n+1,(long long)(1e18));
+    dist[1]=arr[1];
+    priority_queue<pair<long long,long long>,vector<pair<long long,long long>>,greater<pair<long long,long long>> >pq;
+    pq.push({arr[1],1});
+    while(!pq.empty())
+    {
+        auto it=pq.top();
+        pq.pop();
+        long long u=it.second;
+        long long d=it.first;
+        if(d!=dist[u])
+        continue;
+        for(auto v:adj[u])
         {
-            return 0;
+            long long new_v=v.first;
+            long long new_d=v.second+arr[new_v]+d;
+            if(dist[new_v]>(new_d))
+            {
+                dist[new_v]=new_d;
+                pq.push({new_d,new_v});
+            }
         }
-        if(i==n)
-        {
-            return (long long)(1e12);
-        }
-        if(dp[i][count]!=-1)
-        return dp[i][count];
+    }
+    for(long long i=2;i<=n;i++)
+    {
+        cout<<dist[i]<<" ";
+    }
+    cout<<endl;
 
-        long long res=f(i+1,count);
 
-        res=min(res,v[i].second+f(i+1,min(n,count+v[i].first+1)));
-
-        return dp[i][count]= res;
-    };
-
-    long long res=f(0,0);
-    // debug(res);
-    res=min(res,sum);
-    cout<<(sum-res)<<endl;
 }

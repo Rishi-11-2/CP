@@ -26,51 +26,41 @@ signed main()
         solve();
     }
 }
-bool cmp(pair<long long,long long>&a,pair<long long,long long>&b)
-{
-    if(a.first==b.first);
-    return a.second<b.second;
-
-    return a.first>b.first;
-}
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
-
-    vector<pair<long long,long long>>v;
-    long long sum=0;
-    for(long long i=0;i<n;i++)
+    long long n;
+    cin>>n;
+    vector<long long>adj[n+1];
+    map<pair<long long,long long>,long long>mp;
+    for(long long i=1;i<n;i++)
     {
         long long x,y;
         cin>>x>>y;
-        sum+=y;
-        v.push_back({x,y});
+        mp[{x,y}]=i;
+        mp[{y,x}]=i;
+        adj[x].push_back(y);
+        adj[y].push_back(x);
     }
-    sort(all(v),cmp);
-    vector<vector<long long>>dp(n+1,vector<long long>(n+1,-1));
-    function<long long(long long,long long)>f=[&](long long i,long long count)->long long{
+    long long res=0;
+    function<void(long long,long long,long long,long long)>f=[&](long long u,long long p,long long i,long long maxm)->void{
+       res=max(res,i);
 
-        if(count>=n)
-        {
-            return 0;
-        }
-        if(i==n)
-        {
-            return (long long)(1e12);
-        }
-        if(dp[i][count]!=-1)
-        return dp[i][count];
-
-        long long res=f(i+1,count);
-
-        res=min(res,v[i].second+f(i+1,min(n,count+v[i].first+1)));
-
-        return dp[i][count]= res;
+       for(long long v:adj[u])
+       {
+           if(p!=v)
+           {
+              if(p!=-1 && mp[{v,u}]<maxm)
+              {
+                f(v,u,i+1,mp[{v,u}]);
+              }
+              else
+              {
+                f(v,u,i,mp[{v,u}]);
+              }
+           }
+       }
     };
 
-    long long res=f(0,0);
-    // debug(res);
-    res=min(res,sum);
-    cout<<(sum-res)<<endl;
+    f(1,-1,1,0);
+    cout<<res<<endl;
 }

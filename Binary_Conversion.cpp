@@ -26,51 +26,70 @@ signed main()
         solve();
     }
 }
-bool cmp(pair<long long,long long>&a,pair<long long,long long>&b)
-{
-    if(a.first==b.first);
-    return a.second<b.second;
-
-    return a.first>b.first;
-}
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
+    long long n,k;
+    cin>>n>>k;
 
-    vector<pair<long long,long long>>v;
-    long long sum=0;
+    string s;
+    cin>>s;
+    string t;
+    cin>>t;
+    long long one1=0;
+    long long zero1=0;
+    long long one2=0;
+    long long zero2=0;
+    for(char c:s)
+    {
+        if(c=='0')
+        zero1++;
+        else
+        one1++;
+    }
+    for(char c:t)
+    {
+        if(c=='0')
+        zero2++;
+        else
+        one2++;
+    }
+    if(one1!=one2)
+    {
+        cout<<"NO"<<endl;
+        return;
+    }
+    if(one1==one2 && (one1==n||zero1==n))
+    {
+        cout<<"YES"<<endl;
+        return;
+    }
+    long long count=0;
     for(long long i=0;i<n;i++)
     {
-        long long x,y;
-        cin>>x>>y;
-        sum+=y;
-        v.push_back({x,y});
+        if(s[i]!=t[i])
+        count++;
     }
-    sort(all(v),cmp);
-    vector<vector<long long>>dp(n+1,vector<long long>(n+1,-1));
-    function<long long(long long,long long)>f=[&](long long i,long long count)->long long{
+    if(count%2)
+    {
+        cout<<"NO"<<endl;
+        return;
+    }
+    count=count/2LL;
 
-        if(count>=n)
-        {
-            return 0;
-        }
-        if(i==n)
-        {
-            return (long long)(1e12);
-        }
-        if(dp[i][count]!=-1)
-        return dp[i][count];
+    long long d=k-count;
+    // debug(d);
+    if((d>0) && (d%2) && n==2)
+    {
+        cout<<"NO"<<endl;
+        return;
+    }
+    if(d<0)
+    {
+        cout<<"NO"<<endl;
+    }
+    else
+    {
+        cout<<"YES"<<endl;
+    }
 
-        long long res=f(i+1,count);
-
-        res=min(res,v[i].second+f(i+1,min(n,count+v[i].first+1)));
-
-        return dp[i][count]= res;
-    };
-
-    long long res=f(0,0);
-    // debug(res);
-    res=min(res,sum);
-    cout<<(sum-res)<<endl;
 }

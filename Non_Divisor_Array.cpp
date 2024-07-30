@@ -20,57 +20,53 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     long long t;
-    cin >> t;
-    while (t--)
+    cin>>t;
+    while(t--)
     {
         solve();
     }
 }
-bool cmp(pair<long long,long long>&a,pair<long long,long long>&b)
-{
-    if(a.first==b.first);
-    return a.second<b.second;
-
-    return a.first>b.first;
-}
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
-
-    vector<pair<long long,long long>>v;
-    long long sum=0;
-    for(long long i=0;i<n;i++)
+    long long n;
+    cin>>n;
+    if(n==1)
     {
-        long long x,y;
-        cin>>x>>y;
-        sum+=y;
-        v.push_back({x,y});
+        cout<<1<<endl;
+        cout<<1<<endl;
+        return;
     }
-    sort(all(v),cmp);
-    vector<vector<long long>>dp(n+1,vector<long long>(n+1,-1));
-    function<long long(long long,long long)>f=[&](long long i,long long count)->long long{
-
-        if(count>=n)
+    vector<long long>isPrime(n+1,1);
+    for(long long i=2;i<=n;i++)
+    {
+        if(isPrime[i])
         {
-            return 0;
+            for(long long j=i*i;j<=n;j+=i)
+            {
+               isPrime[j]=0; 
+            }
         }
-        if(i==n)
+    }
+
+    long long res=1;
+    vector<long long>v(n+1,0);
+    v.assign(n+1,1);
+    // long long count=2;
+    v[1]=1;
+    for(long long i=1;i<=n;i++)
+    {
+        for(long long j=2*i;j<=n;j+=i)
         {
-            return (long long)(1e12);
+            if(v[j]==v[i])
+            v[j]++;
         }
-        if(dp[i][count]!=-1)
-        return dp[i][count];
-
-        long long res=f(i+1,count);
-
-        res=min(res,v[i].second+f(i+1,min(n,count+v[i].first+1)));
-
-        return dp[i][count]= res;
-    };
-
-    long long res=f(0,0);
-    // debug(res);
-    res=min(res,sum);
-    cout<<(sum-res)<<endl;
+    }
+    long long minm=*max_element(all(v));
+    res=minm;
+    cout<<res<<endl;
+    for(long long i=1;i<=n;i++)
+    {
+        cout<<v[i]<<" ";   
+    }
+    cout<<endl;
 }

@@ -19,58 +19,40 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    long long t;
-    cin >> t;
-    while (t--)
-    {
         solve();
-    }
-}
-bool cmp(pair<long long,long long>&a,pair<long long,long long>&b)
-{
-    if(a.first==b.first);
-    return a.second<b.second;
-
-    return a.first>b.first;
 }
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
-
-    vector<pair<long long,long long>>v;
-    long long sum=0;
-    for(long long i=0;i<n;i++)
+    string s;
+    cin>>s;
+    long long n=s.length();
+    for(char c:s)
     {
-        long long x,y;
-        cin>>x>>y;
-        sum+=y;
-        v.push_back({x,y});
+        if(c=='w'||c=='m')
+        {
+            cout<<0<<endl;
+            return;
+        }
     }
-    sort(all(v),cmp);
-    vector<vector<long long>>dp(n+1,vector<long long>(n+1,-1));
-    function<long long(long long,long long)>f=[&](long long i,long long count)->long long{
-
-        if(count>=n)
+    const long long mod=(long long)(1e9)+7;
+    vector<long long>dp(n+1,-1);
+    function<long long(long long)>f=[&](long long i)->long long{
+        if(i>=n-1)
         {
-            return 0;
+            return 1;
         }
-        if(i==n)
+        if(dp[i]!=-1)
+        return dp[i];
+        long long res=0;
+        if(s[i]==s[i+1] && (s[i]=='u'||s[i]=='n'))
         {
-            return (long long)(1e12);
+            res=(res%mod+f(i+2)%mod)%mod;
         }
-        if(dp[i][count]!=-1)
-        return dp[i][count];
+        res=(res%mod+f(i+1)%mod)%mod;
 
-        long long res=f(i+1,count);
-
-        res=min(res,v[i].second+f(i+1,min(n,count+v[i].first+1)));
-
-        return dp[i][count]= res;
+        return dp[i]= res;
     };
 
-    long long res=f(0,0);
-    // debug(res);
-    res=min(res,sum);
-    cout<<(sum-res)<<endl;
+    long long ans=f(0);
+    cout<<ans<<endl;
 }

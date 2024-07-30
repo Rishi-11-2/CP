@@ -26,51 +26,46 @@ signed main()
         solve();
     }
 }
-bool cmp(pair<long long,long long>&a,pair<long long,long long>&b)
-{
-    if(a.first==b.first);
-    return a.second<b.second;
-
-    return a.first>b.first;
-}
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
+    long long n;
+    cin>>n;
+    vector<long long>adj[n+1];
 
-    vector<pair<long long,long long>>v;
-    long long sum=0;
-    for(long long i=0;i<n;i++)
+    for(long long i=2;i<=n;i++)
     {
-        long long x,y;
-        cin>>x>>y;
-        sum+=y;
-        v.push_back({x,y});
+        long long x;
+        cin>>x;
+        adj[i].push_back(x);
+        adj[x].push_back(i);
     }
-    sort(all(v),cmp);
-    vector<vector<long long>>dp(n+1,vector<long long>(n+1,-1));
-    function<long long(long long,long long)>f=[&](long long i,long long count)->long long{
-
-        if(count>=n)
+    string s;
+    cin>>s;
+    vector<long long>countW(n+1,0);
+    vector<long long>countB(n+1,0);
+    long long res=0;
+    function<void(long long,long long)>f=[&](long long u,long long p)->void{
+        // debug(u,p);
+        for(long long v:adj[u])
         {
-            return 0;
+            if(v==p)
+            continue;
+            
+            f(v,u);
+            countB[u]+=countB[v];
+            countW[u]+=countW[v];
         }
-        if(i==n)
-        {
-            return (long long)(1e12);
-        }
-        if(dp[i][count]!=-1)
-        return dp[i][count];
 
-        long long res=f(i+1,count);
-
-        res=min(res,v[i].second+f(i+1,min(n,count+v[i].first+1)));
-
-        return dp[i][count]= res;
+        if(s[u-1]=='W')
+        countW[u]++;
+        else
+        countB[u]++;
+        // debug(u,countB[u],countW[u],s[u-1]);
+        
+        if(countB[u]==countW[u])
+        res++;
     };
-
-    long long res=f(0,0);
-    // debug(res);
-    res=min(res,sum);
-    cout<<(sum-res)<<endl;
+    // debug("hi");
+    f(1,-1);
+    cout<<res<<endl;
 }

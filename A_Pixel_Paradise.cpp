@@ -19,58 +19,53 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    long long t;
-    cin >> t;
-    while (t--)
-    {
         solve();
-    }
-}
-bool cmp(pair<long long,long long>&a,pair<long long,long long>&b)
-{
-    if(a.first==b.first);
-    return a.second<b.second;
-
-    return a.first>b.first;
 }
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
-
-    vector<pair<long long,long long>>v;
-    long long sum=0;
-    for(long long i=0;i<n;i++)
+    long long n;
+    cin>>n;
+    vector<long long>p(n+1);
+    vector<long long>adj[n+1];
+    for(long long i=1;i<=n;i++)
     {
-        long long x,y;
-        cin>>x>>y;
-        sum+=y;
-        v.push_back({x,y});
+        cin>>p[i];
+        adj[i].push_back(p[i]);
     }
-    sort(all(v),cmp);
-    vector<vector<long long>>dp(n+1,vector<long long>(n+1,-1));
-    function<long long(long long,long long)>f=[&](long long i,long long count)->long long{
 
-        if(count>=n)
+    long long res=-1;
+    vector<long long>vis(n+1,0);
+    long long flag=0;
+    function<void(long long)>f=[&](long long u)->void{
+        vis[u]+=1;
+        if(vis[u]==2)
         {
-            return 0;
+            res=u;
+            flag=1;
+            return;
         }
-        if(i==n)
+        if(flag)
+        return;
+        for(long long v:adj[u])
         {
-            return (long long)(1e12);
+            if(flag)
+            return;
+            f(v);
         }
-        if(dp[i][count]!=-1)
-        return dp[i][count];
-
-        long long res=f(i+1,count);
-
-        res=min(res,v[i].second+f(i+1,min(n,count+v[i].first+1)));
-
-        return dp[i][count]= res;
     };
-
-    long long res=f(0,0);
-    // debug(res);
-    res=min(res,sum);
-    cout<<(sum-res)<<endl;
+    vector<long long>ans(n+1,0);
+    for(long long i=1;i<=n;i++)
+    {
+        vis.assign(n+1,0);
+        f(i);
+        ans[i]=res;
+        res=-1;
+        flag=0;
+ 
+    }
+    for(long long i=1;i<=n;i++)
+    {
+        cout<<ans[i]<<" ";
+    }
+    cout<<endl;
 }

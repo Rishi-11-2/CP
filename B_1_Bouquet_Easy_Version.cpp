@@ -26,51 +26,35 @@ signed main()
         solve();
     }
 }
-bool cmp(pair<long long,long long>&a,pair<long long,long long>&b)
-{
-    if(a.first==b.first);
-    return a.second<b.second;
-
-    return a.first>b.first;
-}
 void solve()
 {
     long long n,m;
     cin>>n>>m;
-
-    vector<pair<long long,long long>>v;
-    long long sum=0;
+    long long arr[n];
     for(long long i=0;i<n;i++)
     {
-        long long x,y;
-        cin>>x>>y;
-        sum+=y;
-        v.push_back({x,y});
+        cin>>arr[i];
     }
-    sort(all(v),cmp);
-    vector<vector<long long>>dp(n+1,vector<long long>(n+1,-1));
-    function<long long(long long,long long)>f=[&](long long i,long long count)->long long{
+    sort(arr,arr+n);
+    
 
-        if(count>=n)
+    long long i=0;
+    long long j=0;
+    multiset<long long>s;
+    long long sum=0;
+    long long res=0;
+    while(j<n)
+    {
+        sum+=arr[j];
+        s.insert(arr[j]);
+        while(i<j && ((*s.rbegin()-*s.begin())>1)||sum>m)
         {
-            return 0;
+            s.erase(s.find(arr[i]));
+            sum-=arr[i];
+            i++;
         }
-        if(i==n)
-        {
-            return (long long)(1e12);
-        }
-        if(dp[i][count]!=-1)
-        return dp[i][count];
-
-        long long res=f(i+1,count);
-
-        res=min(res,v[i].second+f(i+1,min(n,count+v[i].first+1)));
-
-        return dp[i][count]= res;
-    };
-
-    long long res=f(0,0);
-    // debug(res);
-    res=min(res,sum);
-    cout<<(sum-res)<<endl;
+        res=max(res,sum);
+        j++;
+    }
+    cout<<res<<endl;
 }

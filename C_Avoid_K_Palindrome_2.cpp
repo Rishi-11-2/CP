@@ -19,58 +19,65 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    long long t;
-    cin >> t;
-    while (t--)
-    {
+    
         solve();
-    }
+    
 }
-bool cmp(pair<long long,long long>&a,pair<long long,long long>&b)
+long long res=0;
+bool check(vector<char>&v,long long k)
 {
-    if(a.first==b.first);
-    return a.second<b.second;
-
-    return a.first>b.first;
+    long long n=(long long)v.size();
+    long long j=n-1;
+    long long i=n-k;
+    while(i<j)
+    {
+        if(v[i]!=v[j])
+        return 0;
+        i++;
+        j--;
+    }
+    return 1;
 }
+void permute(vector<char>&v,long long i,map<char,long long>&mp,long long k,long long n) 
+{ 
+    // if(check(a,k))
+    // return;
+   if(i>=k)
+   {
+     if(check(v,k))
+     return;
+   }
+   if(i==n)
+   {
+     res++;
+     return;
+   }
+   for(auto &it:mp)
+   {
+      if(it.second>0)
+      {
+         v.push_back(it.first);
+         it.second--;
+         permute(v,i+1,mp,k,n);
+         it.second++;
+         v.pop_back();
+      }
+   }
+} 
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
-
-    vector<pair<long long,long long>>v;
-    long long sum=0;
-    for(long long i=0;i<n;i++)
+    long long n,k;
+    cin>>n>>k;
+    string s;
+    cin>>s;
+    res=0;
+    map<char,long long>mp;
+    for(char c:s)
     {
-        long long x,y;
-        cin>>x>>y;
-        sum+=y;
-        v.push_back({x,y});
+        mp[c]++;
     }
-    sort(all(v),cmp);
-    vector<vector<long long>>dp(n+1,vector<long long>(n+1,-1));
-    function<long long(long long,long long)>f=[&](long long i,long long count)->long long{
-
-        if(count>=n)
-        {
-            return 0;
-        }
-        if(i==n)
-        {
-            return (long long)(1e12);
-        }
-        if(dp[i][count]!=-1)
-        return dp[i][count];
-
-        long long res=f(i+1,count);
-
-        res=min(res,v[i].second+f(i+1,min(n,count+v[i].first+1)));
-
-        return dp[i][count]= res;
-    };
-
-    long long res=f(0,0);
-    // debug(res);
-    res=min(res,sum);
-    cout<<(sum-res)<<endl;
+    vector<char>v;
+    permute(v,0,mp,k,n);
+   
+    cout<<res<<endl;
 }

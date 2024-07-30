@@ -26,51 +26,52 @@ signed main()
         solve();
     }
 }
-bool cmp(pair<long long,long long>&a,pair<long long,long long>&b)
-{
-    if(a.first==b.first);
-    return a.second<b.second;
-
-    return a.first>b.first;
-}
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
+    long long n,q;
+    cin>>n>>q;
+    string s;
+    cin>>s;
+    string t;
+    cin>>t;
 
-    vector<pair<long long,long long>>v;
-    long long sum=0;
-    for(long long i=0;i<n;i++)
+    vector<vector<long long>>prefixS(n+1,vector<long long>(26,0));
+    for(long long i=1;i<=n;i++)
     {
-        long long x,y;
-        cin>>x>>y;
-        sum+=y;
-        v.push_back({x,y});
+        prefixS[i]=prefixS[i-1];
+        prefixS[i][s[i-1]-'a']++;
     }
-    sort(all(v),cmp);
-    vector<vector<long long>>dp(n+1,vector<long long>(n+1,-1));
-    function<long long(long long,long long)>f=[&](long long i,long long count)->long long{
+    vector<vector<long long>>prefixT(n+1,vector<long long>(26,0));
+    for(long long i=1;i<=n;i++)
+    {
+        prefixT[i]=prefixT[i-1];
+        prefixT[i][t[i-1]-'a']++;
+    }
 
-        if(count>=n)
+    for(long long i=1;i<=q;i++)
+    {
+        long long l,r;
+        cin>>l>>r;
+
+        auto v1=prefixS[r];
+        auto v2=prefixS[l-1];
+        for(long long i=0;i<26;i++)
         {
-            return 0;
+            v1[i]-=v2[i];
         }
-        if(i==n)
+        auto x1=prefixT[r];
+        auto x2=prefixT[l-1];
+        for(long long i=0;i<26;i++)
         {
-            return (long long)(1e12);
+            x1[i]-=x2[i];
         }
-        if(dp[i][count]!=-1)
-        return dp[i][count];
+        long long count=0;
 
-        long long res=f(i+1,count);
-
-        res=min(res,v[i].second+f(i+1,min(n,count+v[i].first+1)));
-
-        return dp[i][count]= res;
-    };
-
-    long long res=f(0,0);
-    // debug(res);
-    res=min(res,sum);
-    cout<<(sum-res)<<endl;
+        for(long long i=0;i<26;i++)
+        {
+            // debug(x1[i],v1[i],i);
+            count+=abs(x1[i]-v1[i]);
+        }
+        cout<<count/2<<endl;
+    }
 }

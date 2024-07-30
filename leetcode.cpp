@@ -21,47 +21,50 @@ signed main()
     cout.precision(10);
         solve();
 }
+    int minimumCost(int m, int n, vector<int>& horizontalCut, vector<int>& verticalCut) {
+        vector<vector<vector<vector<int>>>>dp(n+1,vector<vector<vector<int>>>(m+1,vector<vector<int>>(n+1,vector<int>(m+1,-1))));
+        function<long long(long long,long long,long long,long long)>f=[&](long long i,long long j,long long dx,long long dy)->long long{
+            debug(i,j,dx,dy);
+            if(dx==1 && dy==1)
+            {
+                return 0;
+            }
+            if(i==0 && j==4 && dx==3 && dy==2)
+            debug("hi");
+            long long res=(long long)(1e12);
+            for(long long k=0;k<dx-1;k++)
+            {
+                res=min(res,f(i,j,k+1,dy)+f(k+1,j,dx-(k+1),dy)+verticalCut[k+i]);
+            }
+            for(long long k=0;k<dy-1;k++)
+            {
+                // cout<<dy<<" "<<k+1<<endl;
+                res=min(res,f(i,j,dx,k+1)+f(i,k+1,dx,dy-(k+1))+horizontalCut[k+j]);
+            }
+            return res;
+        };
+
+        long long ans=f(0,0,n,m);
+        return ans;
+    }
 void solve()
 {
-    int n;
-    cin>>n;
-
-    vector<vector<int>>requirements(n+1,vector<int>(2,0));
-
-    for(int i=0;i<n;i++)
+    int m,n;
+    cin>>m>>n;
+    vector<int>h;
+    for(int i=0;i<m-1;i++)
     {
-        for(int j=0;j<2;j++)
-        cin>>requirements[i][j];
+        int x;
+        cin>>x;
+        h.push_back(x);
     }
-    
-            sort(requirements.begin(),requirements.end());
-        vector<vector<int>>dp(n+1,vector<int>(500,-1));
-        function<int(int,int)>f=[&](int i,int prev)->int{
-         
-                         
-            if(i>=n)
-                return 1;
-            
-            if(prev>requirements[i][1])
-                return 0;
+    vector<int>v;
+    for(int i=0;i<n-1;i++)
+    {
+        int x;
+        cin>>x;
+        v.push_back(x);
+    }
+    cout<<minimumCost(m,n,h,v)<<endl;
 
-            int res=0;
-            if(dp[i][prev]!=-1)
-                return dp[i][prev];
-            if(i==requirements[i][0])
-            {
-                return dp[i][prev]= f(i+1,requirements[i][1]);
-            }
-            for(int j=prev;j<=400;j++)
-            {
-                res+=f(i+1,j);
-            }
-            
-            return dp[i][prev]= res;
-            
-        };
-        
-        int res=f(0,0);
-
-        cout<<res<<endl;
 }

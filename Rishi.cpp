@@ -20,139 +20,103 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+       #ifndef ONLINEJUDGE
+       clock_t tStart = clock();
+       freopen("input.txt","r",stdin); 
+       freopen("output.txt","w",stdout);
+  #endif
+
+       //Your Code
+
+  #ifndef ONLINEJUDGE
+     fprintf(stderr, "\n>> Runtime: %.10fs\n", (double) (clock() - tStart) / CLOCKS_PER_SEC); 
+  #endif
+
         solve();
 }
-struct Point{
-    long double x,y;
-    Point(long double a,long double b):x(a),y(b){}
+class RSA{
+    public:
+    string s;
+    long long public_key;
+    long long private_key;
+    long long mod;
+    RSA(string &a)
+    {
+        s=a;
+        build();
+    }
+    long long extended_gcd(long long a,long long b,long long &x,long long &y)
+    {
+        if(b==0)
+        {
+            x=1;
+            y=0;
+            return a;
+        }
+        long long x1;
+        long long y1;
+        long long g=extended_gcd(b,a%b,x1,y1);
+        x=y1;
+        y=x1-(a/b)*y1;
+        return g;
+    }
+    long long mod_inverse(long long a,long long mod)
+    {
+        long long x,y;
+        long long g=extended_gcd(a,mod,x,y);
+        long long ans=(x%mod+mod)%mod;
+        return ans;
+    }
+    long long binpow(long long a,long long b,long long mod)
+    {
+        long long res=1;
+        a=a%mod;
+        while(b>0)
+        {
+            if(b&(1LL))
+            {
+                res=(res%mod*a%mod)%mod;
+                // debug(res,a);
+            }
+            a=(a%mod*a%mod)%mod;
+            b=b>>1LL;
+        }
+        return res;
+    }
+    void build()
+    {
+        long long p=999999733;
+        long long q=2;
+        long long phi=(p-1)*(q-1);
+        long long n=p*q;
+        // long long lambda=(euler_toitent)*(__gcd(p-1,q-1));
+        mod=n;
+        public_key=phi-1;
+        debug(mod);
+        // debug(public_key);
+        // public_key=phi-1;
+        private_key=mod_inverse(public_key,phi);
+        debug(private_key);
+    }
 
-    bool operator == (const Point &t)const{
-        return t.x==x && y==t.y;
+    long long encrypt(long long num)
+    {
+        return binpow(num,public_key,mod);
+    }
+    long long decrypt(long long num)
+    {
+        return binpow(num,private_key,mod);
     }
 };
 
-int orientation( const Point &a, const Point &b,const Point &c)
-{
-    /*
-    Line Segment P : a->b
-    Line Segment Q : a->c
-    */
-    long double px=b.x-a.x; // a1
-    long double py=b.y-a.y; // a2
-
-    long double qx=c.x-a.x; // b1
-    long double qy=c.y-a.y; // b2
-
-    long double o= px*qy- py*qx;
-
-    if(o>(0.0))
-    return 1; // for clockwise
-    else if(o<(0.0))
-    return -1 ;  // for anticlockwise
-    return 0; 
-}
-bool collinear(const Point &a,const Point &b ,const Point &c)
-{
-    int o=orientation(a,b,c);
-
-    return (o==0);
-}
-bool f(const Point &a ,const Point &b,const Point &c,bool include_colinear)
-{
-    int o=orientation(a,b,c);
-
-    if(o<0)
-    return true;
-    
-    if(o>0)
-    return false;
-    if(o==0 && include_colinear)
-    return false;
-
-    return true;
-    
-}
-bool compare(const Point&a,const Point&b)
-{
-    if(a.x==b.x)
-        return a.y<b.y;
-    return a.x<b.x;
-}
-
-// convex hull using graham's scan
 void solve()
 {
-        int n;
+    long long n;
     cin>>n;
-
-    vector<Point>points;
-
-    for(int i=0;i<n;i++)
-    {
-        long double x,y;
-        cin>>x>>y;
-        Point a(x,y);
-
-        points.push_back(a);
-    }
-
-    bool include_colinear=false;
-    Point origin=*min_element(all(points),[](Point a, Point b){
-        return make_pair(a.y,a.x)<make_pair(b.y,b.x);
-    });
-
-
-    sort(all(points),[&origin](const Point&a,const Point &b){
-        int o=orientation(origin,a,b);
-
-        if(o==0)
-        {
-            return ((origin.x-a.x)*(origin.x-a.x) + (origin.y-a.y)*(origin.y-a.y))
-                < ((origin.x-b.x)*(origin.x-b.x) + (origin.y-b.y)*(origin.y-b.y));
-        }
-        return o>0;
-    });
-
-
-
-    // debug("hi");
-
-    // for(auto it:points)
-    // {
-    //     cout<<it.x<<" "<<it.y<<endl;
-    // }
-    if(include_colinear)
-    {
-        int i=(points.size())-1;
-
-        while(i>=0 && collinear(origin,points[i],points.back()))
-        {
-            i--;
-        }
-        reverse(points.begin()+i+1,points.end()); 
-    }
-
-    vector<Point>res;
-
-    for(int i=0;i<n;i++)
-    {
-        int m=(int)res.size();
-        while(m>1 && f(res[m-2],res[m-1],points[i],include_colinear))
-        {
-            res.pop_back();
-            m=(int)(res.size());
-        }
-        res.push_back(points[i]);
-    }
-    vector<pair<long double, long double>>ress;
-    for(auto it:res)
-    {
-        ress.push_back({it.x,it.y});
-    }
-    sort(all(ress));
-
-    for(auto it:ress)
-    {
-        cout<<it.first<<" "<<it.second<<endl;
-    }
+    string s="hello";
+    RSA r(s);
+    long long x=r.encrypt(n);
+    long long y=r.decrypt(x);
+    cout<<y<<endl;
+    // debug(x,y,r.public_key,r.private_key);
 }

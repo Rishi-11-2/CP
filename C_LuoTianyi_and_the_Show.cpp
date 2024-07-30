@@ -1,13 +1,25 @@
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 using namespace std;
+using namespace __gnu_pbds;
+using namespace chrono;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+#define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
+template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
+template <typename T1, typename... T2>
+void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 #define all(v) (v).begin(), (v).end()
+//(data type to be stored (pair,long long,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaralong longs)
+typedef tree < pair<long long,long long>, null_type,less<pair<long long,long long>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
 void solve();
-int main()
+signed main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-    cout.tie(NULL);
-    int t;
+    cout.setf(ios::fixed);
+    cout.precision(10);
+    long long t;
     cin >> t;
     while (t--)
     {
@@ -16,36 +28,39 @@ int main()
 }
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
-    int arr[n];
-    int one = 0;
-    int two = 0;
-    vector<int> v;
-    map<int, int> m1;
-    for (int i = 0; i < n; i++)
+    long long n,m;
+    cin>>n>>m;
+
+    long long arr[n];
+    long long one=0;
+    long long two=0;
+    set<long long>s;
+    for(long long i=0;i<n;i++)
     {
-        cin >> arr[i];
-        if (arr[i] == -1)
+        cin>>arr[i];
+        if(arr[i]==-1)
+        {
             one++;
-        else if (arr[i] == -2)
+        }
+        else if(arr[i]==-2)
+        {
             two++;
+        }
         else
         {
-            if (m1[arr[i]] == 0)
-            {
-                v.push_back(arr[i]);
-                m1[arr[i]] = 1;
-            }
+            s.insert(arr[i]);
         }
     }
-    sort(all(v));
-    int res = min(m, max(one + (int)(v.size()), two + (int)(v.size())));
-    for (int i = 0; i < (int)(v.size()); i++)
+    long long a=1;
+    long long sz=(long long)s.size();
+    long long res=max(one+sz,two+sz);
+     res=min(res,m);
+    for(auto it:s)
     {
-        int ss = min(one + i, v[i] - 1) + 1 + min(two + ((int)v.size() - (i + 1)), m - v[i]); // checking for each element the maximum number of people that can be seated
-        res = max(res, ss);
+        long long ans=1+min(it-1,a-1+one)+min(m-it,two+sz-(a));
+        a++;
+        res=max(res,ans);
+
     }
-    res = min(m, res);
-    cout << res << endl;
+    cout<<res<<endl;
 }

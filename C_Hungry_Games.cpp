@@ -26,51 +26,50 @@ signed main()
         solve();
     }
 }
-bool cmp(pair<long long,long long>&a,pair<long long,long long>&b)
-{
-    if(a.first==b.first);
-    return a.second<b.second;
-
-    return a.first>b.first;
-}
 void solve()
 {
-    long long n,m;
-    cin>>n>>m;
+    long long n,x;
+    cin>>n>>x;
 
-    vector<pair<long long,long long>>v;
-    long long sum=0;
+    long long arr[n+1];
+    for(long long i=1;i<=n;i++)
+    cin>>arr[i];
+    
+    vector<long long>dp(n+3,0);
+    vector<long long>prefix(n+1,0);
+    for(long long i=1;i<=n;i++)
+    {
+        prefix[i]=prefix[i-1]+arr[i];
+    }
+    function<long long(long long)>f=[&](long long i)->long long{
+        long long low=i;
+        long long high=n;
+        long long res=n+1;
+        while(low<=high)
+        {
+            long long mid=(low+high)/2;
+            if((prefix[mid]-prefix[i])>x)
+            {
+                res=mid;
+                high=mid-1;
+            }
+            else
+            {
+                low=mid+1;
+            }
+        }
+        return res;
+    };
+    for(long long i=n-1;i>=0;i--)
+    {
+        
+        long long j=f(i);
+        dp[i]=dp[j]+(j-(i+1));
+    }
+    long long ans=0;
     for(long long i=0;i<n;i++)
     {
-        long long x,y;
-        cin>>x>>y;
-        sum+=y;
-        v.push_back({x,y});
+        ans+=dp[i];
     }
-    sort(all(v),cmp);
-    vector<vector<long long>>dp(n+1,vector<long long>(n+1,-1));
-    function<long long(long long,long long)>f=[&](long long i,long long count)->long long{
-
-        if(count>=n)
-        {
-            return 0;
-        }
-        if(i==n)
-        {
-            return (long long)(1e12);
-        }
-        if(dp[i][count]!=-1)
-        return dp[i][count];
-
-        long long res=f(i+1,count);
-
-        res=min(res,v[i].second+f(i+1,min(n,count+v[i].first+1)));
-
-        return dp[i][count]= res;
-    };
-
-    long long res=f(0,0);
-    // debug(res);
-    res=min(res,sum);
-    cout<<(sum-res)<<endl;
+    cout<<ans<<endl;
 }

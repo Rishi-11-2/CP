@@ -5,6 +5,7 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -19,57 +20,130 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t;
+    int t = 1;
     // cin >> t;
-    t=1;
     while (t--)
     {
         solve();
     }
 }
-    vector<string>res;
-    void f(int i,int j,string &s,vector<vector<int>>&mat,vector<vector<int>>&vis)
+class Hash{
+    private:
+    const long long mod1=(long long)(1e9)+7;
+    const long long mod2=(long long)(1e9)+1;
+    const long long mod3=(long long)(1e15)+5;
+    
+    const long long p1=1001;
+    const long long p2=1003;
+    
+    const long long p3=99911;
+    
+    public:
+    vector<long long>pref1;
+    vector<long long>pref2;
+    vector<long long>base_pow1;
+    vector<long long>base_pow2;
+    
+    string s;
+    long long n;
+    
+    Hash( string a)
     {
-        int n=(int)mat.size();
-        if(i==n-1 && j==n-1)
+        s=a;
+        n=s.length()+10;
+        // debug(n);
+        pref1.assign(n+1,0);
+        pref2.assign(n+1,0);
+        base_pow1.assign(n+1,0);
+        base_pow2.assign(n+1,0);
+        build();
+    }
+    void build()
+    {
+        base_pow1[0]=1;
+        
+        base_pow2[0]=1;
+        pref1[0]=1;
+        pref2[0]=1;
+        
+        for(int i=1;i<=n;i++)
         {
-            res.push_back(s);
-            return;
+            base_pow1[i]=(base_pow1[i-1]*p1)%mod1;
+            base_pow2[i]=(base_pow2[i-1]*p2)%mod2;
+            
+            pref1[i]=((pref1[i-1]*p1)%mod1+s[i-1]+997)%mod1;
+            
+            pref2[i]=((pref2[i-1]*p2)%mod2+s[i-1]+997)%mod2;
         }
         
-        int a[]={-1,1,0,0};
-        int b[]={0,0,-1,1};
-        map<int,char>mp;
-        mp[0]='U';
-        mp[1]='D';
-        mp[2]='L';
-        mp[3]='R';
-        for(int k=0;k<4;k++)
-        {
-            int x=a[k]+i;
-            int y=b[k]+j;
-            if(x>=0 && y>=0 && x<n && y<n && mat[x][y] && !vis[x][y])
-            {
-                vis[x][y]=1;
-                s+=mp[k];
-                f(x,y,s,mat,vis);
-                vis[x][y]=0;
-                s.pop_back();
-            }
-        }
     }
+    
+    long long getHash(int l,int r)
+    {
+        long long h1=pref1[r+1];
+        
+        h1-=(pref1[l]*base_pow1[r-l+1])%mod1;
+        h1=(h1%mod1+mod1)%mod1;
+        
+        long long h2=pref2[r+1];
+        
+        h2-=(pref2[l]*base_pow2[r-l+1])%mod2;
+        
+        h2=(h2%mod2+mod2)%mod2;
+        
+        long long h3=((h1*p3)%mod3+h2)%mod3;
+        
+        return h1;
+    }
+};
 void solve()
 {
-        int n;
-        cin>>n;
-        vector<vector<int>>mat(n+1,vector<int>(n+1,0));
-        for(int i=0;i<n;i++)
-        {
-            for(int j=0;j<n;j++)
-            cin>>mat[i][j];
-        }
+    string str1,str2;
+    cin>>str1>>str2;
+            int n=str1.length();
+        int m=str2.length();
         
-        string s;
-        vector<vector<int>>vis(n+1,vector<int>(n+1,0));
-        f(0,0,s,mat,vis);
+        Hash h1(str1);
+        Hash h2(str2);
+        
+        int low=1;
+        int high=min(n,m);
+        // cout<<n<<" "<<m<<endl;
+        int res=0;
+        function<int(int)>f=[&](int mid)->int{
+            
+            map<long long,long long>mp;
+            for(int i=0;i+mid-1<n;i++)
+            {
+                long long h=h1.getHash(i,i+mid-1);
+                // cout<<h<<endl;
+                mp[h]=1;
+            }
+            // cout<<endl;
+            for(int i=0;i+mid-1<m;i++)
+            {
+                long long h=h2.getHash(i,i+mid-1);
+                // cout<<h<<endl;
+                if(mp.find(h)!=mp.end())
+                return 1;
+            }
+            return 0;
+        };
+        int x=f(3);
+        // cout<<x<<endl;
+        while(low<=high)
+        {
+            int mid=(low+high)/2;
+            // cout<<mid<<endl;
+            if(f(mid))
+            {
+                res=mid;
+                low=mid+1;
+            }
+            else
+            {
+                high=mid-1;
+            }
+        }
+        cout<<res<<endl;
 }

@@ -19,8 +19,8 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    long long t = 1;
-    // cin >> t;
+    long long t;
+    cin >> t;
     while (t--)
     {
         solve();
@@ -28,48 +28,56 @@ signed main()
 }
 void solve()
 {
-    long long n ,q;
-    cin>>n>>q;
+    long long n;
+    cin>>n;
+
     long long arr[n];
+    map<long long,long long>mp;
     for(long long i=0;i<n;i++)
-    cin>>arr[i];
-    
-    vector<long long>res;
-    function<long long(long long ,long long ,long long)>f=[&](long long b,long long k, long long mid)->long long{
-
-        auto lb=lower_bound(arr,arr+n,b-mid)-arr;
-        auto ub=upper_bound(arr,arr+n,b+mid)-arr;
-
-        return (ub-lb)>=k;
-    };
-    sort(arr,arr+n);
-    for(long long i=1;i<=q;i++)
     {
-        long long b,k;
-        cin>>b>>k;
+        cin>>arr[i];
+        mp[arr[i]]++;
+    }
 
-        long long low=-1;
-        long long high=(long long)(1e10);
-        long long ans=-1;
-        while(low<=high)
+    vector<long long>v;
+    for(auto it:mp)
+    {
+        v.push_back(it.second);
+    }
+
+    long long m=(long long)v.size();
+
+    vector<vector<long long>>dp(m+1,vector<long long>(m+1,-1));
+
+    dp[0][1]=1;
+
+    for(long long i=1;i<m;i++)
+    {
+        for(long long j=1;j<=m;j++)
         {
-            long long mid=(low+high)/2LL;
-            if(f(b,k,mid))
+            if(dp[i-1][j-1]!=-1)
             {
-                ans=mid;
-                high=mid-1;
+                dp[i][j]=dp[i-1][j-1]+1;
             }
-            else
+            if(dp[i-1][j]>=v[i])
             {
-                low=mid+1;
-            }
+                if(dp[i][j]==-1)
+                dp[i][j]=dp[i-1][j]-v[i];
+                else
+                dp[i][j]=max(dp[i][j],dp[i-1][j]-v[i]);
+            }  
         }
-        res.push_back(ans);
     }
 
-    for(auto it:res)
+    long long res=0;
+    for(long long i=0;i<=m;i++)
     {
-        cout<<it<<endl;
+        if(dp[m-1][i]!=-1)
+        {
+            res=i;
+            break;
+        }
     }
-
+     
+    cout<<res<<endl;
 }

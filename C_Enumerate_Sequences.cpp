@@ -26,50 +26,50 @@ signed main()
         solve();
     }
 }
+set<vector<long long>>s;
+void f(long long i,vector<long long>&v,vector<long long>&r,long long sum,long long k)
+{
+    if(i==(long long)r.size())
+    {
+        // debug((long long)v.size());
+        if(sum%k==0)
+        {
+            s.insert(v);
+
+        }
+        return ;
+    }
+    // debug(i);
+    for(long long j=1;j<=r[i];j++)
+    {
+        long long new_sum=sum+j;
+        v.push_back(j);
+        f(i+1,v,r,new_sum,k);
+        v.pop_back();
+    }
+}
 void solve()
 {
-    long long n ,q;
-    cin>>n>>q;
-    long long arr[n];
-    for(long long i=0;i<n;i++)
-    cin>>arr[i];
-    
-    vector<long long>res;
-    function<long long(long long ,long long ,long long)>f=[&](long long b,long long k, long long mid)->long long{
+    long long n,k;
+    cin>>n>>k;
 
-        auto lb=lower_bound(arr,arr+n,b-mid)-arr;
-        auto ub=upper_bound(arr,arr+n,b+mid)-arr;
+    vector<long long>r;
 
-        return (ub-lb)>=k;
-    };
-    sort(arr,arr+n);
-    for(long long i=1;i<=q;i++)
+    for(long long i=1;i<=n;i++)
     {
-        long long b,k;
-        cin>>b>>k;
-
-        long long low=-1;
-        long long high=(long long)(1e10);
-        long long ans=-1;
-        while(low<=high)
-        {
-            long long mid=(low+high)/2LL;
-            if(f(b,k,mid))
-            {
-                ans=mid;
-                high=mid-1;
-            }
-            else
-            {
-                low=mid+1;
-            }
-        }
-        res.push_back(ans);
+        long long x;
+        cin>>x;
+        r.push_back(x);
     }
+    // debug);
+    vector<long long>v;
+    f(0,v,r,0,k);
 
-    for(auto it:res)
+    for(auto it:s)
     {
-        cout<<it<<endl;
+        for(auto i:it)
+        cout<<i<<" ";
+        cout<<endl;
     }
 
 }

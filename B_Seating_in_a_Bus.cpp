@@ -20,19 +20,7 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    #ifndef ONLINEJUDGE
-       clock_t tStart = clock();
-       freopen("input.txt","r",stdin); 
-       freopen("output.txt","w",stdout);
-  #endif
-
-       //Your Code
-
-  #ifndef ONLINEJUDGE
-     fprintf(stderr, "\n>> Runtime: %.10fs\n", (double) (clock() - tStart) / CLOCKS_PER_SEC); 
-  #endif
-
-    int t=1;
+    int t = 1;
     cin >> t;
     while (t--)
     {
@@ -41,29 +29,33 @@ signed main()
 }
 void solve()
 {
-     int n, m, k;
-    cin >> n >> m >> k;
-    int w;
-    cin >> w;
-    vector<int> a(w);
-    for (int i = 0; i < w; i++) {
-      cin >> a[i];
+    int n;
+    cin>>n;
+
+    int arr[n];
+
+    for(int i=0;i<n;i++)
+    cin>>arr[i];
+
+    set<int>s;
+
+    s.insert(arr[0]);
+    int flag=1;
+    for(int i=1;i<n;i++)
+    {
+        if(s.find(arr[i]-1)==s.end() && s.find(arr[i]+1)==s.end())
+        {
+            flag=0;
+            break;
+        }
+        s.insert(arr[i]);
     }
-    vector<int> coeff;
-    coeff.reserve(n * m);
-    for (int i = 0; i < n; i++) {
-      for (int j = 0; j < m; j++) {
-        int i1 = max(0, i - k + 1);
-        int j1 = max(0, j - k + 1);
-        int i2 = min(i, n - k);
-        int j2 = min(j, m - k);
-        coeff.push_back((i2 - i1 + 1) * (j2 - j1 + 1));
-      }
+    if(flag)
+    {
+        cout<<"YES"<<endl;
     }
-    sort(coeff.rbegin(), coeff.rend());
-    sort(a.rbegin(), a.rend());
-    int64_t ans = 0;
-    for (int i = 0; i < w; i++) {
-      ans += int64_t(a[i]) * coeff[i];
+    else
+    {
+        cout<<"NO"<<endl;
     }
-    cout << ans << '\n';}
+}

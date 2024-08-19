@@ -29,73 +29,36 @@ signed main()
 void solve()
 {
     long long n,k;
+
     cin>>n>>k;
 
     long long a[n];
+    long long alice=0;
+    long long  bob=0;
     for(long long i=0;i<n;i++)
     {
         cin>>a[i];
+
     }
     
-    long long b[n];
+
+    sort(a,a+n,greater<long long>());
     for(long long i=0;i<n;i++)
     {
-        cin>>b[i];
-    }
-
-
-    long long low=0;
-    long long high=(long long)(1e10);
-
-    function<long long(long long)>f=[&](long long mid)->long long{
-        long long count=0;
-        for(long long i=0;i<n;i++)
+        if(i%2==0)
         {
-            if(a[i]<mid)
-            continue;
-            long long cc=((a[i]-mid)/b[i])+1;
-            count+=cc;
-        }
-        if(count>=k)
-        return 1;
-        return 0;
-    };
-    long long res=0;
-    while(low<=high)
-    {
-        long long mid=(low+high)/2;
-        if(f(mid))
-        {
-            res=mid;
-            low=mid+1;
+            alice+=a[i];
         }
         else
         {
-            high=mid-1;
+            bob+=a[i];
+
+            bob+=min(k,a[i-1]-a[i]);
+            k-=a[i-1]-a[i];
+            k=max(0LL,k);
         }
     }
-    function<long long(long long,long long,long long)>summ=[&](long long a,long long d,long long count)->long long{
 
-        long long sum=2*a-(count-1)*d;
-        sum=sum*count;
-        sum=sum/(2LL);
-        return sum;
-    };
-    long long tc=0;
-    long long ans=0;
-    for(long long i=0;i<n;i++)
-    {
-        if(a[i]<(res+1))
-        continue;
-        long long count=((a[i]-(res+1))/b[i])+1;
-
-        tc+=count;
-        // debug(i,count,summ(a[i],b[i],count));
-        ans+=summ(a[i],b[i],count);
-    }
-
-    // debug(res);
-
-    ans+=(k-tc)*res;
-    cout<<ans<<endl;
+    cout<<(alice-bob)<<endl;
+   
 }

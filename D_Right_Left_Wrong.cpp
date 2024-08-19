@@ -28,74 +28,59 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n;
+    cin>>n;
 
-    long long a[n];
+    long long arr[n];
+    vector<long long>prefix(n,0);
     for(long long i=0;i<n;i++)
     {
-        cin>>a[i];
+        cin>>arr[i];
+        prefix[i]=arr[i];
+        if(i)
+        {
+            prefix[i]+=prefix[i-1];
+        }
     }
     
-    long long b[n];
+    string s;
+    cin>>s;
+
+    vector<long long>left;
+    vector<long long>right;
+    // debug(s);
     for(long long i=0;i<n;i++)
     {
-        cin>>b[i];
-    }
-
-
-    long long low=0;
-    long long high=(long long)(1e10);
-
-    function<long long(long long)>f=[&](long long mid)->long long{
-        long long count=0;
-        for(long long i=0;i<n;i++)
+        if(s[i]=='L')
         {
-            if(a[i]<mid)
-            continue;
-            long long cc=((a[i]-mid)/b[i])+1;
-            count+=cc;
-        }
-        if(count>=k)
-        return 1;
-        return 0;
-    };
-    long long res=0;
-    while(low<=high)
-    {
-        long long mid=(low+high)/2;
-        if(f(mid))
-        {
-            res=mid;
-            low=mid+1;
+            left.push_back(i);
         }
         else
         {
-            high=mid-1;
+            right.push_back(i);
         }
     }
-    function<long long(long long,long long,long long)>summ=[&](long long a,long long d,long long count)->long long{
-
-        long long sum=2*a-(count-1)*d;
-        sum=sum*count;
-        sum=sum/(2LL);
-        return sum;
-    };
-    long long tc=0;
+    // reverse(a)
+    long long n1=(long long)left.size();
+    long long n2=(long long)right.size();
+    long long i=0;
+    long long j=n2-1;
+    // debug(n1,n2);
     long long ans=0;
-    for(long long i=0;i<n;i++)
+    while(i<n1 && j>=0)
     {
-        if(a[i]<(res+1))
-        continue;
-        long long count=((a[i]-(res+1))/b[i])+1;
-
-        tc+=count;
-        // debug(i,count,summ(a[i],b[i],count));
-        ans+=summ(a[i],b[i],count);
+        if(left[i]<right[j])
+        {
+            // debug(j);
+            ans+=prefix[right[j]];
+            if(left[i])
+            ans-=prefix[left[i]-1];
+            i++;
+            j--;
+        }
+        else
+        break;
     }
 
-    // debug(res);
-
-    ans+=(k-tc)*res;
     cout<<ans<<endl;
 }

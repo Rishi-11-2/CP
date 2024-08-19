@@ -19,8 +19,8 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    long long t = 1;
-    // cin >> t;
+    long long t;
+    cin >> t;
     while (t--)
     {
         solve();
@@ -28,48 +28,48 @@ signed main()
 }
 void solve()
 {
-    long long n ,q;
-    cin>>n>>q;
-    long long arr[n];
-    for(long long i=0;i<n;i++)
+    long long n;
+    cin>>n;
+
+    long long arr[n+1];
+
+    for(long long i=1;i<=n;i++)
     cin>>arr[i];
     
-    vector<long long>res;
-    function<long long(long long ,long long ,long long)>f=[&](long long b,long long k, long long mid)->long long{
-
-        auto lb=lower_bound(arr,arr+n,b-mid)-arr;
-        auto ub=upper_bound(arr,arr+n,b+mid)-arr;
-
-        return (ub-lb)>=k;
-    };
-    sort(arr,arr+n);
-    for(long long i=1;i<=q;i++)
+    vector<long long>adj[n+1];
+    for(long long i=2;i<=n;i++)
     {
-        long long b,k;
-        cin>>b>>k;
-
-        long long low=-1;
-        long long high=(long long)(1e10);
-        long long ans=-1;
-        while(low<=high)
+        long long x;
+        cin>>x;
+        adj[i].push_back(x);
+        adj[x].push_back(i);
+    }
+    long long res=0;
+    vector<long long>ans(n+1,0);
+    function<void(long long,long long)>f=[&](long long u,long long p)->void{
+        long long sum=0;
+        long long minm=INT_MAX;
+        long long flag=0;
+        for(long long v:adj[u])
         {
-            long long mid=(low+high)/2LL;
-            if(f(b,k,mid))
-            {
-                ans=mid;
-                high=mid-1;
-            }
-            else
-            {
-                low=mid+1;
-            }
+            if(v==p)
+            continue;
+            f(v,u);
+            flag=1;
+            minm=min(minm,ans[v]);
+            sum+=arr[v];
         }
-        res.push_back(ans);
-    }
-
-    for(auto it:res)
-    {
-        cout<<it<<endl;
-    }
-
+        if(!flag)
+        {
+            ans[u]=1;
+            return;
+        }
+        ans[u]=minm+1;
+        if(arr[u]>sum)
+        {
+            res+=(arr[u]-sum)*minm;
+        }
+    };
+    f(1,-1);
+    cout<<res<<endl;
 }

@@ -18,58 +18,50 @@ signed main()
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.setf(ios::fixed);
-    cout.precision(10);
-    long long t = 1;
-    // cin >> t;
+    cout.precision(15);
+    long long  t = 1;
+    cin >> t;
     while (t--)
     {
         solve();
     }
 }
+
 void solve()
 {
-    long long n ,q;
-    cin>>n>>q;
-    long long arr[n];
-    for(long long i=0;i<n;i++)
-    cin>>arr[i];
-    
-    vector<long long>res;
-    function<long long(long long ,long long ,long long)>f=[&](long long b,long long k, long long mid)->long long{
+    long long  n;
+    cin>>n;
 
-        auto lb=lower_bound(arr,arr+n,b-mid)-arr;
-        auto ub=upper_bound(arr,arr+n,b+mid)-arr;
+    vector<pair<long long,long long>>v;
+    for(long long  i=1;i<=n;i++)
+    {
+        long long x,y;
+        cin>>x>>y;
+        v.push_back({x,y});
+    }
+    long long x1,y1,x2,y2;
+    cin>>x1>>y1>>x2>>y2;
 
-        return (ub-lb)>=k;
+    long long a,b,c;
+    // getLine(x1,y1,x2,y2,a,b,c);
+    function<long long(long long,long long,long long,long long)>f=[&](long long x1,long long y1,long long x2,long long y2)->long long{
+        long long d=((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+        // d=sqrtl(d);
+        return d;
     };
-    sort(arr,arr+n);
-    for(long long i=1;i<=q;i++)
+    
+    long long d=f(x1,y1,x2,y2);
+    for(long long i=0;i<n;i++)
     {
-        long long b,k;
-        cin>>b>>k;
-
-        long long low=-1;
-        long long high=(long long)(1e10);
-        long long ans=-1;
-        while(low<=high)
+        long long d1=f(x1,y1,v[i].first,v[i].second);
+        long long d2=f(x2,y2,v[i].first,v[i].second);
+        // debug(d1,d2,d,max(d1,d2));
+        // debug(d2,d);
+        if(d2<=d)
         {
-            long long mid=(low+high)/2LL;
-            if(f(b,k,mid))
-            {
-                ans=mid;
-                high=mid-1;
-            }
-            else
-            {
-                low=mid+1;
-            }
+            cout<<"NO"<<endl;
+            return;
         }
-        res.push_back(ans);
     }
-
-    for(auto it:res)
-    {
-        cout<<it<<endl;
-    }
-
+    cout<<"YES"<<endl;
 }

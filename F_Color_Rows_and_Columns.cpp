@@ -20,7 +20,7 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     long long t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();
@@ -28,48 +28,59 @@ signed main()
 }
 void solve()
 {
-    long long n ,q;
-    cin>>n>>q;
-    long long arr[n];
-    for(long long i=0;i<n;i++)
-    cin>>arr[i];
-    
-    vector<long long>res;
-    function<long long(long long ,long long ,long long)>f=[&](long long b,long long k, long long mid)->long long{
+    long long n,k;
 
-        auto lb=lower_bound(arr,arr+n,b-mid)-arr;
-        auto ub=upper_bound(arr,arr+n,b+mid)-arr;
+    cin>>n>>k;
 
-        return (ub-lb)>=k;
-    };
-    sort(arr,arr+n);
-    for(long long i=1;i<=q;i++)
+    vector<pair<long long,long long>>v;
+    for(long long i=1;i<=n;i++)
     {
-        long long b,k;
-        cin>>b>>k;
+        long long x,y;
+        cin>>x>>y;
+        v.push_back({x,y});
+    }
 
-        long long low=-1;
-        long long high=(long long)(1e10);
-        long long ans=-1;
-        while(low<=high)
+    vector<vector<long long>>dp(n+1,vector<long long>(k+1,-1));
+    function<long long(long long,long long)>f=[&](long long i,long long k1)->long long{
+        if(k1<0)
         {
-            long long mid=(low+high)/2LL;
-            if(f(b,k,mid))
+            return (long long)(1e18);
+        }
+        if(k1==0)
+        {
+            return 0;
+        }
+        if(i==n)
+        {
+            return (long long)(1e18);
+        }
+        if(dp[i][k1]!=-1)
+        return dp[i][k1];
+        long long res=f(i+1,k1);
+        long long a=v[i].first;
+        long long b=v[i].second;
+        long long cost=0;
+        for(long long j=1;j<=min(v[i].first+v[i].second,k1);j++)
+        {
+            cost+=min(a,b);
+            if(a>b)
             {
-                ans=mid;
-                high=mid-1;
+                a--;
+
             }
             else
             {
-                low=mid+1;
+                b--;
             }
+            res=min(res,cost+f(i+1,k1-j));
         }
-        res.push_back(ans);
-    }
+        return dp[i][k1]= res;
+    };
 
-    for(auto it:res)
-    {
-        cout<<it<<endl;
-    }
+    long long res=f(0,k);
 
+    if(res==(long long)(1e18))
+    res=-1;
+
+    cout<<res<<endl;
 }

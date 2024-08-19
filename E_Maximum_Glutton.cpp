@@ -19,66 +19,77 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    long long t = 1;
+    // cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
     long long n,x,y;
     cin>>n>>x>>y;
 
-    vector<pair<long long,long long>>v1;
-    vector<pair<long long,long long>>v2;
+    vector<long long>a;
+    vector<long long>b;
     for(long long i=1;i<=n;i++)
     {
         long long x,y;
         cin>>x>>y;
-        v1.push_back({x,y});
-        v1.push_back({y,});
+        a.push_back(x);
+        b.push_back(y);
     }
-    vector<map<pair<long long,long long>,long long>>dp(n+1);
-    function<long long(long long,long long,long long)>f=[&](long long i,long long sx,long long sy)->long long{
 
-        if(i==n)
+    // dp[i][j][s] : minimum value of saltiness when we have considered array elements
+    // upto j such that the sweetness of all the selected elements equal s and i is the number
+    // of elements considered upto index j
+    long long m=(long long )(1e4);
+    long long dp[n+1][n+1][m+1];
+    for(long long i=0;i<=n;i++)
+    {
+        for(long long j=0;j<=n;j++)
         {
-            return dp[i][{sx,sy}]= 0;
+            for(long long s=0;s<=m;s++)
+            {
+                dp[i][j][s]=(long long)(1e9);
+            }
         }
-        if(sx>x || sy>y)
+    }
+    dp[0][0][0]=0;
+    long long res=0;
+    for(long long j=0;j<n;j++)
+    {
+        for(long long i=0;i<=j;i++)
         {
-            return dp[i][{sx,sy}]= 0;
+            for(long long s=0;s<=x;s++)
+            {
+                dp[i][j+1][s]=dp[i][j][s];
+
+                if((s+a[j])<=x)
+                { 
+                    dp[i+1][j+1][s+a[j]]=min(dp[i+1][j+1][s+a[j]],dp[i][j][s]+b[j]);
+                    // if(dp[i+1][j+1][s+a[j]]<=y)
+                    // {
+                    //     // debug(i,s);
+                    //     res=max(res,i+1);
+                    // }
+                }
+            }
         }
-        if(dp[i].find({sx,sy})!=dp[i].end())
+    }
+    for(long long i=n;i>=0;i--)
+    {
+        for(long long j=0;j<=x;j++)
         {
-            return dp[i][{sx,sy}];
+            if(dp[i][n][j]<=y)
+            {
+                cout<<min(i+1,n)<<endl;
+                return;
+            }
         }
-        long long  res=f(i+1,sx,sy);
+    }
+    // debug(res);
 
-        res=max(res,1+f(i+1,sx+v[i].first,sy+v[i].second));
 
-        return dp[i][{sx,sy}]=res;
-    };
-        function<long long(long long,long long,long long)>f=[&](long long i,long long sx,long long sy)->long long{
-
-        if(i==n)
-        {
-            return dp[i][{sx,sy}]= 0;
-        }
-        if(sx>x || sy>y)
-        {
-            return dp[i][{sx,sy}]= 0;
-        }
-        if(dp[i].find({sx,sy})!=dp[i].end())
-        {
-            return dp[i][{sx,sy}];
-        }
-        long long  res=f(i+1,sx,sy);
-
-        res=max(res,1+f(i+1,sx+v[i].first,sy+v[i].second));
-
-        return dp[i][{sx,sy}]=res;
-    };
-
-    long long res1=f(0,0,0);
-    long long res2=f1(0,0,0);
-
-    cout<<res<<endl;
 }

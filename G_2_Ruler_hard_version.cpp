@@ -20,56 +20,69 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     long long t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();
     }
 }
+long long make_query(long long a,long long b)
+{
+    cout<<"?"<<" "<<a<<" "<<b<<endl;
+
+    long long codeforcesInput;
+    cin>>codeforcesInput;
+    return codeforcesInput;
+}
 void solve()
 {
-    long long n ,q;
-    cin>>n>>q;
-    long long arr[n];
-    for(long long i=0;i<n;i++)
-    cin>>arr[i];
-    
-    vector<long long>res;
-    function<long long(long long ,long long ,long long)>f=[&](long long b,long long k, long long mid)->long long{
+    long long low=2;
+    long long high=999;
 
-        auto lb=lower_bound(arr,arr+n,b-mid)-arr;
-        auto ub=upper_bound(arr,arr+n,b+mid)-arr;
+    long long res=-1;
+    function<long long(long long,long long)>f=[&](long long mid1,long long mid2)->long long{
 
-        return (ub-lb)>=k;
-    };
-    sort(arr,arr+n);
-    for(long long i=1;i<=q;i++)
-    {
-        long long b,k;
-        cin>>b>>k;
-
-        long long low=-1;
-        long long high=(long long)(1e10);
-        long long ans=-1;
-        while(low<=high)
+        long long a=make_query(mid1,mid2);
+        // debug(a,mid*mid);
+        if((a)==(mid1*mid2))
         {
-            long long mid=(low+high)/2LL;
-            if(f(b,k,mid))
-            {
-                ans=mid;
-                high=mid-1;
-            }
-            else
-            {
-                low=mid+1;
-            }
+            return 2;
         }
-        res.push_back(ans);
-    }
-
-    for(auto it:res)
+        else if(a==(mid1*(mid2+1)))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    };
+    int count=0;
+    while(low<=high)
     {
-        cout<<it<<endl;
+       long long mid1=low+(high-low)/3;
+       long long mid2=low+2*(high-low)/3;
+       int x=f(mid1,mid2);
+       if(x==2)
+       {
+          res=mid2;
+          low=mid2+1;
+       }
+       else if(x==1)
+       {
+           res=mid1;
+           low=mid1+1;
+           high=mid2-1;
+       }
+       else
+       {
+         high=mid1-1;
+       }
     }
-
+    if(res==-1)
+    {
+      cout<<"! "<<2<<endl;  
+      return;
+    }
+    cout<<"! "<<res+1<<endl;
 }

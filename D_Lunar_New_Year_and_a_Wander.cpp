@@ -43,6 +43,11 @@ void solve()
             }
         }
     }
+    vector<pair<int,int>>v;
+    // for(auto [a,b]:v)
+    // {
+    //     cout<<a<<" "<<b<<endl;
+    // }
     for (auto it : res)
         cout << it << " ";
     cout << endl;

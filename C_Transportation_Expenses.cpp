@@ -20,7 +20,7 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     long long t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();
@@ -28,39 +28,27 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n,m;
+    cin>>n>>m;
 
-    long long a[n];
+    long long arr[n];
     for(long long i=0;i<n;i++)
-    {
-        cin>>a[i];
-    }
+    cin>>arr[i];
     
-    long long b[n];
-    for(long long i=0;i<n;i++)
-    {
-        cin>>b[i];
-    }
-
 
     long long low=0;
-    long long high=(long long)(1e10);
+    long long high=(long long)(1e18);
+    long long res=0;
 
     function<long long(long long)>f=[&](long long mid)->long long{
-        long long count=0;
+        long long s=0;
+
         for(long long i=0;i<n;i++)
         {
-            if(a[i]<mid)
-            continue;
-            long long cc=((a[i]-mid)/b[i])+1;
-            count+=cc;
+            s+=min(arr[i],mid);
         }
-        if(count>=k)
-        return 1;
-        return 0;
+        return (s<=m);
     };
-    long long res=0;
     while(low<=high)
     {
         long long mid=(low+high)/2;
@@ -74,28 +62,10 @@ void solve()
             high=mid-1;
         }
     }
-    function<long long(long long,long long,long long)>summ=[&](long long a,long long d,long long count)->long long{
-
-        long long sum=2*a-(count-1)*d;
-        sum=sum*count;
-        sum=sum/(2LL);
-        return sum;
-    };
-    long long tc=0;
-    long long ans=0;
-    for(long long i=0;i<n;i++)
+    if(res==(long long)(1e18))
     {
-        if(a[i]<(res+1))
-        continue;
-        long long count=((a[i]-(res+1))/b[i])+1;
-
-        tc+=count;
-        // debug(i,count,summ(a[i],b[i],count));
-        ans+=summ(a[i],b[i],count);
+        cout<<"infinite"<<endl;
+        return;
     }
-
-    // debug(res);
-
-    ans+=(k-tc)*res;
-    cout<<ans<<endl;
+    cout<<res<<endl;
 }

@@ -20,7 +20,7 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     long long t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();
@@ -28,48 +28,31 @@ signed main()
 }
 void solve()
 {
-    long long n ,q;
-    cin>>n>>q;
+    long long n;
+    cin>>n;
+
     long long arr[n];
+
+    long long count_one=0;
     for(long long i=0;i<n;i++)
-    cin>>arr[i];
-    
-    vector<long long>res;
-    function<long long(long long ,long long ,long long)>f=[&](long long b,long long k, long long mid)->long long{
-
-        auto lb=lower_bound(arr,arr+n,b-mid)-arr;
-        auto ub=upper_bound(arr,arr+n,b+mid)-arr;
-
-        return (ub-lb)>=k;
-    };
-    sort(arr,arr+n);
-    for(long long i=1;i<=q;i++)
     {
-        long long b,k;
-        cin>>b>>k;
-
-        long long low=-1;
-        long long high=(long long)(1e10);
-        long long ans=-1;
-        while(low<=high)
-        {
-            long long mid=(low+high)/2LL;
-            if(f(b,k,mid))
-            {
-                ans=mid;
-                high=mid-1;
-            }
-            else
-            {
-                low=mid+1;
-            }
-        }
-        res.push_back(ans);
+        cin>>arr[i];
+        if(arr[i]==1)
+        count_one++;
     }
+    long long count=n-count_one;
 
-    for(auto it:res)
+    if((count%2) && (count_one%2))
     {
-        cout<<it<<endl;
+        cout<<"Alice"<<endl;
+    }
+    else if((count_one%2==0) && (count%2==0))
+    {
+        cout<<"Alice"<<endl;
+    }
+    else
+    {
+        cout<<"Bob"<<endl;
     }
 
 }

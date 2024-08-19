@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -29,13 +28,46 @@ signed main()
 }
 void solve()
 {
-    int x=0;
-    int y=4;
+    int n;
+    cin>>n;
+    vector<string>v;
+    int maxm=0;
+    for(int i=1;i<=n;i++)
+    {
+        string s;
+        cin>>s;
+        v.push_back(s);
+        maxm=max(maxm,(int)s.length());
+    }
+    reverse(all(v));
 
-    function<int(int,int)>f=[&](int x,int i)->int{
-        if(x==y)
-        return 0;
+    vector<vector<char>>ans(maxm+1,vector<char>(n+1,'/'));
 
-      l
-    };
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<v[i].length();j++)
+        {
+            ans[j][i]=v[i][j];
+        }
+        for(int j=v[i].length();j<maxm;j++)
+        {
+            ans[j][i]='*';
+        }
+    }
+    for(int i=0;i<maxm;i++)
+    {
+        string s;
+        int idx=-1;
+        for(int j=n-1;j>=0;j--)
+        {
+            if(ans[i][j]!='*')
+            {
+                idx=j;
+                break;
+            }
+        }
+        for(int j=0;j<=idx;j++)
+        cout<<ans[i][j];
+        cout<<endl;
+    }
 }

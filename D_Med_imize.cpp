@@ -30,37 +30,52 @@ void solve()
 {
     long long n,k;
     cin>>n>>k;
-
-    long long a[n];
+    long long arr[n];
     for(long long i=0;i<n;i++)
-    {
-        cin>>a[i];
-    }
+    cin>>arr[i];
+
     
-    long long b[n];
-    for(long long i=0;i<n;i++)
-    {
-        cin>>b[i];
-    }
-
-
     long long low=0;
-    long long high=(long long)(1e10);
+    long long  high =(long long)(1e9);
+
+    long long res=0;
 
     function<long long(long long)>f=[&](long long mid)->long long{
-        long long count=0;
+        vector<long long>dp(n+1,0);
+
+        long long b[n];
         for(long long i=0;i<n;i++)
         {
-            if(a[i]<mid)
-            continue;
-            long long cc=((a[i]-mid)/b[i])+1;
-            count+=cc;
+            if(arr[i]>=mid)
+            {
+                b[i]=1;
+            }
+            else
+            {
+                b[i]=-1;
+            }
         }
-        if(count>=k)
-        return 1;
-        return 0;
+        /* dp[i] indicates the maximum sum of a segment of length (n-1)%k+1  starting at j such (j%k==0) and (j<i)*/
+        dp[0]=b[0];
+        for(long long i=1;i<min(n,k);i++)
+        {
+            dp[i]=b[i]+dp[i-1];
+        }
+        for(long long i=k;i<n;i++)
+        {
+            if(i%k==0)
+            {
+                dp[i]=max(dp[i-k],b[i]);
+            }
+            else
+            {
+                dp[i]=dp[i-1]+b[i];
+                dp[i]=max(dp[i-k],dp[i]);
+            }
+        }
+
+        return (dp[n-1]>0);
     };
-    long long res=0;
     while(low<=high)
     {
         long long mid=(low+high)/2;
@@ -74,28 +89,6 @@ void solve()
             high=mid-1;
         }
     }
-    function<long long(long long,long long,long long)>summ=[&](long long a,long long d,long long count)->long long{
 
-        long long sum=2*a-(count-1)*d;
-        sum=sum*count;
-        sum=sum/(2LL);
-        return sum;
-    };
-    long long tc=0;
-    long long ans=0;
-    for(long long i=0;i<n;i++)
-    {
-        if(a[i]<(res+1))
-        continue;
-        long long count=((a[i]-(res+1))/b[i])+1;
-
-        tc+=count;
-        // debug(i,count,summ(a[i],b[i],count));
-        ans+=summ(a[i],b[i],count);
-    }
-
-    // debug(res);
-
-    ans+=(k-tc)*res;
-    cout<<ans<<endl;
+    cout<<res<<endl;
 }

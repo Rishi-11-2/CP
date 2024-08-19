@@ -28,48 +28,48 @@ signed main()
 }
 void solve()
 {
-    long long n ,q;
-    cin>>n>>q;
+    long long n;
+    cin>>n;
+
     long long arr[n];
+
     for(long long i=0;i<n;i++)
     cin>>arr[i];
     
-    vector<long long>res;
-    function<long long(long long ,long long ,long long)>f=[&](long long b,long long k, long long mid)->long long{
-
-        auto lb=lower_bound(arr,arr+n,b-mid)-arr;
-        auto ub=upper_bound(arr,arr+n,b+mid)-arr;
-
-        return (ub-lb)>=k;
-    };
-    sort(arr,arr+n);
-    for(long long i=1;i<=q;i++)
-    {
-        long long b,k;
-        cin>>b>>k;
-
-        long long low=-1;
-        long long high=(long long)(1e10);
-        long long ans=-1;
-        while(low<=high)
-        {
-            long long mid=(low+high)/2LL;
-            if(f(b,k,mid))
-            {
-                ans=mid;
-                high=mid-1;
-            }
-            else
-            {
-                low=mid+1;
-            }
+        long long sum = 0;
+ 
+    long long s = 1;
+ 
+    for (long long i = 0; i < 30; i++) {
+ 
+        long long count_odd = 0;
+ 
+        bool odd = 0;
+        for (long long j = 0; j < n; j++) {
+            if ((arr[j] & (1LL << i)) > 0)
+                odd = (!odd);
+            if (odd)
+                count_odd++;
         }
-        res.push_back(ans);
+        
+        for (long long j = 0; j < n; j++) {
+            sum += (s * count_odd);
+ 
+            if ((arr[j] & (1LL << i)) > 0)
+                count_odd = (((n-1)-(j+1)+1)- (count_odd-1));
+        }
+ 
+        s *= 2LL;
+    }
+ 
+    // returning the sum
+    
+    for(long long i=0;i<n;i++)
+    {
+        sum-=arr[i];
     }
 
-    for(auto it:res)
-    {
-        cout<<it<<endl;
-    }
+    cout<<sum<<endl;
+
 
 }

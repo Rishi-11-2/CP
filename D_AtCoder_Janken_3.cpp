@@ -28,48 +28,61 @@ signed main()
 }
 void solve()
 {
-    long long n ,q;
-    cin>>n>>q;
-    long long arr[n];
-    for(long long i=0;i<n;i++)
-    cin>>arr[i];
-    
-    vector<long long>res;
-    function<long long(long long ,long long ,long long)>f=[&](long long b,long long k, long long mid)->long long{
+    long long n;
+    cin>>n;
 
-        auto lb=lower_bound(arr,arr+n,b-mid)-arr;
-        auto ub=upper_bound(arr,arr+n,b+mid)-arr;
-
-        return (ub-lb)>=k;
-    };
-    sort(arr,arr+n);
-    for(long long i=1;i<=q;i++)
+    string s;
+    cin>>s;
+    map<char,long long>mp;
+    mp['R']=0;
+    mp['P']=1;
+    mp['S']=2;
+    long long win[3][3];
+    for(long long i=0;i<3;i++)
     {
-        long long b,k;
-        cin>>b>>k;
-
-        long long low=-1;
-        long long high=(long long)(1e10);
-        long long ans=-1;
-        while(low<=high)
+        for(long long j=0;j<3;j++)
         {
-            long long mid=(low+high)/2LL;
-            if(f(b,k,mid))
+            if(i==0 && j==2)
             {
-                ans=mid;
-                high=mid-1;
+                win[i][j]=1;
+            }
+            else if(i==2 && j==1)
+            {
+                win[i][j]=1;
+            }
+            else if(i==1 && j==0)
+            {
+                win[i][j]=1;
             }
             else
             {
-                low=mid+1;
+                win[i][j]=0;
             }
         }
-        res.push_back(ans);
     }
+    vector<vector<long long>>dp(n+3,vector<long long>(4,-1));
+    function<long long(long long,long long)>f=[&](long long i,long long j)->long long{
+        if(i==n)
+        {
+            return 0;
+        }
+        if(dp[i][j+1]!=-1)
+        return dp[i][j+1];
+        long long res=0;
 
-    for(auto it:res)
-    {
-        cout<<it<<endl;
-    }
+        for(long long k=0;k<3;k++)
+        {
+            if(k==j)
+            continue;
+            if(win[k][mp[s[i]]]==0 && (k!=mp[s[i]]))
+            continue;
+            // debug(win[k][mp[s[i]]]);
+            res=max(res,win[k][mp[s[i]]]+f(i+1,k));
+        }
 
+        return dp[i][j+1]= res;
+    };
+    long long ans=f(0,-1);
+
+    cout<<ans<<endl;
 }

@@ -20,20 +20,8 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    #ifndef ONLINEJUDGE
-       clock_t tStart = clock();
-       freopen("input.txt","r",stdin); 
-       freopen("output.txt","w",stdout);
-  #endif
-
-       //Your Code
-
-  #ifndef ONLINEJUDGE
-     fprintf(stderr, "\n>> Runtime: %.10fs\n", (double) (clock() - tStart) / CLOCKS_PER_SEC); 
-  #endif
-
-    int t=1;
-    cin >> t;
+    int t = 1;
+    // cin >> t;
     while (t--)
     {
         solve();
@@ -41,29 +29,25 @@ signed main()
 }
 void solve()
 {
-     int n, m, k;
-    cin >> n >> m >> k;
-    int w;
-    cin >> w;
-    vector<int> a(w);
-    for (int i = 0; i < w; i++) {
-      cin >> a[i];
+    ofstream myfile;
+    myfile.open("D:/CP/a.txt");
+    int n=(int)(1e5);
+    myfile<<n<<endl;
+    int arr[n];
+    for(int i=0;i<n;i++)
+    {
+        arr[i]=getRandomNumber(1,(int)(1e6));
+        myfile<<arr[i]<<" ";
     }
-    vector<int> coeff;
-    coeff.reserve(n * m);
-    for (int i = 0; i < n; i++) {
-      for (int j = 0; j < m; j++) {
-        int i1 = max(0, i - k + 1);
-        int j1 = max(0, j - k + 1);
-        int i2 = min(i, n - k);
-        int j2 = min(j, m - k);
-        coeff.push_back((i2 - i1 + 1) * (j2 - j1 + 1));
-      }
+    myfile<<endl;
+    int q=(int)(1e5);
+    myfile<<q<<endl;
+    for(int i=0;i<q;i++)
+    {
+        int l=getRandomNumber(1,n);
+        int r=getRandomNumber(l+1,n);
+
+        myfile<<l<<" "<<r<<endl;
     }
-    sort(coeff.rbegin(), coeff.rend());
-    sort(a.rbegin(), a.rend());
-    int64_t ans = 0;
-    for (int i = 0; i < w; i++) {
-      ans += int64_t(a[i]) * coeff[i];
-    }
-    cout << ans << '\n';}
+    myfile.close();
+}

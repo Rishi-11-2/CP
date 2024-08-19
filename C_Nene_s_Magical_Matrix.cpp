@@ -20,7 +20,7 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     long long t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();
@@ -28,48 +28,61 @@ signed main()
 }
 void solve()
 {
-    long long n ,q;
-    cin>>n>>q;
-    long long arr[n];
-    for(long long i=0;i<n;i++)
-    cin>>arr[i];
-    
-    vector<long long>res;
-    function<long long(long long ,long long ,long long)>f=[&](long long b,long long k, long long mid)->long long{
+    long long n;
+    cin>>n;
 
-        auto lb=lower_bound(arr,arr+n,b-mid)-arr;
-        auto ub=upper_bound(arr,arr+n,b+mid)-arr;
-
-        return (ub-lb)>=k;
-    };
-    sort(arr,arr+n);
-    for(long long i=1;i<=q;i++)
+    long long s=0;
+    vector<vector<long long>>v;
+    long long i=n-1;
+    long long j=n-1;
+    long long turn=2;
+    long long a[n][n];
+    long long count=0;
+    while(i>=0 || j>=0)
     {
-        long long b,k;
-        cin>>b>>k;
-
-        long long low=-1;
-        long long high=(long long)(1e10);
-        long long ans=-1;
-        while(low<=high)
+        vector<long long>x;
+        x.push_back(turn);
+        if(turn ==2)
         {
-            long long mid=(low+high)/2LL;
-            if(f(b,k,mid))
+            x.push_back(j+1);
+            for(long long k=0;k<n;k++)
             {
-                ans=mid;
-                high=mid-1;
+                a[k][j]=k+1;
             }
-            else
-            {
-                low=mid+1;
-            }
+            j--;
         }
-        res.push_back(ans);
+        else
+        {
+            x.push_back(i+1);
+            for(long long k=0;k<n;k++)
+            {
+                a[i][k]=k+1;
+            }
+            i--;
+        }
+        for(long long k=1;k<=n;k++)
+        {
+            x.push_back(k);
+        }
+        v.push_back(x);
+        if(turn ==2)
+        turn = 1;
+        else
+        turn = 2;
+        count++;
     }
 
-    for(auto it:res)
+    long long sum=0;
+    for(long long i=0;i<n;i++)
     {
-        cout<<it<<endl;
+        for(long long j=0;j<n;j++)
+        sum+=a[i][j];
     }
-
+    cout<<sum<<" "<<count<<endl;
+    for(auto it:v)
+    {
+        for(auto i:it)
+        cout<<i<<" ";
+        cout<<endl;
+    }
 }

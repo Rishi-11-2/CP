@@ -31,71 +31,34 @@ void solve()
     long long n,k;
     cin>>n>>k;
 
-    long long a[n];
+    vector<pair<long long,long long>>v;
+    long long maxm=0;
+    long long arr[n];
     for(long long i=0;i<n;i++)
     {
-        cin>>a[i];
+        cin>>arr[i];
+        v.push_back({arr[i],arr[i]+k-1});
+        maxm=max(maxm,arr[i]+k-1);
     }
-    
-    long long b[n];
     for(long long i=0;i<n;i++)
     {
-        cin>>b[i];
+        long long d=(maxm-v[i].first)/(2LL*k);
+        v[i].first+=(2LL)*k*d;
+        v[i].second+=(2LL)*k*d;
     }
 
 
-    long long low=0;
-    long long high=(long long)(1e10);
-
-    function<long long(long long)>f=[&](long long mid)->long long{
-        long long count=0;
-        for(long long i=0;i<n;i++)
-        {
-            if(a[i]<mid)
-            continue;
-            long long cc=((a[i]-mid)/b[i])+1;
-            count+=cc;
-        }
-        if(count>=k)
-        return 1;
-        return 0;
-    };
-    long long res=0;
-    while(low<=high)
+    long long l=v[0].first;
+    long long r=v[0].second;
+    for(long long i=1;i<n;i++)
     {
-        long long mid=(low+high)/2;
-        if(f(mid))
+        if(v[i].second<l || v[i].first>r)
         {
-            res=mid;
-            low=mid+1;
+            cout<<-1<<endl;
+            return;
         }
-        else
-        {
-            high=mid-1;
-        }
+        l=max(l,v[i].first);
+        r=min(r,v[i].second);
     }
-    function<long long(long long,long long,long long)>summ=[&](long long a,long long d,long long count)->long long{
-
-        long long sum=2*a-(count-1)*d;
-        sum=sum*count;
-        sum=sum/(2LL);
-        return sum;
-    };
-    long long tc=0;
-    long long ans=0;
-    for(long long i=0;i<n;i++)
-    {
-        if(a[i]<(res+1))
-        continue;
-        long long count=((a[i]-(res+1))/b[i])+1;
-
-        tc+=count;
-        // debug(i,count,summ(a[i],b[i],count));
-        ans+=summ(a[i],b[i],count);
-    }
-
-    // debug(res);
-
-    ans+=(k-tc)*res;
-    cout<<ans<<endl;
+    cout<<l<<endl;
 }

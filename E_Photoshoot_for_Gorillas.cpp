@@ -10,7 +10,8 @@ template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
 void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 #define all(v) (v).begin(), (v).end()
-//(data type to be stored (pair,int,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaraints)
+//(data type to be stored (pair,long long,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaralong longs)
+typedef tree < pair<long long,long long>, null_type,less<pair<long long,long long>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
 void solve();
 signed main()
 {
@@ -18,20 +19,8 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    #ifndef ONLINEJUDGE
-       clock_t tStart = clock();
-       freopen("input.txt","r",stdin); 
-       freopen("output.txt","w",stdout);
-  #endif
-
-       //Your Code
-
-  #ifndef ONLINEJUDGE
-     fprintf(stderr, "\n>> Runtime: %.10fs\n", (double) (clock() - tStart) / CLOCKS_PER_SEC); 
-  #endif
-
-    int t=1;
-    // cin >> t;
+    long long t = 1;
+    cin >> t;
     while (t--)
     {
         solve();
@@ -41,16 +30,16 @@ void solve()
 {
     long long n,m,k;
     cin>>n>>m>>k;
- 
+
     long long w;
     cin>>w;
- 
+
     long long g[w];
- 
+
     for(long long i=0;i<w;i++)
     cin>>g[i];
- 
- 
+
+
     long long grid[n+1][m+1];
     long long grid1[n+1][m+1];
     for(long long i=0;i<=n;i++)
@@ -78,8 +67,8 @@ void solve()
         
         // cout<<endl;
     }
- 
- 
+
+
     sort(all(v));
     reverse(all(v));
     sort(g,g+w,greater<long long>());

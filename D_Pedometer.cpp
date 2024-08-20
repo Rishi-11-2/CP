@@ -10,8 +10,8 @@ template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
 void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 #define all(v) (v).begin(), (v).end()
-//(data type to be stored (pair,int,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaraints)
-typedef tree < pair<int,int>, null_type,less<pair<int,int>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
+//(data type to be stored (pair,long long,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaralong longs)
+typedef tree < pair<long long,long long>, null_type,less<pair<long long,long long>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
 void solve();
 signed main()
 {
@@ -19,8 +19,8 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t = 1;
-    cin >> t;
+    long long t = 1;
+    // cin >> t;.
     while (t--)
     {
         solve();
@@ -31,20 +31,37 @@ void solve()
     long long n,k;
     cin>>n>>k;
 
-    vector<int>v;
+    vector<long long>v;
 
-    for(int i=0;i<n;i++)
+    for(long long i=0;i<n;i++)
     {
-        int x;
+        long long x;
+        cin>>x;
         v.push_back(x);
     }
-
-    for(int i=0;i<n;i++)
+    vector<long long>pref(2*n+1,0);
+    for(long long i=0;i<2*n;i++)
     {
-        v.push_back(x);
+        pref[i]=v[i%n];
+        if(i)
+        {
+            pref[i]+=pref[i-1];
+        }
+        pref[i]=pref[i]%k;
     }
-
-    for(int i=0;i<)
+    vector<long long>b(k+1,0);
+    long long ans=0;
+    for(long long i=0;i<n;i++)
+    {
+        b[pref[i]]++;
+    }
+    for(long long i=n;i<2*n;i++)
+    {
+        b[pref[i-n]]--;
+        ans+=b[pref[i]];
+        b[pref[i]]++;
+    }
+    cout<<ans<<endl;
     
 
 }

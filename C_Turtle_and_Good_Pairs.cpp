@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -21,7 +20,7 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();
@@ -32,35 +31,30 @@ void solve()
     int n;
     cin>>n;
 
-    int arr[n];
-    for(int i=0;i<n;i++)
-    cin>>arr[i];
-    
-        
-        long long sum=n*(n+1);
-        sum=sum/2LL;
-        
-        long long squaresum = n*(n+1)*(2*n+1);
-        
-        squaresum=squaresum/6LL;
-        
-        long long totalsum=0;
-        long long totalsquaresum=0;
-        for(int i=0;i<n;i++)
-        {
-            totalsum+=abs(arr[i]);
-            totalsquaresum+=arr[i]*arr[i];
-        }
-        long long x=totalsum-sum;
-        long long y=totalsquaresum-squaresum;
-        
-        long long twice = (y/x)+x;
-        
-        twice=twice/2LL;
-        
-        long long missing=(y/x)-x;
-        missing=missing/2LL;
-        
+    string s;
+    cin>>s;
 
-        cout<<twice<<" "<<missing<<endl;
+    map<char,int>mp;
+    for(char c:s)
+    {
+        mp[c]++;
+    }
+    string z="";
+
+    while(1)
+    {
+        int flag=0;
+        for(char c='a';c<='z';c++)
+        {
+            if(mp[c])
+            {
+                flag=1;
+                mp[c]--;
+                z+=c;
+            }
+        }
+        if(!flag)
+        break;
+    }
+    cout<<z<<endl;
 }

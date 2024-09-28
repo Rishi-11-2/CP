@@ -1,11 +1,14 @@
 
 
 Todo :
-https://codeforces.com/contest/339/problem/D
 https://codeforces.com/contest/356/problem/A
 https://codeforces.com/contest/61/problem/E
 https://codeforces.com/edu/course/2/lesson/6/3/practice/contest/285083/problem/D
-https://cses.fi/problemset/task/2181
 https://www.geeksforgeeks.org/problems/possible-paths--141628/1
-https://codeforces.com/gym/508693/problem/M
-https://www.geeksforgeeks.org/problems/count-pairs-in-an-array4145/1
+https://www.geeksforgeeks.org/problems/two-repeated-elements-1587115621/1
+https://www.geeksforgeeks.org/problems/merge-sort-on-doubly-linked-list/1
+https://leetcode.com/problems/freedom-trail/
+https://codeforces.com/problemset/problem/1973/C
+https://open.kattis.com/problems/turningred
+https://codeforces.com/blog/entry/125639
+https://codeforces.com/blog/entry/129921

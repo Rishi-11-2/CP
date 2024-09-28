@@ -18,18 +18,13 @@ long long  getRandomNumber(long long  l,long long  r){
 int main()
 {
     
-    int n=getRandomNumber(1,(int)(1e4));
-    int d=(int)(1e4);
-    int m= getRandomNumber(1,d/n);
-    int k=getRandomNumber(1,min(n,m));
-    cout<<n<<" "<<m<<" "<<k<<endl;
+    long long n=getRandomNumber(1,(int)(1e5));
+    cout<<n<<endl;
 
-    int w=getRandomNumber(1,n*m);
-    cout<<w<<endl;
-    int arr[w];
-    for(int i=0;i<w;i++)
+    long long arr[n];
+    for(int i=0;i<n;i++)
     {
-        arr[i]=getRandomNumber(1,(int)(1e9));
+        arr[i]=getRandomNumber(1,(long long)(1e9));
         cout<<arr[i]<<" ";
     }
     cout<<endl;

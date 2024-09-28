@@ -18,20 +18,7 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-   #ifndef ONLINEJUDGE
-       clock_t tStart = clock();
-       freopen("input.txt","r",stdin); 
-       freopen("output.txt","w",stdout);
-  #endif
-
-       //Your Code
-
-  #ifndef ONLINEJUDGE
-     fprintf(stderr, "\n>> Runtime: %.10fs\n", (double) (clock() - tStart) / CLOCKS_PER_SEC); 
-  #endif
-
     int t=1;
-    // cin >> t;
     while (t--)
     {
         solve();
@@ -89,7 +76,7 @@ void solve()
 {
     int n;
     cin>>n;
-    cout<<n<<endl;
+    // cout<<n<<endl;
     vector<int>v(n);
     for(int i=0;i<n;i++)
         cin>>v[i];

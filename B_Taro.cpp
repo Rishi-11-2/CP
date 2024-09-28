@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -29,38 +28,33 @@ signed main()
 }
 void solve()
 {
-    int n;
-    cin>>n;
+    int n,m;
+    cin>>n>>m;
 
-    int arr[n];
-    for(int i=0;i<n;i++)
-    cin>>arr[i];
-    
-        
-        long long sum=n*(n+1);
-        sum=sum/2LL;
-        
-        long long squaresum = n*(n+1)*(2*n+1);
-        
-        squaresum=squaresum/6LL;
-        
-        long long totalsum=0;
-        long long totalsquaresum=0;
-        for(int i=0;i<n;i++)
+    vector<int>v(n+1,0);
+
+    for(int i=1;i<=m;i++)
+    {
+        int a;
+        char b;
+        cin>>a>>b;
+
+        if(b=='M')
         {
-            totalsum+=abs(arr[i]);
-            totalsquaresum+=arr[i]*arr[i];
+            if(v[a]==0)
+            {
+                v[a]=1;
+                cout<<"Yes"<<endl;
+            }
+            else
+            {
+                cout<<"No"<<endl;
+            }
         }
-        long long x=totalsum-sum;
-        long long y=totalsquaresum-squaresum;
-        
-        long long twice = (y/x)+x;
-        
-        twice=twice/2LL;
-        
-        long long missing=(y/x)-x;
-        missing=missing/2LL;
-        
+        else
+        {
+            cout<<"No"<<endl;
+        }
+    }
 
-        cout<<twice<<" "<<missing<<endl;
 }

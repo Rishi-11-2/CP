@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -27,40 +26,63 @@ signed main()
         solve();
     }
 }
+bool cmp(const pair<char,int>&a,const pair<char,int>&b)
+{
+    if(a.first==b.first)
+    return a.second>b.second;
+
+    return a.first>b.first;
+}
+
+bool cmp1(const pair<char,int>&a,const pair<char,int>&b)
+{
+    if(a.first==b.first)
+    return a.second<b.second;
+
+    return a.first<b.first;
+}
 void solve()
 {
-    int n;
-    cin>>n;
+    string a;
+    string b;
+    cin>>a>>b;
 
-    int arr[n];
+    vector<pair<char,int>>down;
+    vector<pair<char,int>>up;
+    int n=(int)a.length();
     for(int i=0;i<n;i++)
-    cin>>arr[i];
-    
-        
-        long long sum=n*(n+1);
-        sum=sum/2LL;
-        
-        long long squaresum = n*(n+1)*(2*n+1);
-        
-        squaresum=squaresum/6LL;
-        
-        long long totalsum=0;
-        long long totalsquaresum=0;
-        for(int i=0;i<n;i++)
+    {
+        if(a[i]>b[i])
         {
-            totalsum+=abs(arr[i]);
-            totalsquaresum+=arr[i]*arr[i];
+            // debug(i);
+            down.push_back({a[i],i});
         }
-        long long x=totalsum-sum;
-        long long y=totalsquaresum-squaresum;
-        
-        long long twice = (y/x)+x;
-        
-        twice=twice/2LL;
-        
-        long long missing=(y/x)-x;
-        missing=missing/2LL;
-        
+        else if(a[i]<b[i])
+        {
+            up.push_back({a[i],i});
+        }
+    }
 
-        cout<<twice<<" "<<missing<<endl;
+    // sort(all(down),cmp1);
+    reverse(all(up));
+
+    string s=a;
+    vector<string>v;
+    for(auto it:down)
+    {
+        // debug(it.second);
+        s[it.second]=b[it.second];
+        v.push_back(s);
+    }
+
+    for(auto it:up)
+    {
+        s[it.second]=b[it.second];
+        v.push_back(s);
+    }
+    cout<<(int)v.size()<<endl;
+    for(auto it:v)
+    {
+        cout<<it<<endl;
+    }
 }

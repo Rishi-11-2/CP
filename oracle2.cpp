@@ -29,38 +29,11 @@ signed main()
 }
 void solve()
 {
-    int n;
-    cin>>n;
+    char arr[]="abcd";
 
-    int arr[n];
-    for(int i=0;i<n;i++)
-    cin>>arr[i];
-    
-        
-        long long sum=n*(n+1);
-        sum=sum/2LL;
-        
-        long long squaresum = n*(n+1)*(2*n+1);
-        
-        squaresum=squaresum/6LL;
-        
-        long long totalsum=0;
-        long long totalsquaresum=0;
-        for(int i=0;i<n;i++)
-        {
-            totalsum+=abs(arr[i]);
-            totalsquaresum+=arr[i]*arr[i];
-        }
-        long long x=totalsum-sum;
-        long long y=totalsquaresum-squaresum;
-        
-        long long twice = (y/x)+x;
-        
-        twice=twice/2LL;
-        
-        long long missing=(y/x)-x;
-        missing=missing/2LL;
-        
-
-        cout<<twice<<" "<<missing<<endl;
+    char *p=arr;
+    printf("%c\t",++*p);
+    printf("%c\t",*p++);
+    printf("%c\t",(*p)++);
+    printf("%c\t",*p);
 }

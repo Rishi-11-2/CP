@@ -5,6 +5,7 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -19,7 +20,12 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
+    int t = 1;
+    // cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
@@ -27,16 +33,46 @@ void solve()
     cin>>n;
 
     int arr[n];
-
     for(int i=0;i<n;i++)
-    cin>>arr[i];
+    {
+        cin>>arr[i];
+    }
 
-    function<int(int,int)>f=[&](int i,int prev)->int{
-
-        if(i==n)
+    vector<int>dp(520,-1);
+    dp[0]=0;
+    for(int i=0;i<n;i++)
+    {
+        auto ndp=dp;
+        for(int j=0;j<=512;j++)
         {
-            
+            if(dp[j]!=-1 && arr[i]>dp[j])
+            {
+                int new_xor=arr[i]^j;
+                if(dp[new_xor]!=-1)
+                {
+                    ndp[new_xor]=min(dp[new_xor],arr[i]);
+                }
+                else
+                {
+                    ndp[new_xor]=arr[i];
+                }
+            }
         }
-        if(dp[i])
-    };
+        dp=ndp;
+        dp[arr[i]]=arr[i];
+    }
+    set<int>s;
+    for(int i=0;i<=512;i++)
+    {
+        if(dp[i]!=-1)
+        {
+            s.insert(i);
+        }
+    }
+    cout<<(int)s.size()<<endl;
+    for(auto it:s)
+    {
+        cout<<it<<" ";
+    }
+    cout<<endl;
 }

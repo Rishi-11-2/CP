@@ -13,7 +13,7 @@ void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 #define all(v) (v).begin(), (v).end()
 //(data type to be stored (pair,int,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaraints)
 typedef tree < pair<int,int>, null_type,less<pair<int,int>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
-void solve();
+int solve();
 signed main()
 {
     ios_base::sync_with_stdio(false);
@@ -27,40 +27,33 @@ signed main()
         solve();
     }
 }
-void solve()
+int solve()
 {
-    int n;
-    cin>>n;
+    ifstream fin("input_file",ifstream::in);
+    ifstream ans("myAnswer",ifstream::in);
+    ifstream cor("correctAnswer",ifstream::in);
+    long long n;
 
-    int arr[n];
-    for(int i=0;i<n;i++)
-    cin>>arr[i];
+    fin>>n;
+
+    long long arr[n];
+    for(long long i=0;i<n;i++)
+    fin>>arr[i];
     
-        
-        long long sum=n*(n+1);
-        sum=sum/2LL;
-        
-        long long squaresum = n*(n+1)*(2*n+1);
-        
-        squaresum=squaresum/6LL;
-        
-        long long totalsum=0;
-        long long totalsquaresum=0;
-        for(int i=0;i<n;i++)
-        {
-            totalsum+=abs(arr[i]);
-            totalsquaresum+=arr[i]*arr[i];
-        }
-        long long x=totalsum-sum;
-        long long y=totalsquaresum-squaresum;
-        
-        long long twice = (y/x)+x;
-        
-        twice=twice/2LL;
-        
-        long long missing=(y/x)-x;
-        missing=missing/2LL;
-        
+    int bruteAnswer,optimalAnswer;
 
-        cout<<twice<<" "<<missing<<endl;
+    ans>>optimalAnswer;
+
+    cor>>bruteAnswer;
+
+    if(optimalAnswer!=bruteAnswer)
+    {
+        cout<<"Wrong Answer!!"<<endl;
+        return -1;
+    }
+    else
+    {
+        cout<<"Testcase Passes!!"<<endl;
+    }
+    return 0;
 }

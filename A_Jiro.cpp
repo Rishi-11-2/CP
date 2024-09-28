@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -29,38 +28,49 @@ signed main()
 }
 void solve()
 {
-    int n;
-    cin>>n;
+    char a,b,c;
+    cin>>a>>b>>c;
 
-    int arr[n];
-    for(int i=0;i<n;i++)
-    cin>>arr[i];
-    
-        
-        long long sum=n*(n+1);
-        sum=sum/2LL;
-        
-        long long squaresum = n*(n+1)*(2*n+1);
-        
-        squaresum=squaresum/6LL;
-        
-        long long totalsum=0;
-        long long totalsquaresum=0;
-        for(int i=0;i<n;i++)
-        {
-            totalsum+=abs(arr[i]);
-            totalsquaresum+=arr[i]*arr[i];
-        }
-        long long x=totalsum-sum;
-        long long y=totalsquaresum-squaresum;
-        
-        long long twice = (y/x)+x;
-        
-        twice=twice/2LL;
-        
-        long long missing=(y/x)-x;
-        missing=missing/2LL;
-        
+    int A=3;
+    int B=3;
+    int C=3;
+    if(a=='<')
+    {
+        A--;
+    }
+    else
+    {
+        B--;
+    }
 
-        cout<<twice<<" "<<missing<<endl;
+    if(b=='<')
+    {
+        A--;
+    }
+    else
+    {
+        C--;
+    }
+
+    if(c=='<')
+    {
+        B--;
+    }
+    else
+    {
+        C--;
+    }
+
+    if(A==2)
+    {
+        cout<<"A"<<endl;
+    }
+    else if(B==2)
+    {
+        cout<<"B"<<endl;
+    }
+    else
+    {
+        cout<<"C"<<endl;
+    }
 }

@@ -20,7 +20,7 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t;
+    int t = 1;
     cin >> t;
     while (t--)
     {
@@ -32,6 +32,24 @@ void solve()
     int n;
     cin>>n;
 
-    bool 
+    int arr[n];
 
+    for(int i=0;i<n;i++)
+    cin>>arr[i];
+
+    int m;
+    cin>>m;
+    int b[m];
+
+    for(int i=0;i<m;i++)
+    cin>>b[i];
+
+    function<int(int,int,int)>f=[&](int i,int j,int flag)->int{
+
+        if(i==-1 && j==-1)
+        return 0;
+
+        if(flag==1)
+        int res=arr[i]+f(i-1,j)
+    };
 }

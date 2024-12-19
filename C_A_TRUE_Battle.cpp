@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -20,7 +19,7 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t;
+    int t = 1;
     cin >> t;
     while (t--)
     {
@@ -31,7 +30,45 @@ void solve()
 {
     int n;
     cin>>n;
+    string s;
+    cin>>s;
+    if(n==2)
+    {
+        if(s[0]=='0' && s[1]=='0')
+        {
+            cout<<"NO"<<endl;
+        }
+        else
+        {
+            cout<<"YES"<<endl;
+        }
+        return ;
+    }
+    if(s[0]=='1'||s[n-1]=='1')
+    {
+        cout<<"YES"<<endl;
+        return;
+    }
+    for(int i=0;(i+2)<n;i++)
+    {
+        if(s[i]=='0' && s[i+1]=='1' && s[i+2]=='1')
+        {
+            cout<<"YES"<<endl;
+            return;
+        }
+        if(s[i]=='1' && s[i+1]=='1' && s[i+2]=='0')
+        {
+            cout<<"YES"<<endl;
+            return;
+        }
 
-    bool 
+        if(s[i]=='1' && s[i+1]=='1' && s[i+2]=='1')
+        {
+            cout<<"YES"<<endl;
+            return;
+        }
 
+    }
+
+    cout<<"NO"<<endl;
 }

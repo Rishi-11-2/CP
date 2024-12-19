@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -20,7 +19,7 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t;
+    int t = 1;
     cin >> t;
     while (t--)
     {
@@ -29,9 +28,70 @@ signed main()
 }
 void solve()
 {
-    int n;
-    cin>>n;
+    int n,k;
+    cin>>n>>k;
 
-    bool 
+    if(n==1)
+    {
+        cout<<1<<endl;
+        cout<<1<<endl;
+        return;
+    }
 
+    if(k==n)
+    {
+        cout<<-1<<endl;
+        return;
+    }
+
+    int left=k-1;
+
+    int right=n-k;
+
+    // debug(left,right);
+    if(left%2 && right%2)
+    {
+        cout<<3<<endl;
+        cout<<1<<" "<<k<<" "<<k+1<<endl;
+        return;
+    }
+    vector<int>v;
+    int flag=0;
+    v.push_back(1);
+    for(int i=1;i<left;i++)
+    {
+        if(i%2 && (left-i)%2)
+        {
+            flag=1;
+            v.push_back(i+1);
+            break;
+        }
+    }
+    if(flag==0)
+    {
+        cout<<-1<<endl;
+        return;
+    }
+    flag=0;
+    v.push_back(k);
+    for(int i=1;i<right;i++)
+    {
+        if(i%2 && (right-i)%2)
+        {
+            flag=1;
+            v.push_back(i+k);
+            v.push_back(i+k+1);
+            break;
+        }
+    }
+    if(flag==0)
+    {
+        cout<<-1<<endl;
+        return;
+    }
+
+    cout<<5<<endl;
+    for(auto it:v)
+    cout<<it<<" ";
+    cout<<endl;
 }

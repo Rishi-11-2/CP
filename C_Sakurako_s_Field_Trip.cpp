@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -20,7 +19,7 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t;
+    int t = 1;
     cin >> t;
     while (t--)
     {
@@ -32,6 +31,58 @@ void solve()
     int n;
     cin>>n;
 
-    bool 
+    int arr[n+1];
 
+    for(int i=1;i<=n;i++)
+    cin>>arr[i];
+    
+
+    function<int(int)>check=[&](int i)->int{
+
+        if(i==(n-i+1))
+        return 0;
+        int count1=0;
+        int count2=0;
+        if(i>1)
+        {
+            if(arr[i]==arr[i-1])
+            count1++;
+        }
+        if(i<n)
+        {
+            if(arr[i]==arr[i+1])
+            count1++;
+        }
+        int j=n-i+1;
+        if(j>1)
+        {
+            if(arr[i]==arr[j-1])
+            count2++;
+        }
+        if(j<(n))
+        {
+            if(arr[i]==arr[j+1])
+            count2++;
+        }
+        if(count2<count1)
+        return 1;
+
+        return 0;
+    };
+    for(int i=1;i<=n;i++)
+    {
+        if(check(i))
+        {
+            // debug(i,n-i+1);
+            swap(arr[i],arr[n-i+1]);
+        }
+    }
+
+    int ans=0;
+    for(int i=1;(i+1)<=n;i++)
+    {
+        if(arr[i]==arr[i+1])
+        ans++;
+    }
+    cout<<ans<<endl;
 }

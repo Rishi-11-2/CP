@@ -5,7 +5,6 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -20,8 +19,8 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t;
-    cin >> t;
+    int t = 1;
+    // cin >> t;
     while (t--)
     {
         solve();
@@ -29,9 +28,46 @@ signed main()
 }
 void solve()
 {
-    int n;
-    cin>>n;
+    int n,m;
+    cin>>n>>m;
 
-    bool 
+    vector<int>adj[n+1];
+    for(int i=1;i<=m;i++)
+    {
+        int u,v;
+        cin>>u>>v;
 
+        adj[u].push_back(v);
+    }
+
+    queue< pair<int,pair<int,int>> >q;
+    q.push({0,{1,-1}});
+    vector<int>vis(n+1,0);
+    int ans=(int)(1e9);
+    while(!q.empty())
+    {
+        auto it=q.front();
+        q.pop();
+        int u=it.second.first;
+        int p=it.second.second;
+        int d=it.first;
+        vis[u]=1;
+        for(int v:adj[u])
+        {
+            if(vis[v] && v!=p && v==1)
+            {
+                ans=min(ans,d+1);
+            }
+            else if(!vis[v])
+            {
+                q.push({d+1,{v,u}});
+                vis[v]=1;
+            }
+        }
+    }
+    if(ans==(int)(1e9))
+    {
+        ans=-1;
+    }
+    cout<<ans<<endl;
 }

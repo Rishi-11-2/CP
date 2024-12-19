@@ -20,8 +20,8 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t;
-    cin >> t;
+    int t = 1;
+    // cin >> t;
     while (t--)
     {
         solve();
@@ -32,6 +32,19 @@ void solve()
     int n;
     cin>>n;
 
-    bool 
+    string s;
+    cin>>s;
+    int count=0;
+    for(int i=1;i<=n-2;i++)
+    {
+        int a=i-1;
+        int b=i;
+        int c=i+1;
 
+        if(s[a]=='#' && s[c]=='#' && s[b]=='.')
+        {
+            count++;
+        }
+    }
+    cout<<count<<endl;
 }

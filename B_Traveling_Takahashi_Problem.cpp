@@ -20,18 +20,36 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t;
-    cin >> t;
+    int t = 1;
     while (t--)
     {
         solve();
     }
+}
+double distance(double x1, double y1, double x2, double y2) {
+    return std::sqrt(std::pow((x2 - x1), 2) + std::pow((y2 - y1), 2));
 }
 void solve()
 {
     int n;
     cin>>n;
 
-    bool 
+    int x=0;
+    int y=0;
 
+    double res=0;
+    for(int i=1;i<=n;i++)
+    {
+        int a,b;
+        cin>>a>>b;
+
+        res+=distance(x,y,a,b);
+
+        x=a;
+        y=b;
+
+    }
+
+    res+=distance(x,y,0,0);
+    cout<<res<<endl;
 }

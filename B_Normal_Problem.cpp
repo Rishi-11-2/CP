@@ -20,7 +20,7 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    int t;
+    int t = 1;
     cin >> t;
     while (t--)
     {
@@ -29,9 +29,26 @@ signed main()
 }
 void solve()
 {
-    int n;
-    cin>>n;
+    string s;
+    cin>>s;
 
-    bool 
+    int n=s.length();
 
+    string z="";
+    reverse(all(s));
+    for(char c:s)
+    {
+        if(c=='p')
+        {
+            z+=string(1,'q');
+        }
+        else if(c=='q')
+        {
+            z+=string(1,'p');
+        }
+        else{
+            z+=string(1,'w');
+        }
+    }
+    cout<<z<<endl;
 }

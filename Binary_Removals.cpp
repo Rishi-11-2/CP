@@ -28,38 +28,32 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n,x,k;
+    cin>>n>>x>>k;
+
+    string s;
+    cin>>s;
 
     long long ans=0;
-    long long count=0;
+    long long c_one=0;
+    long long c_zero=0;
+
     long long sum=0;
-    function<void(long long,long long)>f=[&](long long l,long long r)->void{
-
-        long long len=r-l+1;
-
-        if(len<k)
-        return;
-
-        long long m=(l+r)/2;
-        if(len%2)
+    for(long long i=n-1;i>=0;i--)
+    {
+        if(s[i]=='0')
+        c_zero++;
+        if(s[i]=='1')
         {
-            ans+=m*(1+sum);
-            count++;
-
-            sum+=(m);
-            // debug(len,m);
-            f(l,m-1);
-            // f(m+1,r);
+            sum+=c_zero;
+            if(sum%k==0)
+            {
+                sum=0;
+                ans++;
+            }
         }
-        else
-        {
-            f(l,m);
-            // f(m+1,r);
-        }
-    };
+    }
+    ans+=sum;
 
-    f(1,n);
-    debug(count);
     cout<<ans<<endl;
 }

@@ -20,7 +20,7 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     long long t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();
@@ -28,38 +28,24 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n,d;
+    cin>>n>>d;
 
-    long long ans=0;
-    long long count=0;
-    long long sum=0;
-    function<void(long long,long long)>f=[&](long long l,long long r)->void{
+    vector<long long>t(n);
+    vector<long long>l(n);
 
-        long long len=r-l+1;
+    for(long long i=0;i<n;i++)
+    {
+        cin>>t[i]>>l[i];
 
-        if(len<k)
-        return;
-
-        long long m=(l+r)/2;
-        if(len%2)
+    }
+    for(long long k=1;k<=d;k++)
+    {
+        long long maxm=0;
+        for(long long i=0;i<n;i++)
         {
-            ans+=m*(1+sum);
-            count++;
-
-            sum+=(m);
-            // debug(len,m);
-            f(l,m-1);
-            // f(m+1,r);
+            maxm=max(maxm,t[i]*(l[i]+k));
         }
-        else
-        {
-            f(l,m);
-            // f(m+1,r);
-        }
-    };
-
-    f(1,n);
-    debug(count);
-    cout<<ans<<endl;
+        cout<<maxm<<endl;
+    }
 }

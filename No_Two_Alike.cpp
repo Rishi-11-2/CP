@@ -28,38 +28,57 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+
+    long long n;
+    cin>>n;
+
+    long long arr[n];
+
+    for(long long i=0;i<n;i++)
+    cin>>arr[i];
+
+    map<long long,long long>first;
+    map<long long,long long>last;
+
+    for(long long i=0;i<n;i++)
+    {
+        if(first.find(arr[i])==first.end())
+        {
+            first[arr[i]]=i;
+        }
+    }
+
+    for(long long i=n-1;i>=0;i--)
+    {
+        if(last.find(arr[i])==last.end())
+        {
+            last[arr[i]]=i;
+        }
+    }
+
+    long long i=0;
 
     long long ans=0;
-    long long count=0;
-    long long sum=0;
-    function<void(long long,long long)>f=[&](long long l,long long r)->void{
+    while(i<n)
+    {
+       set<long long>s;
+       long long x=last[arr[i]];
+       if(i==x)
+       {
+          i++;
+          continue;
+       }
+       while(i<=x)
+       {
+         s.insert(arr[i]);
+         x=max(x,last[arr[i]]);
+         i++;
+       }
+    //    debug(i);
+       ans+=(long long)s.size();
 
-        long long len=r-l+1;
+    }
 
-        if(len<k)
-        return;
-
-        long long m=(l+r)/2;
-        if(len%2)
-        {
-            ans+=m*(1+sum);
-            count++;
-
-            sum+=(m);
-            // debug(len,m);
-            f(l,m-1);
-            // f(m+1,r);
-        }
-        else
-        {
-            f(l,m);
-            // f(m+1,r);
-        }
-    };
-
-    f(1,n);
-    debug(count);
     cout<<ans<<endl;
+
 }

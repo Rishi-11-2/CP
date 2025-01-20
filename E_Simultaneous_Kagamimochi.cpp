@@ -20,7 +20,7 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     long long t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();
@@ -28,38 +28,67 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n;
 
-    long long ans=0;
+    cin>>n;
+
+    long long arr[n];
+
+    set<long long>s;
+    map<long long,long long>mp;
+    for(long long i=0;i<n;i++)
+    {
+        cin>>arr[i];
+        mp[arr[i]]++;
+        s.insert(arr[i]);
+    }
     long long count=0;
-    long long sum=0;
-    function<void(long long,long long)>f=[&](long long l,long long r)->void{
+    for(long long i=n-1;i>=0;i--)
+    {
+        if(mp[arr[i]]==0)
+        continue;
 
-        long long len=r-l+1;
-
-        if(len<k)
-        return;
-
-        long long m=(l+r)/2;
-        if(len%2)
+        mp[arr[i]]--;
+        auto it=s.lower_bound(2*arr[i]);
+        if(it!=s.end())
         {
-            ans+=m*(1+sum);
+            long long x=*it;
+            mp[x]--;
+            if(mp[x]==0)
+            {
+                s.erase(x);
+
+            }
             count++;
-
-            sum+=(m);
-            // debug(len,m);
-            f(l,m-1);
-            // f(m+1,r);
         }
-        else
+    }
+
+    long long count2=0;
+    s.clear();
+    mp.clear();
+    for(long long i=0;i<n;i++)
+    {
+        mp[arr[i]]++;
+        s.insert(arr[i]);
+    }
+    for(long long i=0;i<n;i++)
+    {
+        if(mp[arr[i]]==0)
+        continue;
+        mp[arr[i]]--;
+        auto it=s.lower_bound(2*arr[i]);
+        if(it!=s.end())
         {
-            f(l,m);
-            // f(m+1,r);
-        }
-    };
+            long long x=*it;
+            mp[x]--;
+            if(mp[x]==0)
+            {
+                s.erase(x);
 
-    f(1,n);
-    debug(count);
-    cout<<ans<<endl;
+            }
+            count2++;
+
+        }
+    }
+    cout<<max(count,count2)<<endl;
 }

@@ -20,7 +20,7 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     long long t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();
@@ -28,38 +28,43 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long q;
+    cin>>q;
 
-    long long ans=0;
-    long long count=0;
-    long long sum=0;
-    function<void(long long,long long)>f=[&](long long l,long long r)->void{
+    vector<pair<long long,long long>>v;
 
-        long long len=r-l+1;
-
-        if(len<k)
-        return;
-
-        long long m=(l+r)/2;
-        if(len%2)
+    long long a=0;
+    long long j=0;
+    for(long long i=1;i<=q;i++)
+    {
+        long long type;
+        cin>>type;
+        if(type==1)
         {
-            ans+=m*(1+sum);
-            count++;
-
-            sum+=(m);
-            // debug(len,m);
-            f(l,m-1);
-            // f(m+1,r);
+            long long x;
+            cin>>x;
+            if(v.empty())
+            {
+                v.push_back({0,x});
+            }
+            else
+            {
+                auto it=v.back();
+                v.push_back({it.first+it.second,x});
+            }
+        }
+        else if(type==2)
+        {
+            auto it=v[j++];
+            a+=it.second;
         }
         else
         {
-            f(l,m);
-            // f(m+1,r);
+            // debug(j,a);
+            long long x;
+            cin>>x;
+            cout<<(v[j+x-1].first-a)<<"\n";
         }
-    };
+    }
 
-    f(1,n);
-    debug(count);
-    cout<<ans<<endl;
 }

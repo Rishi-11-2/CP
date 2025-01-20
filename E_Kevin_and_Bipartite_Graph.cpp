@@ -28,38 +28,47 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n,m;
+    cin>>n>>m;
 
-    long long ans=0;
-    long long count=0;
-    long long sum=0;
-    function<void(long long,long long)>f=[&](long long l,long long r)->void{
 
-        long long len=r-l+1;
-
-        if(len<k)
-        return;
-
-        long long m=(l+r)/2;
-        if(len%2)
+    if((n)>=m)
+    {
+        cout<<"YES"<<endl;
+        for(long long i=1;i<=2*n;i++)
         {
-            ans+=m*(1+sum);
-            count++;
-
-            sum+=(m);
-            // debug(len,m);
-            f(l,m-1);
-            // f(m+1,r);
+            long long curr=1;
+            for(long long j=1;j<=m;j++)
+            {
+                cout<<curr<<" ";
+                curr++;
+                if(curr>n)
+                curr=1;
+            }
+            cout<<endl;
         }
-        else
+    }
+    else if(m<(2*n))
+    {
+        long long c=1;
+        for(long long i=1;i<=2*n;i++)
         {
-            f(l,m);
-            // f(m+1,r);
+            long long curr=c;
+            for(long long j=1;j<=m;j++)
+            {
+                cout<<curr<<" ";
+                curr++;
+                if(curr>n)
+                curr=1;
+            }
+            cout<<endl;
+            c++;
+ 
+            if(c>n)
+            c=1;
         }
-    };
-
-    f(1,n);
-    debug(count);
-    cout<<ans<<endl;
+    }
+    else{
+        cout<<"NO"<<endl;
+    }
 }

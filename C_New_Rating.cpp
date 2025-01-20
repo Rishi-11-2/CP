@@ -28,38 +28,74 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n;
+    cin>>n;
 
-    long long ans=0;
-    long long count=0;
-    long long sum=0;
-    function<void(long long,long long)>f=[&](long long l,long long r)->void{
+    long long arr[n];
 
-        long long len=r-l+1;
+    for(long long i=0;i<n;i++)
+    cin>>arr[i];
 
-        if(len<k)
+    
+    if(n==1)
+    {
+        cout<<0<<endl;
         return;
+    }
 
-        long long m=(l+r)/2;
-        if(len%2)
+    vector<long long>pf(n);
+    long long x=1;
+    pf[0]=1;
+    for(long long i=1;i<n;i++)
+    {
+        if(arr[i]>x)
         {
-            ans+=m*(1+sum);
-            count++;
+            x++;
+        }
+        else if(arr[i]<x)
+        {
+            x--;
+        }
+        pf[i]=max(x,pf[i-1]);
+    }
+    long long low=0;
+    long long high=(long long)(1e9);
 
-            sum+=(m);
-            // debug(len,m);
-            f(l,m-1);
-            // f(m+1,r);
+    long long res=-1;
+
+    function<long long(long long)>f=[&](long long mid)->long long{
+
+        long long curr=mid;
+
+        for(long long i=n-1;i>=1;i--)
+        {
+            if(curr<=pf[i-1])
+            return true;
+            if(curr>arr[i])
+            curr++;
+            else
+            curr--;
+        }
+        // debug(curr);
+        if(curr<=0)
+        return true;
+        return false;
+    };
+    // f(6);
+    while(low<=high)
+    {
+        long long mid=(low+high)/2;
+
+        if(f(mid))
+        {
+            res=mid;
+            low=mid+1;
         }
         else
         {
-            f(l,m);
-            // f(m+1,r);
+            high=mid-1;
         }
-    };
+    }
 
-    f(1,n);
-    debug(count);
-    cout<<ans<<endl;
+    cout<<res<<endl;
 }

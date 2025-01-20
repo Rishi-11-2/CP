@@ -28,38 +28,77 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
 
-    long long ans=0;
-    long long count=0;
-    long long sum=0;
-    function<void(long long,long long)>f=[&](long long l,long long r)->void{
+    long long l,r;
+    cin>>l>>r;
+    long long x=0;
+    long long start=0;
 
-        long long len=r-l+1;
-
-        if(len<k)
+    if(r-l==2)
+    {
+        cout<<r<<" "<<r-1<<" "<<r-2<<endl;
         return;
-
-        long long m=(l+r)/2;
-        if(len%2)
+    }
+    for(long long i=40;i>=0;i--)
+    {
+        if(r&(1LL<<i))
         {
-            ans+=m*(1+sum);
-            count++;
+            start=i;
+            break;
+        }
+    }
+    // debug(start);
+    for(long long i=start;i>=0;i--)
+    {
 
-            sum+=(m);
-            // debug(len,m);
-            f(l,m-1);
-            // f(m+1,r);
+        long long a=(1LL<<i);
+        if(r&a)
+        {            
+            if((x+a-1)<l)
+            {
+                x+=a;
+            }
         }
         else
         {
-            f(l,m);
-            // f(m+1,r);
+            if((x+a)>=r)
+            continue;
+            
+            x+=a;
         }
-    };
 
-    f(1,n);
-    debug(count);
-    cout<<ans<<endl;
+        // debug(x,i);
+    }
+
+    long long y=0;
+    long long flag=0;
+    for(long long i=start;i>=0;i--)
+    {
+
+        long long a=(1LL<<i);
+
+        if((r&a) && flag==0)
+        {
+            if((y+a-1)<l)
+            {
+                y+=a;
+            }
+            else
+            {
+                flag=1;
+            }
+        }
+
+        if(x&a)
+        {
+            if((y+a-1)<l)
+            y+=a;
+            continue;
+        }
+        if((y+a)<r)
+        y+=(a);
+    }
+
+    cout<<x<<" "<<y<<" "<<r<<endl;
+
 }

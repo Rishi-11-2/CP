@@ -30,36 +30,23 @@ void solve()
 {
     long long n,k;
     cin>>n>>k;
-
     long long ans=0;
-    long long count=0;
-    long long sum=0;
-    function<void(long long,long long)>f=[&](long long l,long long r)->void{
 
-        long long len=r-l+1;
+    long long d=n+1;
+    long long c=1;
+    while(n>=k)
+    {
+        if(n&1)
+        ans+=c;
 
-        if(len<k)
-        return;
+        n>>=1;
+        c<<=1;
+    }
 
-        long long m=(l+r)/2;
-        if(len%2)
-        {
-            ans+=m*(1+sum);
-            count++;
+    // debug(ans,c);
+    ans=d*ans;
 
-            sum+=(m);
-            // debug(len,m);
-            f(l,m-1);
-            // f(m+1,r);
-        }
-        else
-        {
-            f(l,m);
-            // f(m+1,r);
-        }
-    };
+    ans=ans/2;
 
-    f(1,n);
-    debug(count);
     cout<<ans<<endl;
 }

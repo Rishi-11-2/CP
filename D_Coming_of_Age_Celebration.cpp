@@ -20,7 +20,7 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     long long t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();
@@ -28,38 +28,42 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n;
+    cin>>n;
 
-    long long ans=0;
-    long long count=0;
-    long long sum=0;
-    function<void(long long,long long)>f=[&](long long l,long long r)->void{
+    long long arr[n];
 
-        long long len=r-l+1;
+    for(long long i=0;i<n;i++)
+    cin>>arr[i];
 
-        if(len<k)
-        return;
+   vector<long long>prefix(n,0);
 
-        long long m=(l+r)/2;
-        if(len%2)
-        {
-            ans+=m*(1+sum);
-            count++;
+   for(long long i=0;(i)<n;i++)
+   {
+      long long rem=(n-i)-1;
 
-            sum+=(m);
-            // debug(len,m);
-            f(l,m-1);
-            // f(m+1,r);
-        }
-        else
-        {
-            f(l,m);
-            // f(m+1,r);
-        }
-    };
+      if(i)
+      {
+        prefix[i]+=prefix[i-1];
+      }
 
-    f(1,n);
-    debug(count);
-    cout<<ans<<endl;
+      if((i+1)<n)
+      prefix[i+1]++;
+
+      arr[i]+=prefix[i];
+      if((i+1)<n && arr[i] < rem)
+      {
+        prefix[arr[i]+i+1]--;
+      }
+
+      arr[i]-=rem;
+      arr[i]=max(0LL,arr[i]);
+   }
+
+
+   for(long long i=0;i<n;i++)
+   {
+      cout<<(arr[i])<<" ";
+   }
+   cout<<endl;
 }

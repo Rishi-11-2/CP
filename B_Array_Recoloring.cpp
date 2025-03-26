@@ -19,60 +19,45 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
+    int t = 1;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    int n;
-    cin>>n;
+    int n,k;
+    cin>>n>>k;
 
-    vector<int>adj[n+1];
-
-    map<int,int>mp;
-    int root=-1;
-    for(int i=1;i<=n;i++)
+    vector<int>v;
+    int arr[n];
+    for(int i=0;i<n;i++)
     {
-        int x,y;
-        cin>>x>>y;
-        mp[i]=y;
-        if(x==-1)
-        {
-            root=i;
-            continue;
-        }
-        adj[i].push_back(x);
-        adj[x].push_back(i);
+        int x;
+        cin>>x;
+        arr[i]=x;
+        v.push_back(x);
     }
-    set<int>ans;
-    function<void(int,int)>f=[&](int u,int p)->void{
-        int res=mp[u];
-        for(int v:adj[u])
-        {
-            if(v==p)
-            continue;
-            
-            f(v,u);
-            if(mp[v]==0)
-            {
-                res=0;
-            }
-        }
-        if(res==1)
-        {
-            ans.insert(u);
-        }
-    };
+    sort(all(v),greater<int>());
 
-   f(root,0);
-    if((int)(ans.size())==0)
+    if(k==1)
     {
-        cout<<-1<<endl;
+        int sum=arr[0]+arr[n-1];
+        for(int i=1;i<n-1;i++)
+        {
+            sum=max(sum,arr[i]+max(arr[0],arr[n-1]));
+        }
+        cout<<sum<<endl;
         return;
     }
-    for(auto it:ans)
+    long long sum=0;
+    for(int i=0;i<k;i++)
     {
-        cout<<it<<" ";
+        sum+=v[i];
     }
-    cout<<endl;
+    sum+=v[k];
+
+    cout<<sum<<endl;
 }

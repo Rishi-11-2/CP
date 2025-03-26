@@ -19,60 +19,62 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
+    int t = 1;
+    // cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    int n;
-    cin>>n;
+    int n,q;
+    cin>>n>>q;
 
-    vector<int>adj[n+1];
-
+    
+    map<int,int>p;
     map<int,int>mp;
-    int root=-1;
+
     for(int i=1;i<=n;i++)
     {
-        int x,y;
-        cin>>x>>y;
-        mp[i]=y;
-        if(x==-1)
-        {
-            root=i;
-            continue;
-        }
-        adj[i].push_back(x);
-        adj[x].push_back(i);
+        p[i]=i;
+        mp[i]=i;
     }
-    set<int>ans;
-    function<void(int,int)>f=[&](int u,int p)->void{
-        int res=mp[u];
-        for(int v:adj[u])
-        {
-            if(v==p)
-            continue;
-            
-            f(v,u);
-            if(mp[v]==0)
-            {
-                res=0;
-            }
-        }
-        if(res==1)
-        {
-            ans.insert(u);
-        }
-    };
 
-   f(root,0);
-    if((int)(ans.size())==0)
+    for(int i=1;i<=q;i++)
     {
-        cout<<-1<<endl;
-        return;
+        int t;
+        cin>>t;
+
+        if(t==1)
+        {
+            int a,b;
+            cin>>a>>b;
+
+            p[a]=b;
+            mp[b]=b;
+        }
+        else if(t==3)
+        {
+            int a;
+            cin>>a;
+
+            cout<<mp[p[a]]<<endl;
+        }
+        else
+        {
+            int a,b;
+            cin>>a>>b;
+            int x=mp[a];
+            // mp[a]=b;
+            mp[x]=b;
+            // mp[a]=a;
+
+            int y=mp[b];
+
+            // mp[b]=b;
+            mp[y]=a;
+
+        }
     }
-    for(auto it:ans)
-    {
-        cout<<it<<" ";
-    }
-    cout<<endl;
 }

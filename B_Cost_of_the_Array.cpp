@@ -5,6 +5,7 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -19,60 +20,54 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
+    int t = 1;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    int n;
-    cin>>n;
+    int n,k;
+    cin>>n>>k;
 
-    vector<int>adj[n+1];
+    int arr[n];
 
-    map<int,int>mp;
-    int root=-1;
-    for(int i=1;i<=n;i++)
+    for(int i=0;i<n;i++)
     {
-        int x,y;
-        cin>>x>>y;
-        mp[i]=y;
-        if(x==-1)
-        {
-            root=i;
-            continue;
-        }
-        adj[i].push_back(x);
-        adj[x].push_back(i);
+        cin>>arr[i];
     }
-    set<int>ans;
-    function<void(int,int)>f=[&](int u,int p)->void{
-        int res=mp[u];
-        for(int v:adj[u])
-        {
-            if(v==p)
-            continue;
-            
-            f(v,u);
-            if(mp[v]==0)
-            {
-                res=0;
-            }
-        }
-        if(res==1)
-        {
-            ans.insert(u);
-        }
-    };
 
-   f(root,0);
-    if((int)(ans.size())==0)
+    if(k==n)
     {
-        cout<<-1<<endl;
+        int count=1;
+        for(int i=0;i<n;i++)
+        {
+            if(i%2==0)
+            continue;
+            if(arr[i]==count)
+            count++;
+            else
+            break;
+        }
+        cout<<count<<endl;
         return;
     }
-    for(auto it:ans)
+
+    int i=1;
+    while(i<n && (arr[i]==1))
     {
-        cout<<it<<" ";
+        i++;
     }
-    cout<<endl;
+    int rem=(n-1)-i+1;
+    // debug(rem);
+    if(rem>=(k-1))
+    {
+        cout<<1<<endl;
+        return;
+    }
+    else{
+        cout<<2<<endl;
+    }
 }

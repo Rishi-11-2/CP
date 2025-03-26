@@ -19,60 +19,47 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
+    int t = 1;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    int n;
-    cin>>n;
+    int n,x;
+    cin>>n>>x;
 
-    vector<int>adj[n+1];
+    int arr[n];
 
-    map<int,int>mp;
-    int root=-1;
-    for(int i=1;i<=n;i++)
+    for(int i=0;i<n;i++)
+    cin>>arr[i];
+
+    sort(arr,arr+n);
+
+    reverse(arr,arr+n);
+
+    int count=0;
+
+    int i=0;
+    while(i<n)
     {
-        int x,y;
-        cin>>x>>y;
-        mp[i]=y;
-        if(x==-1)
+        int minm=arr[i];
+        int j=i;
+        while(j<n)
         {
-            root=i;
-            continue;
-        }
-        adj[i].push_back(x);
-        adj[x].push_back(i);
-    }
-    set<int>ans;
-    function<void(int,int)>f=[&](int u,int p)->void{
-        int res=mp[u];
-        for(int v:adj[u])
-        {
-            if(v==p)
-            continue;
-            
-            f(v,u);
-            if(mp[v]==0)
+            minm=min(minm,arr[j]);
+            int len=(j-i+1);
+            int y=len*minm;
+            if(y>=x)
             {
-                res=0;
+                count++;
+                break;
             }
+            j++;
         }
-        if(res==1)
-        {
-            ans.insert(u);
-        }
-    };
-
-   f(root,0);
-    if((int)(ans.size())==0)
-    {
-        cout<<-1<<endl;
-        return;
+        i=j+1;
     }
-    for(auto it:ans)
-    {
-        cout<<it<<" ";
-    }
-    cout<<endl;
+    cout<<count<<endl;
 }

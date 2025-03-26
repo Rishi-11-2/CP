@@ -5,6 +5,7 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+long long getRandomNumber(long long l, long long r) {return uniform_int_distribution<long long>(l, r)(rng);}
 #define debug(x...) { cout << "(" << #x << ")" << " = ( "; PRINT(x); } 
 template <typename T1> void PRINT(T1 t1) { cout << t1 << " )" << endl; }
 template <typename T1, typename... T2>
@@ -19,60 +20,44 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
+    int t = 1;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
     int n;
     cin>>n;
 
-    vector<int>adj[n+1];
+    int arr[n];
 
-    map<int,int>mp;
-    int root=-1;
-    for(int i=1;i<=n;i++)
-    {
-        int x,y;
-        cin>>x>>y;
-        mp[i]=y;
-        if(x==-1)
+    for(int i=0;i<n;i++)
+    cin>>arr[i];
+
+
+    function<int(int,int)>f=[&](int i,int flag)->int{
+        if(i==n)
         {
-            root=i;
-            continue;
+            return 0;
         }
-        adj[i].push_back(x);
-        adj[x].push_back(i);
-    }
-    set<int>ans;
-    function<void(int,int)>f=[&](int u,int p)->void{
-        int res=mp[u];
-        for(int v:adj[u])
+
+        int sign
+
+        int res=arr[i]+f(i+1,1-flag);
+
+        if((i+1)<n)
         {
-            if(v==p)
-            continue;
-            
-            f(v,u);
-            if(mp[v]==0)
-            {
-                res=0;
-            }
+            if(flag==0)
+            res=max(res,arr[i]+arr[i+1]+f(i+2,1-flag));
+            else
+            res=min(res,arr[i]+arr[i+1]+f(i+2,1-flag));
         }
-        if(res==1)
-        {
-            ans.insert(u);
-        }
+
+        return res;
     };
 
-   f(root,0);
-    if((int)(ans.size())==0)
-    {
-        cout<<-1<<endl;
-        return;
-    }
-    for(auto it:ans)
-    {
-        cout<<it<<" ";
-    }
-    cout<<endl;
+    cout<<f(0,0)<<endl;
 }

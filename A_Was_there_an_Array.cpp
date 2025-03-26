@@ -19,60 +19,64 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
+    int t = 1;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
     int n;
     cin>>n;
 
-    vector<int>adj[n+1];
+    int b[n-2];
 
-    map<int,int>mp;
-    int root=-1;
-    for(int i=1;i<=n;i++)
-    {
-        int x,y;
-        cin>>x>>y;
-        mp[i]=y;
-        if(x==-1)
-        {
-            root=i;
-            continue;
-        }
-        adj[i].push_back(x);
-        adj[x].push_back(i);
-    }
-    set<int>ans;
-    function<void(int,int)>f=[&](int u,int p)->void{
-        int res=mp[u];
-        for(int v:adj[u])
-        {
-            if(v==p)
-            continue;
-            
-            f(v,u);
-            if(mp[v]==0)
-            {
-                res=0;
-            }
-        }
-        if(res==1)
-        {
-            ans.insert(u);
-        }
-    };
+    for(int i=0;i<n-2;i++)
+    cin>>b[i];
 
-   f(root,0);
-    if((int)(ans.size())==0)
+     
+    int arr[n];
+
+    arr[0]=1;
+    int  c=2;
+    for(int i=1;i<n-1;i++)
     {
-        cout<<-1<<endl;
-        return;
+        if(b[i-1]==1)
+        {
+            arr[i]=arr[i-1];
+        }
+        else if(i>1 && b[i-2]==1)
+        {
+            arr[i]=arr[i-1];
+        }
+        else
+        {
+            arr[i]=c++;
+        }
     }
-    for(auto it:ans)
+    if(b[n-3]==1)
+    arr[n-1]=arr[n-2];
+    else
+    arr[n-1]=c;
+    // for(int i=0;i<n;i++)
+    // cout<<arr[i]<<" ";
+    // cout<<endl;
+
+
+    for(int i=1;i<n-1;i++)
     {
-        cout<<it<<" ";
+        int d=0;
+        if(arr[i]==arr[i-1] && arr[i]==arr[i+1])
+        d=1;
+
+        if(d!=b[i-1])
+        {
+            cout<<"NO"<<endl;
+            return;
+        }
     }
-    cout<<endl;
+    cout<<"YES"<<endl;
+
 }

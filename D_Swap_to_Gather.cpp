@@ -20,7 +20,7 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     long long t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();
@@ -28,40 +28,69 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n;
+    cin>>n;
 
-    long long ans=0;
-    long long count=0;
-    long long sum=0;
+    string s;
+    cin>>s;
 
-    
-    auto f=[&](auto& f, long long l,long long r)->void{
 
-        long long len=r-l+1;
+    vector<long long>v;
 
-        if(len<k)
-        return;
-
-        long long m=(l+r)/2;
-        if(len%2)
+    long long i=0;
+    while(i<n)
+    {
+        if(s[i]=='0')
         {
-            ans+=m*(1+sum);
-            count++;
-
-            sum+=(m);
-            // debug(len,m);
-            f(f,l,m-1);
-            // f(m+1,r);
+            v.push_back(0);
+            i++;
         }
         else
         {
-            f(f,l,m);
-            // f(m+1,r);
+            
+            v.push_back(1);
+            i++;
         }
-    };
+        // i++;
+    }
+    // for(auto it:v)
+    // {
+    //     cout<<it<<" ";
+    // }
+    // cout<<endl;
+    n=(long long)v.size();
 
-    f(f,1,n);
-    debug(count);
-    cout<<ans<<endl;
+    vector<long long>prefix(n,0);
+    vector<long long>suffix(n,0);
+    long long curr=0;
+    long long ss=0;
+    for(long long i=0;i<n;i++)
+    {
+        if(v[i]==0)
+        ss+=curr;
+        if(v[i]==1)
+        curr++;
+        prefix[i]=ss;
+    }
+    curr=0;
+    ss=0;
+    for(long long i=n-1;i>=0;i--)
+    {
+        if(v[i]==0)
+        ss+=curr;
+        if(v[i]==1)
+        curr++;
+        suffix[i]=ss;
+        // cout<<suffix[i]<<" ";
+    }
+    // cout<<endl;
+    long long res=(long long)(1e18);
+    for(long long i=0;i<n;i++)
+    {
+        // debug(i,suffix[i],prefix[i]);
+        res=min(res,suffix[i]+prefix[i]);
+    }
+
+    cout<<res<<endl;
+
 }

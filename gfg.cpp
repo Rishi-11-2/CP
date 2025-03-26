@@ -27,40 +27,123 @@ signed main()
         solve();
     }
 }
+class Hash{
+    private:
+    const long long mod1=999999929;
+    const long long mod2=999999937;
+    const long long mod3=(long long)(1e15)+5;
+    
+    const long long p1=1001; 
+    const long long p2=1003; 
+    const long long p3=99911; 
+    
+    public:
+    vector<long long>pref1;
+    vector<long long>pref2;
+    vector<long long>base_pow1;
+    vector<long long>base_pow2;    
+    string s;
+    long long n;
+    
+    Hash(const string &a)
+    {
+        s=a;
+        n=s.length();
+        pref1.assign(n+1,0);
+        pref2.assign(n+1,0);
+        base_pow1.assign(n+1,0);
+        base_pow2.assign(n+1,0);
+        build();
+    }
+    void build()
+    {
+        base_pow1[0]=1;
+        
+        base_pow2[0]=1;
+        pref1[0]=1;
+        pref2[0]=1;
+        
+        for(int i=1;i<=n;i++)
+        {
+            base_pow1[i]=(base_pow1[i-1]*p1)%mod1;
+            base_pow2[i]=(base_pow2[i-1]*p2)%mod2;
+            
+            pref1[i]=((pref1[i-1]*p1)%mod1+s[i-1]+997)%mod1;
+            
+            pref2[i]=((pref2[i-1]*p2)%mod2+s[i-1]+997)%mod2;
+        }
+        
+    }
+    
+    long long getHash(int l,int r)
+    {
+        long long h1=pref1[r+1];
+        
+        h1-=(pref1[l]*base_pow1[r-l+1])%mod1;
+        h1=(h1%mod1+mod1)%mod1;
+        
+        long long h2=pref2[r+1];
+        
+        h2-=(pref2[l]*base_pow2[r-l+1])%mod2;
+        
+        h2=(h2%mod2+mod2)%mod2;
+        
+        long long h3=((h1*p3)%mod3+h2)%mod3;
+        
+        return h3;
+    }
+};
+
 void solve()
 {
-    int n;
-    cin>>n;
 
-    int arr[n];
-    for(int i=0;i<n;i++)
-    cin>>arr[i];
-    
+    string s;
+    cin>>s;
+    Hash h1(s);
+        string a=s;
+        reverse(a.begin(),a.end());
+        Hash h2(a);
         
-        long long sum=n*(n+1);
-        sum=sum/2LL;
+        int low=1;
         
-        long long squaresum = n*(n+1)*(2*n+1);
+        int n=s.length();
         
-        squaresum=squaresum/6LL;
+        int high=n;
+        int left=-1;
         
-        long long totalsum=0;
-        long long totalsquaresum=0;
-        for(int i=0;i<n;i++)
-        {
-            totalsum+=abs(arr[i]);
-            totalsquaresum+=arr[i]*arr[i];
-        }
-        long long x=totalsum-sum;
-        long long y=totalsquaresum-squaresum;
-        
-        long long twice = (y/x)+x;
-        
-        twice=twice/2LL;
-        
-        long long missing=(y/x)-x;
-        missing=missing/2LL;
-        
+        function<int(int)>f=[&](int mid)->int{
+            cout<<mid<<endl;
+            for(int i=0;(i+mid)<=n;i++)
+            {
+                debug(i);
+                cout<<h1.getHash(i,i+mid-1)<<" "<<h2.getHash(n-i-mid,n-i-1)<<endl;
+                if(h1.getHash(i,i+mid-1)==h2.getHash(n-i-mid,n-i-1))
+                {
+                    debug("h");
+                    left=i;
+                    return 1;
+                }
+                
+            }
+            return 0;
+        };
+        int res=-1;
+        int y=f(26);
+        // while(low<=high)
+        // {
+        //     int mid=(low+high)/2;
+        //     int x=f(mid);
+        //     cout<<x<<" "<<mid<<endl;
+        //     if(x)
+        //     {
+        //         res=mid;
+        //         low=mid+1;
+        //     }
+        //     else
+        //     {
+        //         high=mid-1;
+        //     }
+        // }
+        // return s.substr(1,10);
 
-        cout<<twice<<" "<<missing<<endl;
 }

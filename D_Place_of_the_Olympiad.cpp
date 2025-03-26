@@ -28,40 +28,46 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n,m,k;
+    cin>>n>>m>>k;
 
-    long long ans=0;
-    long long count=0;
-    long long sum=0;
+    long long low=0;
+    long long high=(m);
 
-    
-    auto f=[&](auto& f, long long l,long long r)->void{
+    long long res=-1;
 
-        long long len=r-l+1;
+    function<long long(long long)>f=[&](long long mid)->long long{
+        
+        long long count=m/(mid+1);
 
-        if(len<k)
-        return;
+        long long rem = k-(n*count*mid);
 
-        long long m=(l+r)/2;
-        if(len%2)
+        long long s=(m-(count*(mid+1)))*n;
+
+        if(rem<=s)
+        return 1;
+
+        return 0;
+
+    };
+    // debug(f(2));
+    while(low<=high)
+    {
+        long long mid=(low+high)/2;
+
+        if(f(mid))
         {
-            ans+=m*(1+sum);
-            count++;
-
-            sum+=(m);
-            // debug(len,m);
-            f(f,l,m-1);
-            // f(m+1,r);
+            res=mid;
+            high=mid-1;
         }
         else
         {
-            f(f,l,m);
-            // f(m+1,r);
+            low=mid+1;
         }
-    };
+    }
 
-    f(f,1,n);
-    debug(count);
-    cout<<ans<<endl;
+    cout<<res<<endl;
+
+
+
 }

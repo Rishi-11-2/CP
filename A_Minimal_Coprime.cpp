@@ -28,40 +28,17 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long l,r;
+    cin>>l>>r;
 
-    long long ans=0;
-    long long count=0;
-    long long sum=0;
+    long long d=(r-l);
 
-    
-    auto f=[&](auto& f, long long l,long long r)->void{
-
-        long long len=r-l+1;
-
-        if(len<k)
-        return;
-
-        long long m=(l+r)/2;
-        if(len%2)
-        {
-            ans+=m*(1+sum);
-            count++;
-
-            sum+=(m);
-            // debug(len,m);
-            f(f,l,m-1);
-            // f(m+1,r);
-        }
-        else
-        {
-            f(f,l,m);
-            // f(m+1,r);
-        }
-    };
-
-    f(f,1,n);
-    debug(count);
-    cout<<ans<<endl;
+    if(l==1 && r==1)
+    {
+        cout<<1<<endl;
+    }
+    else
+    {
+        cout<<d<<endl;
+    }
 }

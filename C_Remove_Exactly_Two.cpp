@@ -28,40 +28,48 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n;
+    cin>>n;
 
-    long long ans=0;
-    long long count=0;
-    long long sum=0;
+    vector<long long>deg(n+1,0);
+    for(long long i=1;i<n;i++)
+    {
+        long long u,v;
+        cin>>u>>v;
+        deg[u]++;
+        deg[v]++;
+    }
 
-    
-    auto f=[&](auto& f, long long l,long long r)->void{
+    multiset<long long>s;
 
-        long long len=r-l+1;
+    map<long long,long long>mp;
 
-        if(len<k)
-        return;
-
-        long long m=(l+r)/2;
-        if(len%2)
+    for(long long i=1;i<=n;i++)
+    {
+        s.insert(deg[i]);
+        mp[i]=deg[i];
+    }
+    long long res=0;
+    for(long long i=1;i<=n;i++)
+    {
+        s.erase(s.find(mp[i]));
+        for(long long v:adj[i])
         {
-            ans+=m*(1+sum);
-            count++;
-
-            sum+=(m);
-            // debug(len,m);
-            f(f,l,m-1);
-            // f(m+1,r);
+            // debug(mp[v]);
+            s.erase(s.find(mp[v]));
+            s.insert(mp[v]-1);
         }
-        else
+        auto x=*s.rbegin();
+        // debug(i,x,deg[i]);
+        res=max(res,deg[i]+x-1);
+
+        for(long long v:adj[i])
         {
-            f(f,l,m);
-            // f(m+1,r);
+            s.insert(mp[v]);
+            s.erase(s.find(mp[v]-1));
         }
-    };
+        s.insert(mp[i]);
+    }
+    cout<<res<<endl;
 
-    f(f,1,n);
-    debug(count);
-    cout<<ans<<endl;
 }

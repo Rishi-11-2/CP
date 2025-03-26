@@ -28,40 +28,42 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n;
+    cin>>n;
 
-    long long ans=0;
-    long long count=0;
-    long long sum=0;
+    long long s=0;
+    for(long long i=1;i<=n;i++)
+    {
+        s+=i;
+    }
 
-    
-    auto f=[&](auto& f, long long l,long long r)->void{
+    long long d=sqrtl(s);
 
-        long long len=r-l+1;
-
-        if(len<k)
+    if((d*d)==s)
+    {
+        cout<<-1<<endl;
         return;
+    }
 
-        long long m=(l+r)/2;
-        if(len%2)
+    vector<long long>v;
+    v.push_back(2);
+    v.push_back(1);
+    s=3;
+    for(long long i=3;i<=n;i++)
+    {
+        // s+=i;
+        v.push_back(i);
+    }
+    for(long long i=3;i<=n;i++)
+    {
+        s+=i;
+        long long d=sqrtl(s);
+        if((d*d)==s)
         {
-            ans+=m*(1+sum);
-            count++;
-
-            sum+=(m);
-            // debug(len,m);
-            f(f,l,m-1);
-            // f(m+1,r);
+            swap(v[i-1],v[i]);
         }
-        else
-        {
-            f(f,l,m);
-            // f(m+1,r);
-        }
-    };
-
-    f(f,1,n);
-    debug(count);
-    cout<<ans<<endl;
+    }
+    for(auto it:v)
+    cout<<it<<" ";
+    cout<<endl;
 }

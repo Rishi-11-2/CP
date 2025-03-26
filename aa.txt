@@ -1,0 +1,35 @@
+    function<int(int,int,int)>f=[&](int i,int j,int flag)->int{
+
+        
+
+        int res=0;
+        if(i==0)
+        res=1;
+    
+    
+    int s=sqrt(d*d-1);
+        for(int k=max(0,(j-s));k<=min(m-1,j+s);k++)
+        {
+            if(i>0)
+            {
+                if(grid[i-1][k]=='X')
+                res+=f(i-1,k,0);
+            }
+            
+            
+        }
+        if(flag==0)
+        {
+            for(int k=max(0,j-d);k<=min(m-1,j+d);k++)
+            {
+                if(k==j)
+                continue;
+                if(grid[i][k]=='X')
+                {
+                    res+=f(i,k,1);
+                }
+            }
+        }
+    
+    return res;
+};

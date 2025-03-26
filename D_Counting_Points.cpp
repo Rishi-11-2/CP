@@ -28,40 +28,41 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n,m;
+    cin>>n>>m;
 
-    long long ans=0;
-    long long count=0;
-    long long sum=0;
-
+    vector<long long>x(n);
+    for(long long i=0;i<n;i++)
+    cin>>x[i];
     
-    auto f=[&](auto& f, long long l,long long r)->void{
+    vector<long long>r(n);
 
-        long long len=r-l+1;
+    for(long long i=0;i<n;i++)
+    cin>>r[i];
 
-        if(len<k)
-        return;
 
-        long long m=(l+r)/2;
-        if(len%2)
+    map<long long,long long>mp;
+
+    for(long long i=0;i<n;i++)
+    {
+
+        for(long long j=(x[i]-r[i]);j<=(x[i]+r[i]);j++)
         {
-            ans+=m*(1+sum);
-            count++;
-
-            sum+=(m);
-            // debug(len,m);
-            f(f,l,m-1);
-            // f(m+1,r);
+            long long y=(r[i]*r[i])-((j-x[i])*(j-x[i]));
+            if(mp.find(j)==mp.end())
+            mp[j]=y;
+            else
+            mp[j]=max(mp[j],y);
         }
-        else
-        {
-            f(f,l,m);
-            // f(m+1,r);
-        }
-    };
+    }
 
-    f(f,1,n);
-    debug(count);
-    cout<<ans<<endl;
+    long long count=0;
+    for(auto it:mp)
+    {
+        long long yy=sqrt(it.second);
+
+        long long d=(2*yy)+1;
+        count+=d;
+    }
+    cout<<count<<endl;
 }

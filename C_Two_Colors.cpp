@@ -30,38 +30,73 @@ void solve()
 {
     long long n,k;
     cin>>n>>k;
+    vector<long long>arr(k);
 
-    long long ans=0;
-    long long count=0;
-    long long sum=0;
+    for(long long i=0;i<k;i++)
+    {
+        cin>>arr[i];
+        arr[i]=min(arr[i],n-1);
+    }
+
+
+    sort(all(arr));
+
+    vector<long long>prefix(k,0);
+    for(long long i=0;i<k;i++)
+    {
+        prefix[i]=arr[i];
+        if(i)
+        {
+            prefix[i]+=prefix[i-1];
+        }
+    }
+
+    function<long long(long long)>f=[&](long long i)->long long{
+        long long low=i+1;
+        long long high=k-1;
+
+        long long res=k;
+        while(low<=high)
+        {
+            long long mid=(low+high)/2;
+            if((arr[mid]+arr[i])>=n)
+            {
+                res=mid;
+                high=mid-1;
+            }
+            else
+            {
+                low=mid+1;
+            }
+        }
+        return res;
+    };
+    long long res=0;
+    for(long long i=0;i<k;i++)
+    {
+        long long idx=f(i);
+
+        if(idx==k)
+        continue;
+
+
+        long long count=k-idx;
+
+        long long d=prefix[k-1];
+        if(idx>=1)
+        d-=prefix[idx-1];
+
+        d+=count*arr[i];
+        
+        d=d-(count)*n+count;
+
+
+        d=d*2;
+
+        res+=d;
+    }
+
+    cout<<res<<endl;
 
     
-    auto f=[&](auto& f, long long l,long long r)->void{
-
-        long long len=r-l+1;
-
-        if(len<k)
-        return;
-
-        long long m=(l+r)/2;
-        if(len%2)
-        {
-            ans+=m*(1+sum);
-            count++;
-
-            sum+=(m);
-            // debug(len,m);
-            f(f,l,m-1);
-            // f(m+1,r);
-        }
-        else
-        {
-            f(f,l,m);
-            // f(m+1,r);
-        }
-    };
-
-    f(f,1,n);
-    debug(count);
-    cout<<ans<<endl;
 }

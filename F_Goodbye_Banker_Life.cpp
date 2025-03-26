@@ -19,60 +19,58 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
+    int t = 1;
+    // cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
-    int n;
-    cin>>n;
+    int n,k;
+    cin>>n>>k;
 
-    vector<int>adj[n+1];
+    vector<vector<int>>v;
 
-    map<int,int>mp;
-    int root=-1;
-    for(int i=1;i<=n;i++)
+    vector<int>x;
+    x.push_back(k);
+    v.push_back(x);
+
+    for(int i=1;i<n;i++)
     {
-        int x,y;
-        cin>>x>>y;
-        mp[i]=y;
-        if(x==-1)
+        vector<int>vv;
+        for(int j=0;j<=i;j++)
         {
-            root=i;
-            continue;
-        }
-        adj[i].push_back(x);
-        adj[x].push_back(i);
-    }
-    set<int>ans;
-    function<void(int,int)>f=[&](int u,int p)->void{
-        int res=mp[u];
-        for(int v:adj[u])
-        {
-            if(v==p)
-            continue;
-            
-            f(v,u);
-            if(mp[v]==0)
+            if(j==0 || j==i)
             {
-                res=0;
+                vv.push_back(v[i-1][0]);
+            }
+            else
+            {
+                vv.push_back(v[i-1][j-1]^v[i-1][j]);
             }
         }
-        if(res==1)
-        {
-            ans.insert(u);
-        }
-    };
+        v.push_back(vv);
+    }
+    for(auto it:v)
+    {
+        for(auto i:it)
+        cout<<i<<" ";
+        cout<<endl;
+    }
 
-   f(root,0);
-    if((int)(ans.size())==0)
-    {
-        cout<<-1<<endl;
-        return;
-    }
-    for(auto it:ans)
-    {
-        cout<<it<<" ";
-    }
-    cout<<endl;
+    // int maxm=0;
+
+    // for(int i=1;i<=n;i++)
+    // {
+    //     int x=1;
+
+    //     while((x)<=i)
+    //     {
+    //         x=x*2;
+    //     }
+    //     maxm=max(maxm,x-i);
+    // }
+    // cout<<maxm<<endl;
 }

@@ -13,6 +13,8 @@ void PRINT(T1 t1, T2... t2) { cout << t1 << " , "; PRINT(t2...); }
 //(data type to be stored (pair,long long,string,vector),"null_type"(specifically used for set),comparator,underlying tree,class denoting the policy for updating node invaralong longs)
 typedef tree < pair<long long,long long>, null_type,less<pair<long long,long long>>,rb_tree_tag,tree_order_statistics_node_update > pbds;
 void solve();
+const long long m=(long long)(1e7)+1;
+vector<long long>isPrime(m+1,1);
 signed main()
 {
     ios_base::sync_with_stdio(false);
@@ -20,7 +22,23 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     long long t = 1;
+
+    isPrime[0]=0;
+    isPrime[1]=0;
+    for(long long i=2;i*i<=m;i++)
+    {
+        if(isPrime[i])
+        {
+            for(long long j=i*i;j<=m;j+=i)
+            {
+                isPrime[j]=0;
+            }
+            // v.push_back
+        }
+    }
+    // for(long long i=2;i<=m)
     cin >> t;
+    
     while (t--)
     {
         solve();
@@ -28,40 +46,35 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
-
-    long long ans=0;
-    long long count=0;
-    long long sum=0;
-
+    long long n;
+    cin>>n;
+    vector<long long>primes;
     
-    auto f=[&](auto& f, long long l,long long r)->void{
+    for(long long i=2;i<=n;i++)
+    {
+        if(isPrime[i] )
+        primes.push_back(i);
+    }
 
-        long long len=r-l+1;
+    long long m=(long long)primes.size();
 
-        if(len<k)
-        return;
 
-        long long m=(l+r)/2;
-        if(len%2)
+    long long j=m-1;
+    long long count=0;
+    for(long long i=1;i<=n;i++)
+    {
+        if((i*2)>n)
+        break;
+
+        while(j>=0 && (i*primes[j])>n)
         {
-            ans+=m*(1+sum);
-            count++;
-
-            sum+=(m);
-            // debug(len,m);
-            f(f,l,m-1);
-            // f(m+1,r);
+            j--;
         }
-        else
-        {
-            f(f,l,m);
-            // f(m+1,r);
-        }
-    };
+        count+=(j+1);
+    }
 
-    f(f,1,n);
-    debug(count);
-    cout<<ans<<endl;
+    cout<<count<<endl;
+
+
+
 }

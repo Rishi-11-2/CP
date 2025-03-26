@@ -19,60 +19,71 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
+    int t = 1;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
 }
 void solve()
 {
     int n;
     cin>>n;
 
-    vector<int>adj[n+1];
+    vector<vector<int>>arr(n,vector<int>(n));
 
-    map<int,int>mp;
-    int root=-1;
-    for(int i=1;i<=n;i++)
+    vector<int>suffix(n+1,0);
+    for(int i=0;i<n;i++)
     {
-        int x,y;
-        cin>>x>>y;
-        mp[i]=y;
-        if(x==-1)
+        for(int j=0;j<n;j++)
         {
-            root=i;
-            continue;
+            cin>>arr[i][j];
+            suffix[i]++;
         }
-        adj[i].push_back(x);
-        adj[x].push_back(i);
+        
     }
-    set<int>ans;
-    function<void(int,int)>f=[&](int u,int p)->void{
-        int res=mp[u];
-        for(int v:adj[u])
+    int low=0;
+    int high=(n);
+
+    function<int(int)>f=[&](int mid)->int{
+        int x=mid;
+        debug(mid);
+        for(int j=0;j<n;j++)
         {
-            if(v==p)
-            continue;
-            
-            f(v,u);
-            if(mp[v]==0)
+            int flag=1;
+            for(int i=0;i<n;i++)
             {
-                res=0;
+                suffix[i]-=arr[i][j];
+                int s=suffix[i];
+                if(s==x && flag==1)
+                {
+                    flag=0;
+                    x--;
+                    // break;
+                }
             }
         }
-        if(res==1)
-        {
-            ans.insert(u);
-        }
-    };
+        if(x==0)
+        return 1;
 
-   f(root,0);
-    if((int)(ans.size())==0)
+        return 0;
+    };
+    int res=0;
+    while(low<=high)
     {
-        cout<<-1<<endl;
-        return;
+        int mid=(low+high)/2;
+
+        if(f(mid))
+        {
+            low=mid+1;
+            res=mid;
+        }
+        else
+        {
+            high=mid-1;
+        }
     }
-    for(auto it:ans)
-    {
-        cout<<it<<" ";
-    }
-    cout<<endl;
+
+    cout<<res<<endl;
 }

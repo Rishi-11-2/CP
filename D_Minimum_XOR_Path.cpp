@@ -20,48 +20,51 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     long long t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();
     }
 }
+long long ans=(1LL<<61);
+void dfs(long long curr,long long i,vector< vector<pair<long long,long long>>>&adj,vector<long long>&vis,long long n)
+{
+    if(i==n)
+    {
+        // debug(curr);
+        ans=min(ans,curr);
+        return ;
+    }
+
+    for(auto [v,w]:adj[i])
+    {
+        if(vis[v])
+        continue;
+        vis[v]=1;
+        dfs(curr^w,v,adj,vis,n);
+        vis[v]=0;
+    }
+}
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
 
-    long long ans=0;
-    long long count=0;
-    long long sum=0;
+    long long n,m;
+    cin>>n>>m;
 
-    
-    auto f=[&](auto& f, long long l,long long r)->void{
+    vector< vector<pair<long long,long long>>>adj(n+1);
 
-        long long len=r-l+1;
+    for(long long i=1;i<=m;i++)
+    {
+        long long u,v,w;
+        cin>>u>>v>>w;
 
-        if(len<k)
-        return;
+        adj[u].push_back({v,w});
+        adj[v].push_back({u,w});
+    }
+    vector<long long>vis(n+1,0);
+    vis[1]=1;
+    dfs(0,1,adj,vis,n);
 
-        long long m=(l+r)/2;
-        if(len%2)
-        {
-            ans+=m*(1+sum);
-            count++;
-
-            sum+=(m);
-            // debug(len,m);
-            f(f,l,m-1);
-            // f(m+1,r);
-        }
-        else
-        {
-            f(f,l,m);
-            // f(m+1,r);
-        }
-    };
-
-    f(f,1,n);
-    debug(count);
     cout<<ans<<endl;
+    
 }

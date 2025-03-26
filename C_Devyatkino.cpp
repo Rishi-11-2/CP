@@ -28,40 +28,48 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n;
+    cin>>n;
 
-    long long ans=0;
-    long long count=0;
-    long long sum=0;
 
-    
-    auto f=[&](auto& f, long long l,long long r)->void{
 
-        long long len=r-l+1;
-
-        if(len<k)
-        return;
-
-        long long m=(l+r)/2;
-        if(len%2)
+    string s=to_string(n);
+    long long len=s.length();
+    vector<long long>v;
+    long long ss=9;
+    for(char c:s)
+    {
+        if(c=='7')
         {
-            ans+=m*(1+sum);
+            cout<<0<<endl;
+            return;
+        }
+    }
+    for(long long i=1;i<=len;i++)
+    {
+        v.push_back(ss);
+        ss=ss*10+9;
+    }
+    long long res=INT_MAX;
+    for(auto it:v)
+    {
+        // debug(it);
+        long long x=n;
+        long long count=0;
+        int flag=0;
+        while(!flag)
+        {
+            string a=to_string(x);
+            set<char>as(all(a));
+            if(as.find('7')!=as.end())
+            {
+                res=min(res,count);
+                flag=1;
+                break;
+            }
             count++;
-
-            sum+=(m);
-            // debug(len,m);
-            f(f,l,m-1);
-            // f(m+1,r);
+            x+=it;
         }
-        else
-        {
-            f(f,l,m);
-            // f(m+1,r);
-        }
-    };
-
-    f(f,1,n);
-    debug(count);
-    cout<<ans<<endl;
+    }
+    cout<<res<<endl;
 }

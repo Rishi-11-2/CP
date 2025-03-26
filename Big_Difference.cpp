@@ -19,60 +19,39 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-
+    int t = 1;
+    cin >> t;
+    while (t--)
+    {
         solve();
+    }
+}
+int lcm(int a,int b)
+{
+    return (a*b)/(__gcd(a,b));
 }
 void solve()
 {
-    int n;
-    cin>>n;
+    int n,k;
+    cin>>n>>k;
 
-    vector<int>adj[n+1];
+    int a=2;
+    int b=(a+k);
 
-    map<int,int>mp;
-    int root=-1;
-    for(int i=1;i<=n;i++)
+    if(b>n)
     {
-        int x,y;
-        cin>>x>>y;
-        mp[i]=y;
-        if(x==-1)
-        {
-            root=i;
-            continue;
-        }
-        adj[i].push_back(x);
-        adj[x].push_back(i);
-    }
-    set<int>ans;
-    function<void(int,int)>f=[&](int u,int p)->void{
-        int res=mp[u];
-        for(int v:adj[u])
-        {
-            if(v==p)
-            continue;
-            
-            f(v,u);
-            if(mp[v]==0)
-            {
-                res=0;
-            }
-        }
-        if(res==1)
-        {
-            ans.insert(u);
-        }
-    };
-
-   f(root,0);
-    if((int)(ans.size())==0)
-    {
-        cout<<-1<<endl;
+        cout<<-1<<" "<<-1<<endl;
         return;
     }
-    for(auto it:ans)
+    while(b<n && (b%2==0))
     {
-        cout<<it<<" ";
+        b++;
     }
-    cout<<endl;
+    int xx=abs(__gcd(a,b)-lcm(a,b));
+    if(xx>=(2*k))
+    cout<<a<<" "<<b<<endl;
+    else
+    cout<<-1<<" "<<-1<<endl;
+
+
 }

@@ -28,72 +28,67 @@ signed main()
 }
 void solve()
 {
-    long long n,l,r;
-    cin>>n>>l>>r;
+    long long n;
+    cin>>n;
 
     long long arr[n];
-
     for(long long i=0;i<n;i++)
-    {
-        cin>>arr[i];
-    }
-    multiset<long long,greater<long long>>ss;
-    l--;
-    r--;
-    for(long long i=l;i<=r;i++)
-    {
-        ss.insert(arr[i]);
-    }
-    multiset<long long>left;
-    multiset<long long>right;
+    cin>>arr[i];
 
-    for(long long i=0;i<l;i++)
+    long long i=0;
+    long long j=n-1;
+    long long s=0;
+    while(i<n && (arr[i]>0))
     {
-        left.insert(arr[i]);
+        s+=abs(arr[i]);
+        i++;
+    }
+    while(j>=0 && (arr[j]<0))
+    {
+        s+=abs(arr[j]);
+        j--;
     }
 
-    for(long long i=r+1;i<n;i++)
+    vector<long long>pp;
+    vector<long long>ns;
+
+    for(long long k=i;k<=j;k++)
     {
-        right.insert(arr[i]);
+        if(pp.empty())
+        {
+            pp.push_back(0);
+        }
+        else
+        {
+            pp.push_back(pp.back());
+        }
+
+        if(arr[k]>0)
+        pp.back()+=abs(arr[k]);
     }
 
-    auto sss=ss;
-    long long sum1=0;
-    while(!left.empty() && !ss.empty())
-    {
-        auto a=*left.begin();
-        auto b=*ss.begin();
 
-        if(a>=b)
-        break;
-        left.erase(left.begin());
-        ss.erase(ss.begin());
-        // debug(a);
-        sum1+=a;
-    }
-    while(!ss.empty())
+    for(long long k=j;k>=i;k--)
     {
-        sum1+=*ss.begin();
-        ss.erase(ss.begin());
+        if(ns.empty())
+        {
+            ns.push_back(0);
+        }
+        else
+        {
+            ns.push_back(ns.back());
+        }
+        if(arr[k]<0)
+        ns.back()+=abs(arr[k]);
     }
-    long long sum2=0;
-    while(!right.empty() && !sss.empty())
+    reverse(all(ns));
+    reverse(all(ps));
+    long long res=0;
+    // debug((int)ns.size(),(int)pp.size());
+    for(long long k=i;k<=j;k++)
     {
-        auto a=*right.begin();
-        auto b=*sss.begin();
-
-        if(a>=b)
-        break;
-        right.erase(right.begin());
-        sss.erase(sss.begin());
-        // debug(a);
-        sum2+=a;
+        res=max(res,ns[k-i]+pp[k-i]);
     }
-    while(!sss.empty())
-    {
-        sum2+=*sss.begin();
-        sss.erase(sss.begin());
-    }
-    cout<<min(sum1,sum2)<<endl;
-
+    res+=s;
+    cout<<res<<endl;
 }

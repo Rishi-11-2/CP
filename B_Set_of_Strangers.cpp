@@ -28,40 +28,58 @@ signed main()
 }
 void solve()
 {
-    long long n,k;
-    cin>>n>>k;
+    long long n,m;
+    cin>>n>>m;
 
-    long long ans=0;
-    long long count=0;
-    long long sum=0;
+    long long arr[n][m];
 
+    set<long long>s1;
+    for(long long i=0;i<n;i++)
+    {
+        for(long long j=0;j<m;j++)
+        {
+            cin>>arr[i][j];
+            s1.insert(arr[i][j]);
+        }
+    }
+
+    set<long long>s2;
+
+    long long a[]={-1,1,0,0};
+    long long b[]={0,0,-1,1};
     
-    auto f=[&](auto& f, long long l,long long r)->void{
-
-        long long len=r-l+1;
-
-        if(len<k)
-        return;
-
-        long long m=(l+r)/2;
-        if(len%2)
+    for(long long i=0;i<n;i++)
+    {
+        for(long long j=0;j<m;j++)
         {
-            ans+=m*(1+sum);
-            count++;
-
-            sum+=(m);
-            // debug(len,m);
-            f(f,l,m-1);
-            // f(m+1,r);
+            long long c=0;
+            for(long long k=0;k<4;k++)
+            {
+                long long x=a[k]+i;
+                long long y=b[k]+j;
+                if(x>=0 && y>=0 && x<n && y<m && arr[x][y]==arr[i][j])
+                {
+                    c++;
+                }
+            }
+            if(c>0)
+            {
+                s2.insert(arr[i][j]);
+            }
         }
-        else
-        {
-            f(f,l,m);
-            // f(m+1,r);
-        }
-    };
+    }
+        
+    long long ans=(long long)s1.size();
 
-    f(f,1,n);
-    debug(count);
+    ans--;
+
+    long long d=(long long )s2.size();
+
+    if(d>0)
+    {
+        ans+=d;
+        ans--;
+    }
+
     cout<<ans<<endl;
 }

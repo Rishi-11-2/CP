@@ -19,65 +19,34 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    solve();
+    long long t = 1;
+    cin >> t;
+    while (t--)
+    {
+        solve();
+    }
 }
 void solve()
 {
     long long n;
     cin>>n;
-  
 
-    vector<set<int>>adj(n+1);
+    long long arr[n];
 
+    for(long long i=0;i<n;i++)
+    cin>>arr[i];
 
-    vector<pair<int,int>>v;
-    for(int i=1;i<=n;i++)
+    long long res=0;
+
+    for(long long i=0;i<n;i++)
     {
-        int x,y;
-        cin>>x>>y;
+        long long left=i;
+        long long right=n-i-1;
 
-        v.push_back({x,y});
+        long long x=(left/2)+(right/2);
+
+        res=max(res,x+arr[i]);
     }
 
-    for(int i=0;i<n;i++)
-    {
-        for(int j=0;j<n;j++)
-        {
-            if(i==j)
-            continue;
-
-            if(v[i].first==v[j].first || v[i].second==v[j].second)
-            {
-                adj[i].insert(j);
-                adj[j].insert(i);
-            }
-        }
-    }
-
-    vector<int>vis(n+1,0);
-
-    auto f=[&](int u,auto&& f)->void{
-
-        vis[u]=1;
-        for(int v:adj[u])
-        {
-            if(!vis[v])
-            {
-                f(v,f);
-            }
-        }
-    };
-
-    int count=0;
-    for(int i=0;i<n;i++)
-    {
-        if(!vis[i])
-        {
-            f(i,f);
-            count++;
-        }
-    }
-
-    cout<<count-1<<endl;
-
+    cout<<res<<endl;
 }

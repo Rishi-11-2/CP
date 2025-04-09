@@ -19,65 +19,50 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    solve();
+    long long t = 1;
+    cin >> t;
+    while (t--)
+    {
+        solve();
+    }
 }
 void solve()
 {
-    long long n;
-    cin>>n;
-  
-
-    vector<set<int>>adj(n+1);
-
-
-    vector<pair<int,int>>v;
-    for(int i=1;i<=n;i++)
+    long long n,x;
+    cin>>n>>x;
+    long long flag=1;
+    for(long long i=2;(i*i)<=n;i++)
     {
-        int x,y;
-        cin>>x>>y;
-
-        v.push_back({x,y});
+        if(n%i==0)
+        flag=0;
     }
 
-    for(int i=0;i<n;i++)
+    if(x==1)
     {
-        for(int j=0;j<n;j++)
-        {
-            if(i==j)
-            continue;
-
-            if(v[i].first==v[j].first || v[i].second==v[j].second)
-            {
-                adj[i].insert(j);
-                adj[j].insert(i);
-            }
-        }
+        if(flag && n>1)
+        cout<<"YES"<<endl;
+        else
+        cout<<"NO"<<endl;
     }
-
-    vector<int>vis(n+1,0);
-
-    auto f=[&](int u,auto&& f)->void{
-
-        vis[u]=1;
-        for(int v:adj[u])
-        {
-            if(!vis[v])
-            {
-                f(v,f);
-            }
-        }
-    };
-
-    int count=0;
-    for(int i=0;i<n;i++)
+    else if(n==1)
     {
-        if(!vis[i])
+
+        for(long long i=2;i<=x;i++)
         {
-            f(i,f);
-            count++;
+            n=n*10+1;
         }
+        // debug(n);
+        long long flag=1;
+        for(long long i=2;i*i<n;i++)
+        {
+            if(n%i==0)
+            flag=0;
+        }
+        if(flag && n>1)
+        cout<<"YES"<<endl;
+        else
+        cout<<"NO"<<endl;
     }
-
-    cout<<count-1<<endl;
-
+    else 
+    cout<<"NO"<<endl;
 }

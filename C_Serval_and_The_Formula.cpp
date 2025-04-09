@@ -19,65 +19,35 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    solve();
+    long long t = 1;
+    cin >> t;
+    while (t--)
+    {
+        solve();
+    }
 }
+
 void solve()
 {
-    long long n;
-    cin>>n;
-  
+    long long x,y;
+    cin>>x>>y;
 
-    vector<set<int>>adj(n+1);
-
-
-    vector<pair<int,int>>v;
-    for(int i=1;i<=n;i++)
+    if(x==y)
     {
-        int x,y;
-        cin>>x>>y;
-
-        v.push_back({x,y});
+        cout<<-1<<endl;
+        return;
     }
 
-    for(int i=0;i<n;i++)
-    {
-        for(int j=0;j<n;j++)
-        {
-            if(i==j)
-            continue;
+    
+    long long s=(x+y);
 
-            if(v[i].first==v[j].first || v[i].second==v[j].second)
-            {
-                adj[i].insert(j);
-                adj[j].insert(i);
-            }
-        }
-    }
+    long long pow=(1LL<<51);
+    pow--;
+    // debug(diff,pow,s);
+    // debug(diff);
 
-    vector<int>vis(n+1,0);
+    // debug(diff);
 
-    auto f=[&](int u,auto&& f)->void{
-
-        vis[u]=1;
-        for(int v:adj[u])
-        {
-            if(!vis[v])
-            {
-                f(v,f);
-            }
-        }
-    };
-
-    int count=0;
-    for(int i=0;i<n;i++)
-    {
-        if(!vis[i])
-        {
-            f(i,f);
-            count++;
-        }
-    }
-
-    cout<<count-1<<endl;
-
+    
+    cout<<(pow-s)<<endl;
 }

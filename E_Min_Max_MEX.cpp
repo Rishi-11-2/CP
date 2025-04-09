@@ -19,65 +19,71 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    solve();
+    long long t = 1;
+    cin >> t;
+    while (t--)
+    {
+        solve();
+    }
 }
 void solve()
 {
-    long long n;
-    cin>>n;
-  
+    long long n,k;
+    cin>>n>>k;
 
-    vector<set<int>>adj(n+1);
+    vector<long long>arr(n);
 
+    for(long long i=0;i<n;i++)
+    cin>>arr[i];
 
-    vector<pair<int,int>>v;
-    for(int i=1;i<=n;i++)
-    {
-        int x,y;
-        cin>>x>>y;
+    auto f=[&](long long mex,auto&& f)->long long{
+    
+        long long count=0;
+        
+        set<long long>s;
 
-        v.push_back({x,y});
-    }
-
-    for(int i=0;i<n;i++)
-    {
-        for(int j=0;j<n;j++)
+        long long res=0;
+        for(long long i=0;i<n;i++)
         {
-            if(i==j)
-            continue;
-
-            if(v[i].first==v[j].first || v[i].second==v[j].second)
+            s.insert(arr[i]);
+            while(s.find(res)!=s.end())
             {
-                adj[i].insert(j);
-                adj[j].insert(i);
+                s.erase(res);
+                res++;
             }
-        }
-    }
-
-    vector<int>vis(n+1,0);
-
-    auto f=[&](int u,auto&& f)->void{
-
-        vis[u]=1;
-        for(int v:adj[u])
-        {
-            if(!vis[v])
+            if(res>=mex)
             {
-                f(v,f);
+                s.clear();
+                count++;
+                res=0;
             }
+            // debug(i,res,count,mex);
         }
+        if(count>=k)
+        return 1;
+
+        return 0;
     };
 
-    int count=0;
-    for(int i=0;i<n;i++)
+    long long low=0;
+    long long high=n;
+
+    long long res=0;
+    // debug(f(3,f));
+    while(low<=high)
     {
-        if(!vis[i])
+        long long mid=(low+high)/2;
+        // debug(mid,f(mid,f));
+        if(f(mid,f))
         {
-            f(i,f);
-            count++;
+            res=mid;
+            low=mid+1;
+        }
+        else
+        {
+            high=mid-1;
         }
     }
 
-    cout<<count-1<<endl;
-
+    cout<<res<<endl;
 }

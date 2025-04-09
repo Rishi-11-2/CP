@@ -19,65 +19,54 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    solve();
+    long long t = 1;
+    cin >> t;
+    while (t--)
+    {
+        solve();
+    }
 }
 void solve()
 {
-    long long n;
-    cin>>n;
-  
+    long long l,r,g;
+    cin>>l>>r>>g;
 
-    vector<set<int>>adj(n+1);
+    long long d1=(l/g);
 
+    d1=d1*g;
 
-    vector<pair<int,int>>v;
-    for(int i=1;i<=n;i++)
+    while(d1<l)
     {
-        int x,y;
-        cin>>x>>y;
-
-        v.push_back({x,y});
+        d1+=g;
     }
 
-    for(int i=0;i<n;i++)
-    {
-        for(int j=0;j<n;j++)
-        {
-            if(i==j)
-            continue;
+    long long d2=(r/g);
 
-            if(v[i].first==v[j].first || v[i].second==v[j].second)
+    d2=d2*g;
+
+    while((d2+g)<=r)
+    {
+        d2+=g;
+    }
+
+    
+
+    long long diff=(d2-d1);
+
+
+
+    for(long long i=(diff/g);i>=0;i--)
+    {
+        for(long long j=(d1/g);(j+i)<=(d2/g);j++)
+        {
+            if(__gcd(j,j+i)==1)
             {
-                adj[i].insert(j);
-                adj[j].insert(i);
+                cout<<j*g<<" "<<(j+i)*g<<endl;
+                return;
             }
         }
     }
 
-    vector<int>vis(n+1,0);
-
-    auto f=[&](int u,auto&& f)->void{
-
-        vis[u]=1;
-        for(int v:adj[u])
-        {
-            if(!vis[v])
-            {
-                f(v,f);
-            }
-        }
-    };
-
-    int count=0;
-    for(int i=0;i<n;i++)
-    {
-        if(!vis[i])
-        {
-            f(i,f);
-            count++;
-        }
-    }
-
-    cout<<count-1<<endl;
-
+        
+    cout<<-1<<" "<<-1<<endl;
 }

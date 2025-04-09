@@ -19,65 +19,71 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    solve();
+    long long t = 1;
+    cin >> t;
+    while (t--)
+    {
+        solve();
+    }
 }
 void solve()
 {
     long long n;
     cin>>n;
-  
 
-    vector<set<int>>adj(n+1);
+    long long arr[n];
+    
 
+    priority_queue<long long>odd;
+    priority_queue<long long>even;
 
-    vector<pair<int,int>>v;
-    for(int i=1;i<=n;i++)
+    for(long long i=0;i<n;i++)
     {
-        int x,y;
-        cin>>x>>y;
+        cin>>arr[i];
 
-        v.push_back({x,y});
-    }
-
-    for(int i=0;i<n;i++)
-    {
-        for(int j=0;j<n;j++)
+        if(arr[i]%2)
         {
-            if(i==j)
-            continue;
-
-            if(v[i].first==v[j].first || v[i].second==v[j].second)
-            {
-                adj[i].insert(j);
-                adj[j].insert(i);
-            }
+            odd.push(arr[i]);
+        }
+        else
+        {
+            even.push(arr[i]);
         }
     }
 
-    vector<int>vis(n+1,0);
+    long long c=(long long)even.size();
 
-    auto f=[&](int u,auto&& f)->void{
-
-        vis[u]=1;
-        for(int v:adj[u])
-        {
-            if(!vis[v])
-            {
-                f(v,f);
-            }
-        }
-    };
-
-    int count=0;
-    for(int i=0;i<n;i++)
+    if((long long)odd.size()==0)
     {
-        if(!vis[i])
-        {
-            f(i,f);
-            count++;
-        }
+        cout<<even.top()<<endl;
+        return;
+    }
+    if((long long)even.size()==0)
+    {
+        cout<<odd.top()<<endl;
+        return;
+    }
+    while(!odd.empty() && !even.empty())
+    {
+        auto it1=odd.top();
+        auto it2=even.top();
+        odd.pop();
+        even.pop();
+
+        odd.push(it1+it2);
     }
 
-    cout<<count-1<<endl;
+    long long ans=odd.top();
 
+    odd.pop();
+    // debug(c);
+
+    while(!odd.empty())
+    {
+        ans+=(odd.top()-1);
+        odd.pop();
+        c--;
+    }
+
+    cout<<ans<<endl;
 }

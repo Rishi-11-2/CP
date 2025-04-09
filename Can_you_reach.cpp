@@ -19,65 +19,78 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    solve();
+    long long t = 1;
+    cin >> t;
+    while (t--)
+    {
+        solve();
+    }
 }
 void solve()
 {
     long long n;
     cin>>n;
-  
 
-    vector<set<int>>adj(n+1);
+    long long arr[n];
+
+    for(long long i=0;i<n;i++)
+    cin>>arr[i];
+
+    map<long long,long long>c;
+
+    map<long long,long long>f;
+    map<long long,long long>b;
 
 
-    vector<pair<int,int>>v;
-    for(int i=1;i<=n;i++)
+    vector<long long>v;
+    
+    for(long long i=n-1;i>=0;i--)
     {
-        int x,y;
-        cin>>x>>y;
-
-        v.push_back({x,y});
-    }
-
-    for(int i=0;i<n;i++)
-    {
-        for(int j=0;j<n;j++)
+        if(c.find(arr[i])!=c.end())
         {
-            if(i==j)
+            f[i]=c[arr[i]]-1;
+        }
+        else
+        {
+            f[i]=n+2;
+        }
+        c[arr[i]]=i+1;
+        v.push_back(f[i]);
+    }
+    
+    c.clear();
+
+    sort(all(v));
+
+    // for(auto it:v)
+    // cout<<it<<" ";
+
+    // cout<<endl;
+
+    long long count=0;
+    for(long long i=0;i<n;i++)
+    {
+        if(c.find(arr[i])!=c.end())
+        {
+            b[i]=c[arr[i]]+1;
+        }
+        else
+        {
+            b[i]=-1;
+        }
+        c[arr[i]]=i+1;
+        if(i>0 && (arr[i]==arr[i-1]))
+        {
+            count+=0;
             continue;
-
-            if(v[i].first==v[j].first || v[i].second==v[j].second)
-            {
-                adj[i].insert(j);
-                adj[j].insert(i);
-            }
         }
+        auto it=upper_bound(all(v),b[i]-1)-v.begin();
+
+        // debug(i,it,b[i]);
+        count+=(i-it);
     }
 
-    vector<int>vis(n+1,0);
+    
 
-    auto f=[&](int u,auto&& f)->void{
-
-        vis[u]=1;
-        for(int v:adj[u])
-        {
-            if(!vis[v])
-            {
-                f(v,f);
-            }
-        }
-    };
-
-    int count=0;
-    for(int i=0;i<n;i++)
-    {
-        if(!vis[i])
-        {
-            f(i,f);
-            count++;
-        }
-    }
-
-    cout<<count-1<<endl;
-
+    cout<<count<<endl;
 }

@@ -19,65 +19,43 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    solve();
+    long long t = 1;
+    cin >> t;
+    while (t--)
+    {
+        solve();
+    }
+}
+long long binpow(long long a,long long b,long long mod){
+    long long res=1;
+    while(b>0)
+    {
+        if(b&1)
+        {
+            res=(res%mod*a%mod)%mod;
+        }
+        a=(a%mod*a%mod)%mod;
+        b>>=1;
+    }
+    return res;
 }
 void solve()
 {
     long long n;
+
     cin>>n;
-  
-
-    vector<set<int>>adj(n+1);
 
 
-    vector<pair<int,int>>v;
-    for(int i=1;i<=n;i++)
+    const long long mod=998244353;
+    long long s=0;
+    long long flag=0;
+
+    if(n%2)
     {
-        int x,y;
-        cin>>x>>y;
-
-        v.push_back({x,y});
+        cout<<binpow(2,n-1,mod)<<endl;
     }
-
-    for(int i=0;i<n;i++)
+    else
     {
-        for(int j=0;j<n;j++)
-        {
-            if(i==j)
-            continue;
-
-            if(v[i].first==v[j].first || v[i].second==v[j].second)
-            {
-                adj[i].insert(j);
-                adj[j].insert(i);
-            }
-        }
+        cout<<(3*binpow(2,n-2,mod))%mod<<endl;
     }
-
-    vector<int>vis(n+1,0);
-
-    auto f=[&](int u,auto&& f)->void{
-
-        vis[u]=1;
-        for(int v:adj[u])
-        {
-            if(!vis[v])
-            {
-                f(v,f);
-            }
-        }
-    };
-
-    int count=0;
-    for(int i=0;i<n;i++)
-    {
-        if(!vis[i])
-        {
-            f(i,f);
-            count++;
-        }
-    }
-
-    cout<<count-1<<endl;
-
 }

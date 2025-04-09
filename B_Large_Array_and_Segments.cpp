@@ -19,65 +19,72 @@ signed main()
     cin.tie(NULL);
     cout.setf(ios::fixed);
     cout.precision(10);
-    solve();
+    long long t = 1;
+    cin >> t;
+    while (t--)
+    {
+        solve();
+    }
 }
 void solve()
 {
-    long long n;
-    cin>>n;
-  
+    long long n,k,x;
+    cin>>n>>k>>x;
 
-    vector<set<int>>adj(n+1);
+    long long arr[n];
 
 
-    vector<pair<int,int>>v;
-    for(int i=1;i<=n;i++)
+    long long sum=0;
+    for(long long i=0;i<n;i++)
     {
-        int x,y;
-        cin>>x>>y;
-
-        v.push_back({x,y});
+        cin>>arr[i];
+        sum+=arr[i];
     }
+    long long i=0;
 
-    for(int i=0;i<n;i++)
+
+    long long j=0;
+
+    long long s=0;
+
+
+    long long ans=0;
+
+    // debug
+    while(i<n)
     {
-        for(int j=0;j<n;j++)
+
+        while(j<n)
         {
-            if(i==j)
+            s+=arr[j];
+            j++;
+            if(s>=x)
+            break;
+        }
+
+        if(s>=x)
+        {
+            ans+=k;
+            s-=arr[i];
+            i++;
             continue;
-
-            if(v[i].first==v[j].first || v[i].second==v[j].second)
-            {
-                adj[i].insert(j);
-                adj[j].insert(i);
-            }
         }
+
+        // debug("hi");
+
+        long long rem=x-s;
+
+        long long y=rem/sum;
+
+        if(rem%sum==0)
+        y--;
+        // debug(i,rem,sum,s);
+        ans+=max(0LL,(k-(y+1)));
+        s-=arr[i];
+        i++;
+
+        
     }
 
-    vector<int>vis(n+1,0);
-
-    auto f=[&](int u,auto&& f)->void{
-
-        vis[u]=1;
-        for(int v:adj[u])
-        {
-            if(!vis[v])
-            {
-                f(v,f);
-            }
-        }
-    };
-
-    int count=0;
-    for(int i=0;i<n;i++)
-    {
-        if(!vis[i])
-        {
-            f(i,f);
-            count++;
-        }
-    }
-
-    cout<<count-1<<endl;
-
+    cout<<ans<<endl;
 }

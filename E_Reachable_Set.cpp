@@ -20,74 +20,75 @@ signed main()
     cout.setf(ios::fixed);
     cout.precision(10);
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();
     }
 }
-int f(int mex,vector<int>&arr,int k)
-{
-    int count=0;
-    int n=(int)arr.size();
-    unordered_set<int>s;
-
-    int res=0;
-    for(int i=0;i<n;i++)
-    {
-        if(arr[i]<=(n+10))
-        s.insert(arr[i]);
-        while(s.count(res))
-        {
-            res++;
-        }
-        if(res>=mex)
-        {
-            for(int j=0;j<res;j++)
-            s.erase(j);
-            count++;
-            res=0;
-        }
-        // debug(i,res,count,mex);
-    }
-    if(count>=k)
-    return 1;
-
-    return 0;
-}
 void solve()
 {
-    int n,k;
-    cin>>n>>k;
+    int n,m;
+    cin>>n>>m;
 
-    vector<int>arr(n);
+    set<int>adj[n+1];
 
-    int high=(n/k);
-
-    for(int i=0;i<n;i++)
+    vector<int>vv(n+1,0);
+    for(int i=1;i<=m;i++)
     {
-        cin>>arr[i];
+        int x,y;
+        cin>>x>>y;
+        adj[x].insert(y);
+        adj[y].insert(x);
     }
 
-
-    int low=0;
-
     int res=0;
-    // debug(f(3,f));
-    while(low<=high)
+
+    for(auto v:adj[1])
     {
-        int mid=(low+high)/2;
-        // debug(mid,f(mid,f));
-        if(f(mid,arr,k))
+        vv[v]=1;
+        res++;
+    }
+    cout<<res<<endl;
+    vv[1]=2;
+    set<int>s;
+    for(int i=2;i<=n;i++)
+    {
+        if(vv[i]==1)
         {
-            res=mid;
-            low=mid+1;
+            res--;
+        }
+        vv[i]=2;
+        int flag=0;
+        for(int v:adj[i])
+        {
+            // if(v==i)
+            // continue;
+            if(vv[v]==2)
+            flag=1;
+            if(vv[v]==0)
+            {
+                res++;
+                vv[v]=1;
+            }
+        }
+        if(!flag || (int)s.size()>0)
+        {
+            s.insert(i);
+            vv[i]=1;
+            cout<<-1<<endl;
         }
         else
         {
-            high=mid-1;
+            for(int v:adj[i])
+            {
+                if(vv[i]==1)
+                {
+                    vv[v]=1;
+                    s.erase(v);
+                }
+            }
+            cout<<res<<endl;
         }
     }
-
-    cout<<res<<endl;
 }
